@@ -1,0 +1,180 @@
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px)
+	/**/
+
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px)
+	.main
+		padding-top: 60px
+
+	.topbar
+		font-size: 13px
+		
+		&-content
+			height: 60px
+
+	.logo
+		img
+			width: 66.666px
+			height: 31.697px
+
+	.content
+		padding: 11px 25px 30px 
+		
+		.content-label
+			display: flex
+			justify-content: flex-end
+			flex-wrap: wrap
+			h1
+				font-size: 21px
+			a
+				width: auto
+				font-size: 11px
+			input
+				max-width: 100%
+				margin-right: 0
+				order: 3
+				margin-top: 9px
+			
+			.button
+				width: auto
+				padding: 6px 10px
+				
+	.content-box
+		&-row
+			display: block
+			margin-bottom: 0
+			&:last-child
+				.content-box-cell:last-child
+					margin-bottom: 0
+
+		&-cell
+			margin-right: 0
+			margin-bottom: 20px
+			max-width: 440px
+	
+	.default-table
+		max-width: 440px
+		thead
+			display: none
+		
+		tr
+			display: block
+
+		td
+			display: block
+
+			&:first-child
+				font-family: RobotoMedium, sans-serif			
+		
+		&.vertical
+			tr
+				display: table-row
+
+			td
+				display: table-cell
+
+				&:first-child
+					font-family: Roboto, sans-serif		
+
+
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px)		
+	h2
+		font-size: 17px
+
+	.back-btn 
+		font-size: 15px
+
+	.main
+		padding-top: 50px
+
+	.topbar
+		font-size: 12px
+
+	.topbar-content
+		justify-content: space-between
+		height: 50px
+
+	.logo
+		display: none
+
+	.topbar-nav
+		display: none
+
+	.burger
+		display: block
+
+	.rc-calendar-fullscreen .rc-calendar-cell .rc-calendar-date, .rc-calendar-fullscreen .rc-calendar-month-panel-cell .rc-calendar-month-panel-month
+		display: block
+		height: 63px
+	/*Disable Animation on Mobile Devices*/
+	.animated
+		/*CSS transitions*/
+		-o-transition-property: none !important
+		-moz-transition-property: none !important
+		-ms-transition-property: none !important
+		-webkit-transition-property: none !important
+		transition-property: none !important
+		/*CSS transforms*/
+		-o-transform: none !important
+		-moz-transform: none !important
+		-ms-transform: none !important
+		-webkit-transform: none !important
+		transform: none !important
+		/*CSS animations*/
+		-webkit-animation: none !important
+		-moz-animation: none !important
+		-o-animation: none !important
+		-ms-animation: none !important
+		animation: none !important
+
+@media only screen and (max-width : 643px)
+	.rc-calendar-fullscreen .rc-calendar-cell .rc-calendar-date, .rc-calendar-fullscreen .rc-calendar-month-panel-cell .rc-calendar-month-panel-month
+		display: block
+		height: 43px
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px)
+	.rc-calendar-fullscreen .rc-calendar-cell .rc-calendar-date, .rc-calendar-fullscreen .rc-calendar-month-panel-cell .rc-calendar-month-panel-month
+		display: block
+		height: 33px
+
+@media only screen and (max-width : 356px)
+	.rc-calendar-full
+		width: 100%
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px)
+	/**/
+
+
+/*==========  Mobile First Method  ==========*/
+
+/* Custom, iPhone Retina */
+@media only screen and (min-width : 320px)
+	/**/
+
+
+/* Extra Small Devices, Phones */
+@media only screen and (min-width : 480px)
+	/**/
+
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px)
+	/**/
+
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px)
+	/**/
+
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px)
+	/**/
+

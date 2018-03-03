@@ -1,0 +1,53 @@
+{
+  "name": "redux-practice",
+  "version": "0.1.0",
+  "private": true,
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0",
+      "port": "3333"
+    }
+  },
+  "dependencies": {
+    "cross-fetch": "^2.0.0",
+    "form-serialize": "^0.7.2",
+    "jwt-decode": "^2.2.0",
+    "node-sass": "^4.7.2",
+    "npm-run-all": "^4.1.2",
+    "rc-calendar": "^9.6.0",
+    "rc-select": "^7.7.1",
+    "rc-time-picker": "^3.3.1",
+    "react": "^16.2.0",
+    "react-burger-menu": "^2.3.0",
+    "react-dom": "^16.2.0",
+    "react-modal": "^3.2.1",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^4.0.8",
+    "react-scripts": "1.1.1",
+    "redux": "^3.7.2",
+    "redux-api-middleware": "^2.2.0",
+    "redux-burger-menu": "^0.2.4",
+    "redux-form": "^7.2.3",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^5.9.1",
+    "redux-persist-transform-filter": "0.0.16",
+    "redux-thunk": "^2.2.0"
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "build-css": "node-sass src/ -o src/",
+    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
+    "start-js": "react-scripts start",
+    "start": "set PORT=8080 && npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "babel-plugin-react-html-attrs": "^2.1.0",
+    "key-mirror": "^1.0.1",
+    "three": "^0.89.0"
+  }
+}
