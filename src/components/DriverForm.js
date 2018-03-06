@@ -6,30 +6,45 @@ export default class DriverForm extends Component {
     super(props)
 
     if(this.props.retrieveDriver) {
-      let _driverId = this.props.match.params.driverId.slice(1)
-      this.props.retrieveDriver(_driverId)
+      let driverId = this.props.match.params.driverId.slice(1)
+      this.props.retrieveDriver(driverId)
     }
   }
 
   componentDidUpdate() {
     if (this.props.retrieveDriver && this.props.currentDriver.isFetched) {
+
       let form = this.form,
           driver = this.props.currentDriver.data
 
       form.firstName.value = this.props.currentDriver.data.user.first_name
       form.lastName.value = driver.user.last_name
       form.username.value = driver.user.username
-      form.password.value = driver.user.password
-      form.email.value = driver.user.email
       form.car.value = driver.car
-      form.carNumber.value = driver.car_number 
-    } 
+      form.carNumber.value = driver.number_of_car
+
+      return
+
+    } else if (this.props.registerDriver) {
+
+      let form = this.form
+
+      form.firstName.setAttribute('required', 'required')
+      form.lastName.setAttribute('required', 'required')
+      form.username.setAttribute('required', 'required')
+      form.email.setAttribute('required', 'required')
+      form.car.setAttribute('required', 'required')
+      form.carNumber.setAttribute('required', 'required')
+      form.password.setAttribute('required', 'required')
+
+    }
       
   }
 
   submitForm(e) {
     e.preventDefault()
     if (this.props.registerDriver) {
+     
       let data = {
         ext_user: {
           is_admin: false,
@@ -46,9 +61,29 @@ export default class DriverForm extends Component {
         number_of_car: this.form.carNumber.value
       }
       
-      this.props.registerDriver(data)   
+      this.props.registerDriver(data)
+      this.props.retrieveDrivers()
+      this.props.history.push('/admin/drivers')   
+    
     } else if (this.props.editDriver) {
-      //______________________________
+      let password = null
+
+      if (this.form.password.value !== "") {
+        password = this.form.password.value
+      }
+      
+      let data = {
+        first_name: this.form.firstName.value,
+        last_name: this.form.lastName.value,
+        email: this.form.email.value,
+        username: this.form.username.value,
+        password: password,
+        car: this.form.car.value,
+        number_of_car: this.form.carNumber.value
+      }
+
+      let driverId = this.props.match.params.driverId.slice(1)
+      this.props.editDriver(data, driverId)
     }
  
     for (let i of this.form.getElementsByTagName('input')) {
@@ -62,7 +97,7 @@ export default class DriverForm extends Component {
         {(this.props.retrieveDriver !== undefined && !this.props.currentDriver.isFetched) ? (
           <img className="spinner" src={spinner} />
         ) : (
-          <form className="form" ref={(form) => this.form = form} onSubmit={this.submitForm.bind(this)}>
+          <form className="form" ref={(form) => this.form = form} onSubmit={(e) => this.submitForm(e)}>
  
             <label>First name: <input type="text" name="firstName"/></label>
 

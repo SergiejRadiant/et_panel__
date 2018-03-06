@@ -5,7 +5,6 @@ import Picker from 'rc-calendar/lib/Picker';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import zhCN from 'rc-calendar/lib/locale/zh_CN';
 import enUS from 'rc-calendar/lib/locale/en_US';
-import TimePickerPanel from 'rc-time-picker/lib/Panel';
 import '../assets/styles/calendar.css';
 import '../assets/styles/picker.css';
 import spinner from '../assets/images/loading.gif'
@@ -33,12 +32,6 @@ if (cn) {
 const defaultCalendarValue = now.clone();
 defaultCalendarValue.add(-1, 'month');
 
-const timePickerElement = (
-  <TimePickerPanel
-    defaultValue={[moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]}
-  />
-);
-
 function newArray(start, end) {
   const result = [];
   for (let i = start; i < end; i++) {
@@ -55,7 +48,8 @@ function disabledDate(current) {
   return current.isBefore(date);  // can not select days before today
 }
 
-const formatStr = 'DD.MM.YYYY HH:mm';
+const formatStr = 'YYYY-MM-DD';
+
 function format(v) {
   return v ? v.format(formatStr) : '';
 }
@@ -64,39 +58,29 @@ function isValidRange(v) {
   return v && v[0] && v[1];
 }
 
-function onStandaloneChange(value) {
-  console.log('onChange');
-  console.log(value[0] && format(value[0]), value[1] && format(value[1]));
-}
-
-function onStandaloneSelect(value) {
-  console.log('onSelect');
-  console.log(format(value[0]), format(value[1]));
-}
-
-
 export default class AdmOrdersWindow extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state = {
       value: [],
       hoverValue: [],
-      filteredDrivers: [],
       deleteOrderModalIsOpen: false,
       currentOrder: null,
       getDriverModalIsOpen: false,
+      editOrderModalIsOpen: false,
     }
 
     this.openDeleteOrderModal = this.openDeleteOrderModal.bind(this);
     this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this);
     this.openGetDriverModal = this.openGetDriverModal.bind(this);
     this.closeGetDriverModal = this.closeGetDriverModal.bind(this);
+    this.openEditOrderModal = this.openEditOrderModal.bind(this);
+    this.closeEditOrderModal = this.closeEditOrderModal.bind(this);
   }
 
   newOrders() {
     return this.props.orders.data.filter(ord => {
-      console.log(allConst.STATUS_NEW + ord.status === allConst.STATUS_WAIT)
       return ord.status === allConst.STATUS_NEW || ord.status === allConst.STATUS_WAIT;
     });
   }
@@ -113,9 +97,9 @@ export default class AdmOrdersWindow extends Component {
     });
   }
 
-  getDriverName(userName) {
+  getDriverName(driverId) {
     let driver = this.props.drivers.data.filter(drv => {
-      return drv.user.username === userName
+      return +drv.id === +driverId
     })
 
     return `${driver[0].user.first_name} ${driver[0].user.last_name}`
@@ -125,7 +109,9 @@ export default class AdmOrdersWindow extends Component {
     if (this.newOrders().length)
       return (
         <div className="content-box-cell">
-          <h5>Новые заказы:</h5>
+          <div className="content-label">
+						<h5>Новые заказы:</h5>
+					</div>
           <table className="default-table">
             <thead>
               <tr>
@@ -144,9 +130,15 @@ export default class AdmOrdersWindow extends Component {
                     <td>{n.date}</td>
                     <td>{n.status}</td>
                     <td>
-                      <span onClick={() => this.openGetDriverModal(n.id)}>Назначить</span></td>
+                      {n.driver ? (
+                        this.getDriverName(n.driver)
+                      ) : (
+                        <span onClick={() => this.openGetDriverModal(n.id)}>Назначить</span>
+                      )}
+                    </td>
                     <td>
                       <Link to={`/admin/det_ord:${n.id}`}>Дет.</Link>
+                      <span onClick={(orderId) => this.openEditOrderModal(n.id)}>Ред.</span>
                       <span onClick={() => this.openDeleteOrderModal(n.id)}>Удал.</span>
                     </td>
                   </tr>
@@ -162,7 +154,9 @@ export default class AdmOrdersWindow extends Component {
     if (this.activeOrders().length)
       return (
         <div className="content-box-cell">
-          <h5>Активные заказы:</h5>
+          <div className="content-label">
+					  <h5>Активные заказы:</h5>
+					</div>
           <table className="default-table">
             <thead>
               <tr>
@@ -184,6 +178,7 @@ export default class AdmOrdersWindow extends Component {
                       <Link to={`/admin/det_drv:${a.driver}`}>{this.getDriverName(a.driver)}</Link></td>
                     <td>
                       <Link to={`/admin/det_ord:${a.id}`}>Дет.</Link>
+                      <span onClick={(orderId) => this.openEditOrderModal(a.id)}>Ред.</span>
                       <span onClick={() => this.openDeleteOrderModal(a.id)}>Удал.</span>
                     </td>
                   </tr>
@@ -199,7 +194,9 @@ export default class AdmOrdersWindow extends Component {
     if (this.executedOrders().length)
       return (
         <div className="content-box-cell">
-          <h5>Выполненные заказы:</h5>
+          <div className="content-label">
+						<h5>Выполненные заказы:</h5>
+					</div>
           <table className="default-table">
             <thead>
               <tr>
@@ -221,7 +218,8 @@ export default class AdmOrdersWindow extends Component {
                       <Link to={`/admin/det_drv:${e.driver}`}>{this.getDriverName(e.driver)}</Link></td>
                     <td>
                       <Link to={`/admin/det_ord:${e.id}`}>Дет.</Link>
-                      <span onClick={() => this.openDeleteOrderModal(e.id)}>Удал.</span>
+                      <span onClick={(orderId) => this.openEditOrderModal(e.id)}>Ред.</span>
+                      <span onClick={(orderId) => this.openDeleteOrderModal(e.id)}>Удал.</span>
                     </td>
 
                   </tr>
@@ -235,15 +233,15 @@ export default class AdmOrdersWindow extends Component {
 
   checkAllOrders() {
     if (!this.executedOrders().length && !this.activeOrders().length && !this.newOrders().length)
-      return <p>You have not any orders right now.</p>;
+      return <div style={{ marginTop: "20px" }}>You have not any orders right now.</div>;
   }
 
   openDeleteOrderModal(orderId) {
-    this.setState({ deleteOrderModalIsOpen: true , currentOrder: orderId });
+    this.setState({ deleteOrderModalIsOpen: true, currentOrder: orderId });
   }
 
   closeDeleteOrderModal() {
-    this.setState({ deleteOrderModalIsOpen: false });
+    this.setState({ deleteOrderModalIsOpen: false, currentOrder: '' });
   }
 
   openGetDriverModal(orderId) {
@@ -251,11 +249,18 @@ export default class AdmOrdersWindow extends Component {
   }
 
   closeGetDriverModal() {
-    this.setState({ getDriverModalIsOpen: false });
+    this.setState({ getDriverModalIsOpen: false, currentOrder: '' });
+  }
+
+  openEditOrderModal(orderId) {
+    this.setState({ editOrderModalIsOpen: true , currentOrder: orderId});
+  }
+
+  closeEditOrderModal() {
+    this.setState({ editOrderModalIsOpen: false, currentOrder: ''});
   }
 
   onChange = (value) => {
-    console.log('onChange', value);
     this.setState({ value });
   }
 
@@ -264,25 +269,50 @@ export default class AdmOrdersWindow extends Component {
   }
 
   setDriver() {
-    let _orderId = this.state.currentOrder,
-        _driverId = this.setDriverSelect.value
+    let orderId = this.state.currentOrder,
+        driverId = this.setDriverSelect.value
 
-    if (_driverId) {
-      let target = this.props.orders.filter( ord => {
-        return ord.id === _orderId
+    if (driverId) {
+      let target = this.props.orders.data.filter( ord => {
+        return +ord.id === +orderId
       })
       
       target = target[0]
-      target.driver = _driverId
-      target.status = "wait for accepting"
+      target.driver = driverId
+      target.status = allConst.STATUS_WAIT
       this.props.setDriver(target)
 
-      this.closeDeleteOrderModal()
+      this.closeGetDriverModal()
+    }
+  }
+
+  editOrder() {
+    let orderId = this.state.currentOrder,
+        driverId = this.setDriverSelect.value
+
+    if (driverId) {
+      let target = this.props.orders.data.filter( ord => {
+        return +ord.id === +orderId
+      })
+      
+      target = target[0]
+      target.driver = driverId
+      target.status = allConst.STATUS_WAIT
+      this.props.setDriver(target)
+
+      this.closeGetDriverModal()
     }
   }
 
   submitDeleteForm() {
     this.props.deleteOrder(this.state.currentOrder)
+     
+    let updatedData = this.props.orders.data.filter( ord => {
+      return ord.id != this.state.currentOrder
+    })
+
+    this.props.orders.data = updatedData
+
     this.closeDeleteOrderModal()
   }
 
@@ -295,13 +325,12 @@ export default class AdmOrdersWindow extends Component {
         dateInputPlaceholder={['start', 'end']}
         defaultValue={[now, now.clone().add(1, 'months')]}
         locale={cn ? zhCN : enUS}
-        timePicker={timePickerElement}
       />
     )
     
     return (
       <div className="content-wrap">
-        {!this.props.orders.isFetched ? (
+        {!this.props.orders.isFetched || !this.props.drivers.isFetched ? (
           <img className="spinner" src={spinner} />
         ) : (
         <div className="content">
@@ -309,9 +338,9 @@ export default class AdmOrdersWindow extends Component {
             <h1>Заказы</h1>
             <Link to='/admin/reg_ord' className="button grey">Новый заказ</Link>
           </div>
-          {this.checkAllOrders()}
           <div className="content-box">
             <div className="content-box-row">
+              {this.checkAllOrders()}
               {this.checkNewOrders()}
               {this.checkActiveOrders()}
             </div>
@@ -355,7 +384,7 @@ export default class AdmOrdersWindow extends Component {
                 ({ value }) => {
                   return (
                     <input
-                      placeholder="please select"
+                      placeholder="Любое число"
                       disabled={this.state.disabled}
                       readOnly
                       type="text"
@@ -366,19 +395,69 @@ export default class AdmOrdersWindow extends Component {
               }
             </Picker></label>
             <label>Водители:
-            <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
-              {this.props.drivers.data.map(d => {
-                return (
-                  <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                )
-              })}
-            </select>
+              <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
+                {this.props.drivers.data.map(d => {
+                  return (
+                    <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                  )
+                })}
+              </select>
             </label>
             <div className="btn-wrap">
               <button type="submit" className="button small" onClick={this.setDriver.bind(this)}>Принять</button>
               <button type="reset" className="button small">Отмена</button>
             </div>
-          </Modal>   
+          </Modal>  
+          <Modal
+            isOpen={this.state.editOrderModalIsOpen}
+            onRequestClose={this.closeEditOrderModal}
+            style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
+            className="modal"
+            ariaHideApp={false}
+          >
+            <button type="reset" className="close-btn" onClick={this.closeEditOrderModal} />
+            <label>Выберите дату: <Picker
+              value={this.state.value}
+              onChange={this.onChange}
+              animation="slide-up"
+              calendar={calendar}
+            >
+              {
+                ({ value }) => {
+                  return (
+                    <input
+                      placeholder="Любое число"
+                      disabled={this.state.disabled}
+                      readOnly
+                      type="text"
+                      value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+                    />
+                  );
+                }
+              }
+            </Picker></label>
+            <label>Водитель:
+              <select ref={ select => this.setDriverSelect = select }>
+                {this.props.drivers.data.map(d => {
+                  return (
+                    <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                  )
+                })}
+              </select>
+            </label>
+            <label>Статус:
+              <select ref={ select => this.setDriverSelect = select }>
+                <option>{allConst.STATUS_NEW}</option>
+                <option>{allConst.STATUS_WAIT}</option>
+                <option>{allConst.STATUS_ACTIVE}</option>
+                <option>{allConst.STATUS_EXECUTED}</option>
+              </select>
+            </label>
+            <div className="btn-wrap">
+              <button type="submit" className="button small" onClick={this.editOrder.bind(this)}>Принять</button>
+              <button type="reset" className="button small">Отмена</button>
+            </div>
+          </Modal>    
         </div>
         )}
       </div>

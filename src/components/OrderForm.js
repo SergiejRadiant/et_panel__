@@ -17,28 +17,6 @@ export default class DriverForm extends Component {
     this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this);
   } 
 
-  getButtons() {
-    let _orderId = this.props.match.params.orderId
-    let path = this.props.history.location.pathname
-    if (~path.indexOf("admin")) {
-      if (~path.indexOf("det_ord")) {
-        return (
-          <div className="btn-wrap">
-            <Link to={`/admin/edit_ord${_orderId}`} className="button small">Редакт.</Link>
-            <span className="button small grey" onClick={this.openDeleteOrderModal}>Удалить</span>
-          </div>
-        )
-      } else {
-        return (
-          <div className="btn-wrap">
-            <button type="submit" className="button small">Принять</button>
-            <button type="reset" className="button small">Отмена</button>
-          </div>
-        )
-      }
-    }
-  }
-
   submitOrderForm(e) {
     e.preventDefault()
 
@@ -133,7 +111,10 @@ export default class DriverForm extends Component {
               </div>
             </div>
 
-            {this.getButtons()}
+            <div className="btn-wrap">
+              <button type="submit" className="button small">Принять</button>
+              <button type="reset" className="button small">Отмена</button>
+            </div>
             
           </form>
           <Modal

@@ -3,6 +3,9 @@ import { Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
 
+import spinner from '../assets/images/loading.gif'
+import * as allConst from '../constants/index'
+
 class DrvOrdersWindow extends Component {
 	constructor() {
 		super();
@@ -20,32 +23,30 @@ class DrvOrdersWindow extends Component {
 	}
 
 	newOrders() {
-		return this.props.orders.filter((ord) => {
-			return ord.status === 'wait';
+		return this.props.currentDriver.data.orders.filter((ord) => {
+			return ord.status === allConst.STATUS_WAIT;
 		});
 	}
 
 	activeOrders() {
-		return this.props.orders.filter((ord) => {
-			return ord.status === 'process';
+		return this.props.currentDriver.data.orders.filter((ord) => {
+			return ord.status === allConst.STATUS_ACTIVE;
 		});
 	}
 
 	executedOrders() {
-		return this.props.orders.filter((ord) => {
-			return ord.status === 'done';
+		return this.props.currentDriver.data.orders.filter((ord) => {
+			return ord.status === allConst.STATUS_EXECUTED;
 		});
-	}
-
-	getStatus(status) {
-		return status === 'wait' ? 'new' : status;
 	}
 
 	checkNewOrders() {
 		if (this.newOrders().length)
 			return (
 				<div className="content-box-cell">
-					<h5>Новые заказы:</h5>
+					<div className="content-label">
+						<h5>Новые заказы:</h5>
+					</div>
 					<table className="default-table">
 						<thead>
 							<tr>
@@ -59,11 +60,11 @@ class DrvOrdersWindow extends Component {
 							{this.newOrders().map((n) => {
 								return (
 									<tr key={n.id}>
-										<td>{n.id.slice(-6)}</td>
+										<td>{n.id}</td>
 										<td>{n.date}</td>
-										<td>{this.getStatus(n.status)}</td>
+										<td>{n.status}</td>
 										<td>
-											<span onClick={this.openConfirmModal}>Принять</span>
+											<span onClick={(orderId) => this.openConfirmModal(n.id)}>Принять</span>
 											<Link to={`/driver/det_ord:${n.id}`}>Дет.</Link>
 										</td>
 									</tr>
@@ -79,8 +80,10 @@ class DrvOrdersWindow extends Component {
 		if (this.activeOrders().length)
 			return (
 				<div className="content-box-cell">
-					<h5>Активные заказы:</h5>
-					<table className="default-table">
+					<div className="content-label">
+						<h5>Активные заказы:</h5>
+					</div>
+						<table className="default-table">
 						<thead>
 							<tr>
 								<td className="xxsmall">Номер:</td>
@@ -93,11 +96,11 @@ class DrvOrdersWindow extends Component {
 							{this.activeOrders().map((a) => {
 								return (
 									<tr key={a.id}>
-										<td>{a.id.slice(-6)}</td>
+										<td>{a.id}</td>
 										<td>{a.date}</td>
-										<td>{this.getStatus(a.status)}</td>
+										<td>{a.status}</td>
 										<td>
-											<span onClick={this.openCompleteModal}>Заверш.</span>
+											<span onClick={(orderId) => this.openCompleteModal(a.id)}>Заверш.</span>
 											<Link to={`/driver/det_ord:${a.id}`}>Дет.</Link>
 										</td>
 									</tr>
@@ -113,7 +116,9 @@ class DrvOrdersWindow extends Component {
 		if (this.executedOrders().length)
 			return (
 				<div className="content-box-cell">
-					<h5>Выполненные заказы:</h5>
+					<div className="content-label">
+						<h5>Выполненные заказы:</h5>
+					</div>
 					<table className="default-table">
 						<thead>
 							<tr>
@@ -126,10 +131,10 @@ class DrvOrdersWindow extends Component {
 						<tbody>
 							{this.executedOrders().map((e) => {
 								return (
-									<tr key={e.id.slice(-6)}>
+									<tr key={e.id}>
 										<td>{e.id}</td>
 										<td>{e.date}</td>
-										<td>{this.getStatus(e.status)}</td>
+										<td>{e.status}</td>
 										<td>
 											<Link to={`/driver/det_ord:${e.id}`}>Детали</Link>
 										</td>
@@ -143,84 +148,121 @@ class DrvOrdersWindow extends Component {
 	}
 
 	checkAllOrders() {
-		if (!this.executedOrders().length && !this.activeOrders().length && !this.newOrders().length)
-			return <p>You have not any orders right now.</p>;
-	}
+    if (!this.executedOrders().length && !this.activeOrders().length && !this.newOrders().length)
+      return <div style={{ marginTop: "20px" }}>You have not any orders right now.</div>;
+  }
 
-	openConfirmModal() {
-		this.setState({ confirmModalIsOpen: true });
+	openConfirmModal(orderId) {
+		this.setState({ confirmModalIsOpen: true , currentOrder: orderId });
 	}
 
 	closeConfirmModal() {
-		this.setState({ confirmModalIsOpen: false });
+		this.setState({ confirmModalIsOpen: false, currentOrder: '' });
 	}
 
-	openCompleteModal() {
-		this.setState({ completeModalIsOpen: true });
+	openCompleteModal(orderId) {
+		this.setState({ completeModalIsOpen: true, currentOrder: orderId });
 	}
 
 	closeCompleteModal() {
-		this.setState({ completeModalIsOpen: false });
+		this.setState({ completeModalIsOpen: false, currentOrder: '' });
 	}
+
+	confirmOrder() {
+		let orderId = this.state.currentOrder
+
+		let target = this.props.currentDriver.data.orders.filter( ord => {
+			return +ord.id === +orderId
+		})
+		
+		target = target[0]
+		
+		target.status = allConst.STATUS_ACTIVE
+		
+		this.props.refreshStatus(target)
+
+		this.closeConfirmModal()
+
+	}
+	
+	completeOrder() {
+		let orderId = this.state.currentOrder
+
+		let target = this.props.currentDriver.data.orders.filter( ord => {
+			return +ord.id === +orderId
+		})
+		
+		target = target[0]
+		
+		target.status = allConst.STATUS_EXECUTED
+		
+		this.props.refreshStatus(target)
+
+		this.closeConfirmModal()
+
+  }
 
 	render() {
 		return (
 			<div className="content-wrap">
-				<div className="content">
-					<div className="content-label">
-						<h1>Заказы</h1>
-					</div>
-					{this.checkAllOrders()}
-					<div className="content-box">
-						<div className="content-box-row">
-							{this.checkNewOrders()}
+				{ !this.props.currentDriver.isFetched ? (
+          
+					<img className="spinner" src={spinner} />
+					
+					) : (
+						<div className="content">
+							<div className="content-label">
+								<h1>Заказы</h1>
+							</div>
+							{this.checkAllOrders()}
+							<div className="content-box">
+								<div className="content-box-row">
+									{this.checkNewOrders()}
 
-							{this.checkActiveOrders()}
+									{this.checkActiveOrders()}
+								</div>
+
+								<div className="content-box-row">{this.checkExecutedOrders()}</div>
+							</div>
+							<Modal
+								isOpen={this.state.confirmModalIsOpen}
+								onRequestClose={this.closeConfirmModal}
+								style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
+								className="modal"
+								ariaHideApp={false}
+							>
+								<button className="close-btn" onClick={this.closeConfirmModal.bind(this)} />
+								<p>Подтвердить заказ?</p>
+								<div className="btn-wrap">
+									<button className="button small" onClick={this.confirmOrder.bind(this)}>
+										Ок
+									</button>
+									<button className="button small" onClick={this.closeConfirmModal.bind(this)}>
+										Отмена
+									</button>
+								</div>
+							</Modal>
+							<Modal
+								isOpen={this.state.completeModalIsOpen}
+								onRequestClose={this.closeCompleteModal}
+								style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
+								className="modal"
+								ariaHideApp={false}
+							>
+								<button className="close-btn" onClick={this.closeCompleteModal.bind(this)} />
+								<p>Завершить заказ?</p>
+								<div className="btn-wrap">
+									<button className="button small" onClick={this.completeOrder.bind(this)}>
+										Ок
+									</button>
+									<button className="button small" onClick={this.closeCompleteModal.bind(this)}>
+										Отмена
+									</button>
+								</div>
+							</Modal>
 						</div>
-
-						<div className="content-box-row">{this.checkExecutedOrders()}</div>
-					</div>
-					<Modal
-						isOpen={this.state.confirmModalIsOpen}
-						onRequestClose={this.closeConfirmModal}
-						style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-						className="modal"
-						ariaHideApp={false}
-					>
-						<form>
-							<button className="close-btn" onClick={this.closeConfirmModal} />
-							<p>Подтвердить заказ?</p>
-							<div className="btn-wrap">
-								<button type="submit" className="button small">
-									Ок
-								</button>
-								<button type="recet" className="button small" onClick={this.closeConfirmModal}>
-									Отмена
-								</button>
-							</div>
-						</form>
-					</Modal>
-					<Modal
-						isOpen={this.state.completeModalIsOpen}
-						onRequestClose={this.closeCompleteModal}
-						style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-						className="modal"
-						ariaHideApp={false}
-					>
-						<form>
-							<button className="close-btn" onClick={this.closeCompleteModal} />
-							<p>Завершить заказ?</p>
-							<div className="btn-wrap">
-								<button type="submit" className="button small">
-									Ок
-								</button>
-								<button type="recet" className="button small" onClick={this.closeCompleteModal}>
-									Отмена
-								</button>
-							</div>
-						</form>
-					</Modal>
-				</div>
+					)
+				}
 			</div>
 		);
 	}

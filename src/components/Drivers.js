@@ -7,14 +7,17 @@ import Picker from 'rc-calendar/lib/Picker';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
 import zhCN from 'rc-calendar/lib/locale/zh_CN';
 import enUS from 'rc-calendar/lib/locale/en_US';
-import TimePickerPanel from 'rc-time-picker/lib/Panel';
 import '../assets/styles/calendar.css';
 import '../assets/styles/picker.css';
 import spinner from '../assets/images/loading.gif';
 
-import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'moment/locale/en-gb';
+
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+
+const moment = extendMoment(Moment);
 
 const cn = window.location.search.indexOf('cn') !== -1;
 
@@ -34,10 +37,6 @@ if (cn) {
 const defaultCalendarValue = now.clone();
 defaultCalendarValue.add(-1, 'month');
 
-const timePickerElement = (
-	<TimePickerPanel defaultValue={[ moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss') ]} />
-);
-
 function newArray(start, end) {
 	const result = [];
 	for (let i = start; i < end; i++) {
@@ -54,7 +53,7 @@ function disabledDate(current) {
 	return current.isBefore(date); // can not select days before today
 }
 
-const formatStr = 'DD.MM.YYYY HH:mm';
+const formatStr = 'YYYY-MM-DD';
 function format(v) {
 	return v ? v.format(formatStr) : '';
 }
@@ -74,14 +73,16 @@ function onStandaloneSelect(value) {
 }
 
 export default class Drivers extends Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.state = {
+			filteredDrivers: [],
 			value: [],
 			hoverValue: [],
 			currentDriver: null,
 			deleteDriverModalIsOpen: false
 		};
+
 		this.openDeleteDriverModal = this.openDeleteDriverModal.bind(this);
 		this.closeDeleteDriverModal = this.closeDeleteDriverModal.bind(this);
 	}
@@ -90,10 +91,10 @@ export default class Drivers extends Component {
 		return d.user.is_authenticated ? (
 			<div style={{ color: '#68f2dd' }}>online</div>
 		) : d.user.last_login ? (
-			`last visit ${d.user.last_login}`
+			`last visit ${moment(d.user.last_login).format('YYYY-MM-DD HH:mm')}`
 		) : (
 			''
-		);
+		)
 	}
 
 	openDeleteDriverModal(driverId) {
@@ -105,32 +106,65 @@ export default class Drivers extends Component {
 	}
 
 	onChange = (value) => {
-		console.log('onChange', value);
-		this.setState({ value });
-	};
+		this.setState({ value })
+		
+		let startDay = value[0],
+				endDay = value[1],
+				range = moment.range(startDay, endDay),
+				drivers = this.props.drivers.data,
+				filteredDrivers = []
 
-	onHoverChange = (hoverValue) => {
-		this.setState({ hoverValue });
-	};
+		for (let drv = 0; drv < drivers.length; drv++) {
 
+			for (let day = 0; day < drivers[drv].work_schedule.workdays.length; day++) {
+				
+				for (let r of range.by('days')) {
+
+					let workday = moment(drivers[drv].work_schedule.workdays[day].date)
+					
+					if (moment(workday._d.toDateString()).isSame(r._d.toDateString())) {
+						filteredDrivers.push(drivers[drv])
+					}
+				}
+			}
+		}
+
+		filteredDrivers = filteredDrivers.filter( (value, index, self) => {
+			return self.indexOf(value) === index
+		})
+
+		this.setState({ filteredDrivers: filteredDrivers })
+	}	
+
+  onHoverChange = (hoverValue) => {
+    this.setState({ hoverValue });
+	}
+	
 	submitDeleteForm() {
-		console.log(this.state.currentDriver)
 		this.props.deleteDriver(this.state.currentDriver)
+
+		let updatedData = this.props.drivers.data.filter( ord => {
+      return ord.id != this.state.currentDriver
+    })
+
+		this.props.drivers.data = updatedData
+		
 		this.closeDeleteDriverModal()
 	}
 
 	render() {
 		const calendar = (
-			<RangeCalendar
-				hoverValue={this.state.hoverValue}
-				onHoverChange={this.onHoverChange}
-				showWeekNumber={false}
-				dateInputPlaceholder={[ 'start', 'end' ]}
-				defaultValue={[ now, now.clone().add(1, 'months') ]}
-				locale={cn ? zhCN : enUS}
-				timePicker={timePickerElement}
-			/>
-		);
+      <RangeCalendar
+        hoverValue={this.state.hoverValue}
+        onHoverChange={this.onHoverChange}
+        format={formatStr}
+        showWeekNumber={false}
+        dateInputPlaceholder={['start', 'end']}
+        defaultValue={[now, now.clone().add(1, 'months')]}
+        locale={cn ? zhCN : enUS}
+      />
+		)
+		
 		return (
 			<div className="content-wrap">
 				{!this.props.drivers.isFetched ? (
@@ -140,26 +174,24 @@ export default class Drivers extends Component {
 						<div className="content-label">
 							<h1>Водители</h1>
 							<Picker
-								value={this.state.value}
-								onChange={this.onChange}
-								animation="slide-up"
-								calendar={calendar}
-							>
-								{({ value }) => {
-									return (
-										<input
-											placeholder="please select"
-											disabled={this.state.disabled}
-											readOnly
-											type="text"
-											value={
-												(isValidRange(value) && `${format(value[0])} - ${format(value[1])}`) ||
-												''
-											}
-										/>
-									);
-								}}
-							</Picker>
+                  value={this.state.value}
+                  onChange={this.onChange}
+                  animation="slide-up"
+                  calendar={calendar}
+                >
+                  {
+                    ({ value }) => {
+                      return (
+                        <input
+                          placeholder="Select days"
+                          readOnly
+                          type="text"
+                          value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+                        />
+                      );
+                    }
+                  }
+                </Picker>
 							<Link to="/admin/reg_drv" className="button grey">
 								Зарегистрировать
 							</Link>
@@ -174,20 +206,41 @@ export default class Drivers extends Component {
 								</tr>
 							</thead>
 							<tbody>
-								{this.props.drivers.data.map((d) => {
-									return (
-										<tr key={d.id}>
-											<td>{`${d.user.first_name} ${d.user.last_name}`}</td>
-											<td>{`${d.car}, ${d.number_of_car}`}</td>
-											<td>{this.isOnline(d)}</td>
-											<td>
-												<Link to={`/admin/det_drv:${d.id}`}>Дет.</Link>
-												<Link to={`/admin/edit_drv:${d.id}`}>Ред.</Link>
-												<span onClick={() => this.openDeleteDriverModal(d.id)}>Удал.</span>
-											</td>
-										</tr>
-									);
-								})}
+								{ this.state.filteredDrivers.length > 0 ? (
+									
+									this.state.filteredDrivers.map((d) => {
+										
+										return (
+											<tr key={d.id}>
+												<td>{`${d.user.first_name} ${d.user.last_name}`}</td>
+												<td>{`${d.car}, ${d.number_of_car}`}</td>
+												<td>{this.isOnline(d)}</td>
+												<td>
+													<Link to={`/admin/det_drv:${d.id}`}>Дет.</Link>
+													<Link to={`/admin/edit_drv:${d.id}`}>Ред.</Link>
+													<span onClick={() => this.openDeleteDriverModal(d.id)}>Удал.</span>
+												</td>
+											</tr>
+										)
+									})
+								) : (
+									this.props.drivers.data.map((d) => {
+
+										return (
+											<tr key={d.id}>
+												<td>{`${d.user.first_name} ${d.user.last_name}`}</td>
+												<td>{`${d.car}, ${d.number_of_car}`}</td>
+												<td>{this.isOnline(d)}</td>
+												<td>
+													<Link to={`/admin/det_drv:${d.id}`}>Дет.</Link>
+													<Link to={`/admin/edit_drv:${d.id}`}>Ред.</Link>
+													<span onClick={() => this.openDeleteDriverModal(d.id)}>Удал.</span>
+												</td>
+											</tr>
+										)
+									})
+								)}
+								
 							</tbody>
 						</table>
 						<Modal

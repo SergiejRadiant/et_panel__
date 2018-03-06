@@ -275,18 +275,29 @@ ul
 		&:focus
 			color: #fff
 			text-decoration: none
-
+	
+	.nav-link-counter
+		right: 0
+		
 
 /* Styling of overlay */
 .bm-overlay 
 	background: rgba(0, 0, 0, 0.3)
 
 
-.burger
+.burger										
 	display: none
 	width: 22px
 	height: 22px
-	opacity: 0.95
+	position: relative
+	img
+		width: 100%
+		height: 100%
+		opacity: 0.95
+	.nav-link-counter
+		right: -11px
+		top: -6px
+		margin: 0
 	
 .topbar
 	color: #d3d3d3
@@ -322,7 +333,30 @@ ul
 			&:hover
 				opacity: .95
 
+.nav-link-counter
+	width: 18px
+	height: 18px
+	position: absolute
+	top: 0
+	bottom: 0
+	right: -28px
+	margin: auto 0
+	border-radius: 50%
+	color: #fff
+	font-size: 11px
+	text-shadow: 1px 1px 1px rgba(0,0,0,.3)
+	line-height: 18px
+	text-align: center
+	background-color: $light-green
+	box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1)
+	&:hover,
+	&.focus
+		color: #fff
+		text-decoration: none
+
+
 a.topbar-nav-link
+	position: relative
 	color: inherit
 	transition: color .2s ease-in-out
 	&:hover,
@@ -332,6 +366,10 @@ a.topbar-nav-link
 
 	&:hover
 		color: #fff
+
+.bm-item-list
+	a
+		position: relative
 
 .logo
 	display: flex
@@ -451,7 +489,12 @@ a.topbar-nav-link
 		td:first-child
 			font-family: RobotoMedium, sans-serif
 
-		
+.table-footer
+	>div
+		margin-top: 4px
+		h5
+			display: inline-block
+			margin-right: 5px
 
 .content-box
 	width: 100%
@@ -461,9 +504,6 @@ a.topbar-nav-link
 
 	&-row
 		display: flex
-		margin-bottom: 20px
-		&:last-child
-			margin-bottom: 0
 
 	&-cell
 		width: 100%

@@ -10,6 +10,8 @@ import retrieveDriverReducer from './retrieveDriverReducer'
 import retrieveDriversReducer from './retrieveDriversReducer'
 import retrieveOrderReducer from './retrieveOrderReducer'
 import retrieveOrdersReducer from './retrieveOrdersReducer'
+import setScheduleReducer from './setScheduleReducer'
+import refreshStatusReducer from './refreshStatusReducer'
 
 
 const rootReducer = combineReducers({
@@ -24,6 +26,8 @@ const rootReducer = combineReducers({
     retrieveDriversReducer,
     retrieveOrderReducer,
     retrieveOrdersReducer,
+    setScheduleReducer,
+    refreshStatusReducer
 })
 
 

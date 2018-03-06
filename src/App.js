@@ -25,7 +25,7 @@ export default class App extends Component {
 					<Switch>
 						<Route path="/login" component={Login} />
 						<PrivateRoute path="/admin" component={Admin} />
-						<PrivateRoute path="/:driverId" component={Driver} />
+						<PrivateRoute path="/driver" component={Driver} />
 						<Redirect to="/login" />
 					</Switch>
 				</BrowserRouter>

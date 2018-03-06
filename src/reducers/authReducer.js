@@ -14,13 +14,13 @@ export default (state = initialState, action) => {
       return {
         access: {
           token: action.payload.token,
-          isAdmin: action.payload.user.is_admin,
+          user: action.payload.user,
           exp: action.payload.exp,
           start_exp: (new Date()).getTime()
         },
         refresh: {
           token: action.payload.token,
-          isAdmin: action.payload.user.is_admin,
+          user: action.payload.user,
           exp: action.payload.exp,
           start_exp: (new Date()).getTime()
         },
@@ -31,7 +31,7 @@ export default (state = initialState, action) => {
         ...state,
         access: {
           token: action.payload.token,
-          isAdmin: action.payload.user.is_admin,
+          user: action.payload.user,
           exp: action.payload.exp,
           start_exp: (new Date()).getTime()
         }
@@ -72,7 +72,7 @@ export function isAccessTokenExpired(state) {
 }
 export function isRefreshTokenExpired(state) {
   if (state.access && state.access.token !== "") {
-    return { isAdmin: state.access.isAdmin, isAuthenticated: true }
+    return { user: state.access.user, isAdmin: state.access.user.is_admin, isAuthenticated: true }
   }
 
   return { isAuthenticated: false }

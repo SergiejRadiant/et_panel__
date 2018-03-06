@@ -10,7 +10,7 @@ import Drivers from '../components/Drivers'
 import AdmOrdersWindow from '../components/AdmOrdersWindow'
 import DriverForm from '../components/DriverForm'
 import OrderForm from '../components/OrderForm'
-import OrderDetails from '../components/OrderDetails'
+import AdmOrderDetails from '../components/AdmOrderDetails'
 import DriverDetails from '../components/DriverDetails'
 
 import logo from '../assets/images/logo.svg'
@@ -26,9 +26,12 @@ import {
 	registerOrder, 
 	deleteDriver,
 	deleteOrder, 
-	setDriver
+	setDriver,
+	editDriver
 } from '../actions/index'
 
+import { isAuthenticated } from '../reducers/index'
+import * as allConst from '../constants/index'
 
 const admLinks =  [
 	{
@@ -43,19 +46,23 @@ const admLinks =  [
 
 class Admin extends Component {
 	constructor(props) {
-		super(props)
-
+		super(props) 
+		
 		this.props.retrieveDrivers()
 		this.props.retrieveOrders()
 	}
-
 	componentDidMount() {
-		!localStorage.getItem('location') ? this.props.history.push('admin/home') : this.props.history.push(localStorage.getItem('location'))
+		!localStorage.getItem('adminLocation') ? this.props.history.push('/admin/home') : this.props.history.push(localStorage.getItem('adminLocation'))
 	}
 
 	componentWillReceiveProps() {
-		if (this.props.location.pathname !== '/' && this.props.location.pathname !== '/admin' && this.props.location.pathname !== '/admin/home')
-			localStorage.setItem('location', this.props.history.location.pathname)
+		if (this.props.history.location.pathname !== '/' && this.props.history.location.pathname !== '/admin' && this.props.history.location.pathname !== '/admin/home')
+			localStorage.setItem('adminLocation', this.props.history.location.pathname)
+	}
+
+	logout() {
+		localStorage.clear('ersist:poll')
+		window.location = '/'
 	}
 	
 	getTitle() {
@@ -78,33 +85,47 @@ class Admin extends Component {
 			return "Информация о заказе"
 		}
 	}
+	
+	setCounter() {
+		if (this.props.orders.isFetched) {
+
+			let newOrders = this.props.orders.data.filter( ord => {
+				return ord.status === allConst.STATUS_NEW
+			})
+
+			return newOrders.length > 0 ? 
+
+			<span className="nav-link-counter">{newOrders.length}</span> :
+
+			null
+
+		}
+	}
 
 	render() {
 		return (
 			<div className="page app-page">
 				<Menu customBurgerIcon={false} >
 					<Link to="/admin/home" className="logo" ><img src={logo} alt="Logo" /></Link>
-					{admLinks.map(l => {
-						return <Link to={l.href} key={l.href}>{l.name}</Link>
-					})}
+					<Link to='/admin/orders'>Orders{this.setCounter()}</Link>
+					<Link to='/admin/drivers'>Drivers</Link>
 				</Menu>
 				<div className="topbar">
 					<div className="container">
 						<div className="topbar-content">
-							<img className="burger" onClick={() => window.store.dispatch(toggleMenu(true))} src={burgerIcon} />
+							<span className="burger"><img onClick={() => window.store.dispatch(toggleMenu(true))} src={burgerIcon} />{this.setCounter()}</span>
 							<Link to="/admin/home"  className="logo" ><img src={logo} alt="Logo" /></Link>
 							<ul className="topbar-nav">
-								{admLinks.map(l => {
-									return (
-										<li key={l.href} className="topbar-nav-item">
-											<Link className="topbar-nav-link" to={l.href}>{l.name}</Link>
-										</li>
-									)
-								})}
+								<li className="topbar-nav-item">
+									<Link className="topbar-nav-link" to='/admin/orders'>Orders{this.setCounter()}</Link>
+								</li>
+								<li className="topbar-nav-item">
+									<Link className="topbar-nav-link" to='/admin/drivers'>Drivers</Link>
+								</li>
 							</ul>
 							<div className="topbar-auth">
-								Вы вошли как Username
-								<img src={exitBtn} alt="Выход" className="exit-btn" />
+								Вы вошли как Admin
+								<img src={exitBtn} alt="Выход" className="exit-btn" onClick={() => this.logout()}/>
 							</div>
 						</div>
 					</div>
@@ -121,20 +142,25 @@ class Admin extends Component {
 						<Switch>
 							<Route path="/admin/home" render={ props => <Home {...props} links={admLinks}/> } />
 
-							<Route path="/admin/drivers" render={ props => <Drivers {...props} deleteDriver={this.props.deleteDriver} drivers={this.props.drivers} /> } />
+							<Route path="/admin/drivers" render={ props => <Drivers {...props} retrieveDrivers={this.props.retrieveDrivers} deleteDriver={this.props.deleteDriver} drivers={this.props.drivers} /> } />
 					
 							<Route path="/admin/reg_drv" render={ props => <DriverForm {...props} registerDriver={this.props.registerDriver} /> } />
 					
-							<Route path="/admin/det_drv:driverId" render={props => <DriverDetails {...props} retrieveDriver={this.props.retrieveDriver} currentDriver={this.props.currentDriver} /> } />
+							<Route path="/admin/det_drv:driverId" render={props => <DriverDetails {...props} deleteOrder={this.props.deleteOrder} deleteDriver={this.props.deleteDriver} retrieveDriver={this.props.retrieveDriver} retrieveDrivers={this.props.retrieveDrivers} currentDriver={this.props.currentDriver} /> } />
 
-							<Route path="/admin/edit_drv:driverId" render={ props => <DriverForm {...props} retrieveDriver={this.props.retrieveDriver} currentDriver={this.props.currentDriver} /> } />
+							<Route path="/admin/edit_drv:driverId" render={ props => <DriverForm {...props} editDriver={this.props.editDriver} retrieveDriver={this.props.retrieveDriver} retrieveDrivers={this.props.retrieveDrivers} currentDriver={this.props.currentDriver} /> } />
 					
-							<Route path="/admin/orders" render={ props => <AdmOrdersWindow {...props} setDriver={this.props.setDriver} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
+							<Route path="/admin/orders" render={ props => <AdmOrdersWindow {...props} retrieveOrders={this.props.retrieveOrders} setDriver={this.props.setDriver} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
 					
-							<Route path="/admin/reg_ord" render={ props => <OrderForm {...props}  registerOrder={this.props.registerOrder} /> } />
+							<Route path="/admin/reg_ord" render={ props => <OrderForm {...props}  registerOrder={this.props.registerOrder}  retrieveOrders={this.props.retrieveOrders} orders={this.props.orders} /> } />
 					
-							<Route path="/admin/det_ord:orderId" render={ props => <OrderDetails {...props} retrieveOrder={this.props.retrieveOrder} currentOrder={this.props.currentOrder} /> } />
-
+							<Route path="/admin/det_ord:orderId" render={ props => <AdmOrderDetails {...props} setDriver={this.props.setDriver}  retrieveOrder={this.props.retrieveOrder} retrieveOrders={this.props.retrieveOrders} currentOrder={this.props.currentOrder} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
+							
+							{localStorage.getItem('adminLocation') ? (
+								<Redirect to={localStorage.getItem('adminLocation')}/>
+							) : (
+								<Redirect to="admin/home"/>
+							)}
 						</Switch>
 					</div>
 				</div>
@@ -151,12 +177,15 @@ class Admin extends Component {
 
 const mapStateToProps = (state) => {
 	return {
+		auth: isAuthenticated(state),
 		drivers: state.retrieveDriversReducer,
 		orders: state.retrieveOrdersReducer,
 		currentOrder: state.retrieveOrderReducer,
 		currentDriver: state.retrieveDriverReducer,
+		editDriver: state.editDriverReducer,
 	}
 }
+
 const mapDispatchToProps = (dispatch) => {
 	return {
 		retrieveDrivers: bindActionCreators(retrieveDrivers, dispatch),
@@ -168,6 +197,7 @@ const mapDispatchToProps = (dispatch) => {
 		retrieveOrder: bindActionCreators(retrieveOrder, dispatch),
 		deleteOrder: bindActionCreators(deleteOrder, dispatch),
 		setDriver: bindActionCreators(setDriver, dispatch),
+		editDriver: bindActionCreators(editDriver, dispatch),
 	}
 }
 

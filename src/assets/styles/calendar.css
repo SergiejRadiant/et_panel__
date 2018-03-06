@@ -466,17 +466,14 @@
   height: 100%;
   background: url(../images/dots.svg) center no-repeat;
   background-size: 26px auto;
-  opacity: 0.5;
-}
+  opacity: 0.5; }
+  
 .rc-calendar-selected-day .rc-calendar-date {
-  background: #d9f4fe; }
-
-.rc-calendar-selected-date .rc-calendar-date {
-  background: #11caad;
-  color: #fff; }
+  background: #68f2dd;
+  color: #666; }
 
 .rc-calendar-selected-date .rc-calendar-date:hover {
-  background: #11caad; }
+  background: #68f2dd; }
 
 .rc-calendar-today .rc-calendar-date {
   border: 1px solid #11caad; }
@@ -761,12 +758,12 @@
   cursor: not-allowed; }
 
 .rc-calendar-month-panel-selected-cell .rc-calendar-month-panel-month {
-  background: #11caad;
-  color: #fff; }
+  background-color: rgba(104, 242, 221, .5);
+  color: #666; }
 
 .rc-calendar-month-panel-selected-cell .rc-calendar-month-panel-month:hover {
-  background: #11caad;
-  color: #fff; }
+  background-color: rgba(104, 242, 221, .5);
+  color: #666; }
 
 .rc-calendar-month-header-wrap {
   position: relative;
@@ -1173,8 +1170,7 @@
   text-align: right;
   padding-right: 8px; }
 
-.rc-calendar-fullscreen .rc-calendar-selected-day .rc-calendar-date,
-.rc-calendar-fullscreen .rc-calendar-month-panel-selected-cell .rc-calendar-month-panel-month {
+.work-schedule-selected-day .rc-calendar-date {
   background-color: rgba(104, 242, 221, .5);
   color: #666; }
 

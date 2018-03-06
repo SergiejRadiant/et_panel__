@@ -15,6 +15,7 @@ export const login = (data) => ({
   }
 })
 
+
 export const refreshAccessToken = (token) => ({
   [RSAA]: {
     endpoint: 'http://89.223.28.252:8000/ru/ext_api/v0/api-token-refresh/',
@@ -51,6 +52,7 @@ export const registerDriver = (data) => ({
     ]
   }
 })
+
 
 export const retrieveDriver = (driverId) => ({
   [RSAA]: {
@@ -133,6 +135,42 @@ export const setDriver = (data) => ({
     body: JSON.stringify(data),
     types: [
       constants.SET_DRIVER_REQUEST, constants.SET_DRIVER_SUCCESS, constants.SET_DRIVER_FAILURE
+    ]
+  }
+})
+
+export const setSchedule = (data, scheduleId) => ({
+  [RSAA]: {
+    endpoint: `http://89.223.28.252:8000/ru/ext_api/v0/add-workdays/${scheduleId}`,
+    method: 'POST',
+    headers: withAuth({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(data),
+    types: [
+      constants.SET_SCHEDULE_REQUEST, constants.SET_SCHEDULE_SUCCESS, constants.SET_SCHEDULE_FAILURE
+    ]
+  }
+})
+
+export const editDriver = (data, driverId) => ({
+  [RSAA]: {
+    endpoint: `http://89.223.28.252:8000/ru/ext_api/v0/edit-driver/${driverId}`,
+    method: 'POST',
+    headers: withAuth({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(data),
+    types: [
+      constants.EDIT_DRIVER_REQUEST, constants.EDIT_DRIVER_SUCCESS, constants.EDIT_DRIVER_FAILURE
+    ]
+  }
+})
+
+export const refreshStatus = (data) => ({
+  [RSAA]: {
+    endpoint: `http://89.223.28.252:8000/ru/ext_api/v0/orders/${data.id}/`,
+    method: 'PATCH',
+    headers: withAuth({ 'Content-Type': 'application/json' }),
+    body: JSON.stringify(data),
+    types: [
+      constants.REFRESH_STATUS_REQUEST, constants.REFRESH_STATUS_SUCCESS, constants.REFRESH_STATUS_FAILURE
     ]
   }
 })

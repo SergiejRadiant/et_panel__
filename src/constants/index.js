@@ -46,9 +46,21 @@ export default keyMirror({
   SET_DRIVER_SUCCESS: null,
   SET_DRIVER_FAILURE: null,
 
+  SET_SCHEDULE_SUCCESS: null,
+  SET_SCHEDULE_REQUEST: null,
+  SET_SCHEDULE_FAILURE: null,
+  
+  EDIT_DRIVER_REQUEST: null,
+  EDIT_DRIVER_SUCCESS: null,
+  EDIT_DRIVER_FAILURE: null,
+
+  REFRESH_STATUS_REQUEST: null,
+  REFRESH_STATUS_SUCCESS: null,
+  REFRESH_STATUS_FAILURE: null,
+
 })
 
-export const STATUS_NEW = "new"
+export const STATUS_NEW = "Ожидает исполнителя"
 export const STATUS_WAIT = "wait for accepting"
-export const STATUS_ACTIVE = "realization"
+export const STATUS_ACTIVE = "in process"
 export const STATUS_EXECUTED = "completed"
