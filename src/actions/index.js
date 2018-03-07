@@ -163,14 +163,14 @@ export const editDriver = (data, driverId) => ({
   }
 })
 
-export const refreshStatus = (data) => ({
+export const editOrder = (data) => ({
   [RSAA]: {
     endpoint: `http://89.223.28.252:8000/ru/ext_api/v0/orders/${data.id}/`,
     method: 'PATCH',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
     types: [
-      constants.REFRESH_STATUS_REQUEST, constants.REFRESH_STATUS_SUCCESS, constants.REFRESH_STATUS_FAILURE
+      constants.EDIT_ORDER_REQUEST, constants.EDIT_ORDER_SUCCESS, constants.EDIT_ORDER_FAILURE
     ]
   }
 })

@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import spinner from '../assets/images/loading.gif'
 import * as allConst from '../constants/index'
 
-class DrvOrdersWindow extends Component {
+export default class DrvOrdersWindow extends Component {
 	constructor() {
 		super();
 
@@ -15,11 +15,10 @@ class DrvOrdersWindow extends Component {
 			completeModalIsOpen: false
 		};
 
-		this.openConfirmModal = this.openConfirmModal.bind(this);
-		this.closeConfirmModal = this.closeConfirmModal.bind(this);
-
-		this.openCompleteModal = this.openCompleteModal.bind(this);
-		this.closeCompleteModal = this.closeCompleteModal.bind(this);
+		this.openConfirmModal = this.openConfirmModal.bind(this)
+		this.closeConfirmModal = this.closeConfirmModal.bind(this)
+		this.openCompleteModal = this.openCompleteModal.bind(this)
+		this.closeCompleteModal = this.closeCompleteModal.bind(this)
 	}
 
 	newOrders() {
@@ -179,7 +178,7 @@ class DrvOrdersWindow extends Component {
 		
 		target.status = allConst.STATUS_ACTIVE
 		
-		this.props.refreshStatus(target)
+		this.props.editOrder(target)
 
 		this.closeConfirmModal()
 
@@ -196,9 +195,9 @@ class DrvOrdersWindow extends Component {
 		
 		target.status = allConst.STATUS_EXECUTED
 		
-		this.props.refreshStatus(target)
+		this.props.editOrder(target)
 
-		this.closeConfirmModal()
+		this.closeComoleteModal()
 
   }
 
@@ -268,15 +267,3 @@ class DrvOrdersWindow extends Component {
 	}
 }
 
-const mapStateToProps = (state) => { 
-	return {
-		orders: state.driverOrdersReducer
-	}
-}
-const mapDispatchToProps = (dispatch) => {
-	return {
-		dispatch
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(DrvOrdersWindow)

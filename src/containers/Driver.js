@@ -15,7 +15,7 @@ import burgerIcon from '../assets/images/burger-icon.svg'
 import exitBtn from '../assets/images/exit.svg'
 
 import { isAuthenticated } from '../reducers/index'
-import { retrieveDriver, retrieveOrder, setSchedule, refreshStatus } from '../actions/index'
+import { retrieveDriver, retrieveOrder, setSchedule, editOrder } from '../actions/index'
 
 import * as allConst from '../constants/index'
 
@@ -127,11 +127,11 @@ class Driver extends Component {
 						<Switch>
 							<Route path="/driver/home" render={props => <Home {...props} links={drvLinks} />} />
 
-							<Route path="/driver/orders" render={ props => <DrvOrdersWindow {...props} refreshStatus={this.props.refreshStatus} currentDriver={this.props.currentDriver} /> } />
+							<Route path="/driver/orders" render={ props => <DrvOrdersWindow {...props} editOrder={this.props.editOrder} currentDriver={this.props.currentDriver} /> } />
 
-							<Route path="/driver/det_ord:orderId" render={ props => <DrvOrderDetails {...props} refreshStatus={this.props.refreshStatus} retrieveOrder={this.props.retrieveOrder} currentDriver={this.props.currentDriver} currentOrder={this.props.currentOrder} /> } />
+							<Route path="/driver/det_ord:orderId" render={ props => <DrvOrderDetails {...props} editOrder={this.props.editOrder} retrieveOrder={this.props.retrieveOrder} currentDriver={this.props.currentDriver} currentOrder={this.props.currentOrder} /> } />
 
-							<Route path="/driver/schedule" render={ props => <Schedule {...props} setSchedule={this.props.setSchedule} currentDriver={this.props.currentDriver} /> } />
+							<Route path="/driver/schedule" render={ props => <Schedule {...props} setSchedule={this.props.setSchedule} retrieveDriver={this.props.retrieveDriver} currentDriver={this.props.currentDriver} /> } />
 
 							{localStorage.getItem('driverLocation') ? (
 								<Redirect to={localStorage.getItem('driverLocation')}/>
@@ -166,7 +166,7 @@ const mapDispatchToProps = (dispatch) => {
 		retrieveDriver: bindActionCreators(retrieveDriver, dispatch),
 		retrieveOrder: bindActionCreators(retrieveOrder, dispatch),
 		setSchedule: bindActionCreators(setSchedule, dispatch),
-		refreshStatus: bindActionCreators(refreshStatus, dispatch)
+		editOrder: bindActionCreators(editOrder, dispatch)
 	}
 }
 

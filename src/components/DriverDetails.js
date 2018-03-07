@@ -58,27 +58,23 @@ export default class DriverDetails extends Component {
     this.props.retrieveDriver(driverId)
   }
 
-  componentDidUpdate() {
-    if (this.props.currentDriver.isFetched) {
-     
-      this.fillSchedule()
-    }
-  }
-
-  fillSchedule() {
+  renderDate(m) {
     let workdays = this.props.currentDriver.data.work_schedule.workdays,
-          dates = document.querySelectorAll('.rc-calendar-full .rc-calendar-cell')
+        count = -1
+
+    for (let w of workdays) {
+      
+      if (moment(m._d.toDateString()).isSame(w.date)) {
+        count++
+      }
+          
+    }
     
-        for ( let j = 0; j < dates.length; j++ ) {
+    return ~count ?
 
-          for (let i = 0; i < workdays.length; i++) {
+    <div className="rc-calendar-date work-schedule-selected-day">{moment(m).date()}</div> :
 
-            if ( moment(dates[j].getAttribute('title')).isSame(workdays[i].date) ) {
-
-              dates[j].classList.add('work-schedule-selected-day')
-            }
-          }
-        }
+    <div className="rc-calendar-date">{moment(m).date()}</div>
   }
 
   onTypeChange(type) {
@@ -104,25 +100,10 @@ export default class DriverDetails extends Component {
 
   openScheduleModal() {
     this.setState({ scheduleModalIsOpen: true })
-
-    let workday = this.props.currentDriver.data.work_schedule.workdays.filter( w => {
-      return moment(w.date).isSame(this.state.select)
-    })
-
-    if (workday.length > 0) {
-      workday = workday[0]
-
-      this.setState({
-        start: workday.start,
-        end: workday.end
-      })
-
-    }
-   
   }
 
   closeScheduleModal() {
-    this.setState({ scheduleModalIsOpen: false, start: '', end: '' })
+    this.setState({ scheduleModalIsOpen: false })
   }
 
   openDeleteDriverModal() {
@@ -141,9 +122,65 @@ export default class DriverDetails extends Component {
     this.setState({ deleteOrderModalIsOpen: false });
   }
 
+  getDayOfSchedule() {
+
+    let workday = this.props.currentDriver.data.work_schedule.workdays.filter( w => {
+      return moment(w.date).isSame(this.state.select)
+    })
+
+    if (workday.length > 0) {
+      workday = workday[0]
+
+      return (
+
+        <form onSubmit={(e) => e.preventDefault()}>
+
+          <button className="close-btn" onClick={this.closeScheduleModal}></button>
+
+          <h4>{workday.date}</h4>
+
+          <label>Work day: <input type="text" name="workDay" value={workday.date} disabled/></label>
+          <label>Work day start:  <input type="text" value={workday.start} disabled /></label>
+          <label>Work day end:  <input type="text" value={workday.end} disabled /></label>
+          
+          <div className="btn-wrap">
+            <button type="submit" className="button small" onClick={this.closeScheduleModal.bind(this)}>Ок</button>
+          </div>
+
+        </form>
+
+      )
+
+    }
+
+    return (
+
+      <div>
+        <button className="close-btn" onClick={this.closeScheduleModal.bind(this)}></button>
+
+        <p>Выходной</p>
+
+        <div className="btn-wrap">
+          <button className="button small" onClick={this.closeScheduleModal.bind(this)}>Ок</button>
+        </div>
+        
+      </div>
+
+    )
+      
+  }
+
   submitDeleteDriverForm() {
-		this.props.deleteDriver(this.props.currentDriver.data.id)
+    this.props.deleteDriver(this.props.currentDriver.data.id)
+    
     this.closeDeleteDriverModal()
+
+    let updatedData = this.props.drivers.data.filter( ord => {
+      return ord.id != this.props.currentDriver.data.id
+    })
+
+    this.props.drivers.data = updatedData
+
     this.props.history.push('/admin/drivers')
 	}
 
@@ -194,6 +231,7 @@ export default class DriverDetails extends Component {
                       defaultValue={now}
                       onTypeChange={this.onTypeChange.bind(this)}
                       locale={cn ? zhCN : enUS}
+                      dateCellRender={(m) => this.renderDate(m)}
                     />
                   </div>
                 </div>
@@ -271,17 +309,7 @@ export default class DriverDetails extends Component {
                 className="modal"
                 ariaHideApp={false}
               >
-                <form  ref={form => this.scheduleForm = form}>
-                  <button className="close-btn" onClick={this.closeScheduleModal.bind(this)}></button>
-                  <h4>{this.state.select}</h4>
-                  <label>Work day: <input type="text" name="workDay" value={this.state.select} disabled/></label>
-                  <label>Work day start:  <input type="time" name="startTime" value={this.state.start} disabled/></label>
-                  <label>Work day end:  <input type="time" name="endTime" value={this.state.end} disabled/></label>
-                  <div className="btn-wrap">
-                    <button type="submit" className="button small">Ок</button>
-                    <button type="recet" className="button small" onClick={this.closeScheduleModal.bind(this)}>Отмена</button>
-                  </div>
-                </form>
+                {this.getDayOfSchedule()} 
               </Modal>
             </div>
           )

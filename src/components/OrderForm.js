@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
+import * as allConst from '../constants/index'
 
 var serialize = require('form-serialize')
 
@@ -31,11 +32,13 @@ export default class DriverForm extends Component {
     let newOrder = {
       data: orderData,
       date: null,
-      status: "new",
+      status: allConst.STATUS_NEW,
       driver: null
     }
 
     this.props.registerOrder(newOrder)
+    localStorage.setItem('adminLocation', '/admin/orders')
+    this.props.history.push('/')
   }
 
   openDeleteOrderModal() {
@@ -113,30 +116,11 @@ export default class DriverForm extends Component {
 
             <div className="btn-wrap">
               <button type="submit" className="button small">Принять</button>
-              <button type="reset" className="button small">Отмена</button>
+              <button type="reset" className="button small" onClick={() => this.props.history.goBack()}>Отмена</button>
             </div>
             
           </form>
-          <Modal
-            isOpen={this.state.deleteOrderModalIsOpen}
-            onRequestClose={this.closeDeleteOrderModal}
-            style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-            className="modal"
-            ariaHideApp={false}
-          >
-            <form>
-              <button type="reset" className="close-btn" onClick={() => this.closeDeleteOrderModal()} />
-              <p>Вы уверены, что хотите удалить заказ?</p>
-              <div className="btn-wrap">
-                <button type="submit" className="button small">
-                  Ок
-								</button>
-                <button type="recet" className="button small" onClick={this.closeDeleteOrderModal}>
-                  Отмена
-								</button>
-              </div>
-            </form>
-          </Modal> 
+
         </div>
         
       </div>        

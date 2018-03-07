@@ -54,9 +54,9 @@ export default keyMirror({
   EDIT_DRIVER_SUCCESS: null,
   EDIT_DRIVER_FAILURE: null,
 
-  REFRESH_STATUS_REQUEST: null,
-  REFRESH_STATUS_SUCCESS: null,
-  REFRESH_STATUS_FAILURE: null,
+  EDIT_ORDER_REQUEST: null,
+  EDIT_ORDER_SUCCESS: null,
+  EDIT_ORDER_FAILURE: null,
 
 })
 

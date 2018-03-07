@@ -7,17 +7,17 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case constants.REFRESH_STATUS_SUCCESS:
+    case constants.EDIT_ORDER_SUCCESS:
       return {
         isFetched: true,
         errors: {}
       }
-    case constants.REFRESH_STATUS_REQUEST:
+    case constants.EDIT_ORDER_REQUEST:
       return {
         isFetched: false,
         errors: {}
       }
-    case constants.REFRESH_STATUS_FAILURE:
+    case constants.EDIT_ORDER_FAILURE:
       return {
         isFetched: true,
         errors: {}

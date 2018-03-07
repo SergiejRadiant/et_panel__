@@ -428,6 +428,8 @@ a.topbar-nav-link
 		align-items: flex-end
 		padding-top: 15px
 		padding-bottom: 9px
+		span
+			position: relative
 		h1, h5
 			margin: 0 auto 0 0
 			line-height: 1
@@ -436,6 +438,28 @@ a.topbar-nav-link
 			margin-right: 10px
 		.button
 			margin-left: 20px
+
+.input-close-btn
+	position: absolute
+	top: 0
+	bottom: 0
+	right: 6px
+	width: 13px
+	height: 13px
+	border-radius: 50%
+	color: #E8EDF0
+	font-size: 5px
+	font-weight: 600
+	line-height: 13px
+	text-align: center
+	background-color: #C9C8CE
+	margin: auto 0
+	cursor: pointer
+	&:before
+		content: '\2573'
+
+.filter-wrap
+	position: relative
 
 .sections
 	width: 100%

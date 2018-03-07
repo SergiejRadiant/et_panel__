@@ -62,8 +62,8 @@ export default class DriverForm extends Component {
       }
       
       this.props.registerDriver(data)
-      this.props.retrieveDrivers()
-      this.props.history.push('/admin/drivers')   
+      localStorage.setItem('adminLocation', '/admin/drivers')
+      this.props.history.push('/')  
     
     } else if (this.props.editDriver) {
       let password = null

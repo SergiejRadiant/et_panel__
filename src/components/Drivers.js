@@ -34,9 +34,6 @@ if (cn) {
 	now.utcOffset(0);
 }
 
-const defaultCalendarValue = now.clone();
-defaultCalendarValue.add(-1, 'month');
-
 function newArray(start, end) {
 	const result = [];
 	for (let i = start; i < end; i++) {
@@ -133,8 +130,12 @@ export default class Drivers extends Component {
 			return self.indexOf(value) === index
 		})
 
-		this.setState({ filteredDrivers: filteredDrivers })
-	}	
+		this.setState({ filteredDrivers })
+	}
+	
+	clearDriverFilter() {
+		this.setState({ filteredDrivers: '', value : '' })
+	}
 
   onHoverChange = (hoverValue) => {
     this.setState({ hoverValue });
@@ -160,7 +161,7 @@ export default class Drivers extends Component {
         format={formatStr}
         showWeekNumber={false}
         dateInputPlaceholder={['start', 'end']}
-        defaultValue={[now, now.clone().add(1, 'months')]}
+        defaultValue={[now]}
         locale={cn ? zhCN : enUS}
       />
 		)
@@ -172,26 +173,32 @@ export default class Drivers extends Component {
 				) : (
 					<div className="content">
 						<div className="content-label">
+						
 							<h1>Водители</h1>
-							<Picker
-                  value={this.state.value}
-                  onChange={this.onChange}
-                  animation="slide-up"
-                  calendar={calendar}
-                >
-                  {
-                    ({ value }) => {
-                      return (
-                        <input
-                          placeholder="Select days"
-                          readOnly
-                          type="text"
-                          value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
-                        />
-                      );
-                    }
-                  }
-                </Picker>
+						
+							<div className="filter-wrap">
+								<Picker
+										value={this.state.value}
+										onChange={this.onChange}
+										animation="slide-up"
+										calendar={calendar}
+									>
+										{
+											({ value }) => {
+												return (
+													<input
+														placeholder="Select days"
+														readOnly
+														type="text"
+														ref={input => this.selectDays = input}
+														value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+													/>
+												);
+											}
+										}
+								</Picker>
+								<div className="input-close-btn" onClick={(e) => this.clearDriverFilter(e)}></div>
+							</div>
 							<Link to="/admin/reg_drv" className="button grey">
 								Зарегистрировать
 							</Link>

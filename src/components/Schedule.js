@@ -32,9 +32,6 @@ if (cn) {
   now.locale('en-gb').utcOffset(0)
 }
 
-const defaultCalendarValue = now.clone()
-defaultCalendarValue.add(-1, 'month')
-
 function newArray(start, end) {
   const result = []
   for (let i = start; i < end; i++) {
@@ -88,43 +85,25 @@ export default class Shedule extends Component {
     this.closeScheduleModal = this.closeScheduleModal.bind(this)
   }
 
-  componentDidUpdate() {
-    if (this.props.currentDriver.isFetched) {
-      this.clearSchedule()
-      this.fillSchedule()
-    }
-  }
-
-  fillSchedule() {
+  renderDate(m) {
     let workdays = this.props.currentDriver.data.work_schedule.workdays,
-        dates = document.querySelectorAll('.rc-calendar-full .rc-calendar-cell')
-    
-    for ( let j = 0; j < dates.length; j++ ) {
-     
-      let i = 0,
-          flag = false
-     
-      while ( !flag && i < workdays.length) {
-        flag = moment(dates[j].getAttribute('title')).isSame(workdays[i].date)
-        i++
-      }
+        count = -1
 
-      if (flag) {
-        dates[j].classList.add('work-schedule-selected-day')
+    for (let w of workdays) {
+      
+      if (moment(m._d.toDateString()).isSame(w.date)) {
+        count++
       }
+          
     }
-  }
-
-  clearSchedule() {
-    let dates = document.querySelectorAll('.rc-calendar-full .rc-calendar-cell')
-
-    dates = Array.from(dates)
     
-    dates.map( date => {
-      return date.classList.remove('work-schedule-selected-day')
-    })
+    return ~count ?
+
+    <div className="rc-calendar-date work-schedule-selected-day">{moment(m).date()}</div> :
+
+    <div className="rc-calendar-date">{moment(m).date()}</div>
   }
-  
+
   onTypeChange(type) {
     this.setState({
       type
@@ -143,7 +122,7 @@ export default class Shedule extends Component {
   }
 
   closeScheduleModal() {
-    this.setState({ selectedWorkday: null, scheduleModalIsOpen: false })
+    this.setState({ scheduleModalIsOpen: false })
   }
 
   openSetScheduleModal() {
@@ -155,7 +134,6 @@ export default class Shedule extends Component {
   }
 
   onChange = (value) => {
-    console.log('onChange', value);
     this.setState({ value });
   }
 
@@ -237,8 +215,6 @@ export default class Shedule extends Component {
 
     this.props.setSchedule(newWorkdays, workSchedule)
 
-    this.fillSchedule()
-
     this.closeScheduleModal()
   }
 
@@ -266,8 +242,6 @@ export default class Shedule extends Component {
 
     this.props.setSchedule(newWorkdays, workSchedule)
 
-    this.fillSchedule()
-
     this.closeSetScheduleModal()
   }
 
@@ -279,7 +253,7 @@ export default class Shedule extends Component {
         format={formatStr}
         showWeekNumber={false}
         dateInputPlaceholder={['start', 'end']}
-        defaultValue={[now, now.clone().add(1, 'months')]}
+        defaultValue={[now]}
         locale={cn ? zhCN : enUS}
       />
     )
@@ -297,6 +271,7 @@ export default class Shedule extends Component {
               type={this.state.type}
               onTypeChange={this.onTypeChange.bind(this)}
               locale={cn ? zhCN : enUS}
+              dateCellRender={(m) => this.renderDate(m)}
             />
          
             <div className="btn-wrap">

@@ -29,9 +29,6 @@ if (cn) {
   now.utcOffset(0);
 }
 
-const defaultCalendarValue = now.clone();
-defaultCalendarValue.add(-1, 'month');
-
 function newArray(start, end) {
   const result = [];
   for (let i = start; i < end; i++) {
@@ -63,6 +60,7 @@ export default class AdmOrdersWindow extends Component {
     super(props)
 
     this.state = {
+      filteredDrivers: [],
       value: [],
       hoverValue: [],
       deleteOrderModalIsOpen: false,
@@ -71,12 +69,12 @@ export default class AdmOrdersWindow extends Component {
       editOrderModalIsOpen: false,
     }
 
-    this.openDeleteOrderModal = this.openDeleteOrderModal.bind(this);
-    this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this);
-    this.openGetDriverModal = this.openGetDriverModal.bind(this);
-    this.closeGetDriverModal = this.closeGetDriverModal.bind(this);
-    this.openEditOrderModal = this.openEditOrderModal.bind(this);
-    this.closeEditOrderModal = this.closeEditOrderModal.bind(this);
+    this.openDeleteOrderModal = this.openDeleteOrderModal.bind(this)
+    this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this)
+    this.openGetDriverModal = this.openGetDriverModal.bind(this)
+    this.closeGetDriverModal = this.closeGetDriverModal.bind(this)
+    this.openEditOrderModal = this.openEditOrderModal.bind(this)
+    this.closeEditOrderModal = this.closeEditOrderModal.bind(this)
   }
 
   newOrders() {
@@ -112,7 +110,7 @@ export default class AdmOrdersWindow extends Component {
           <div className="content-label">
 						<h5>Новые заказы:</h5>
 					</div>
-          <table className="default-table">
+          <table className="default-table" style={{ boxShadow: '0 0 3px #68f2dd' }}>
             <thead>
               <tr>
                 <td className="xxsmall">Номер:</td>
@@ -261,8 +259,39 @@ export default class AdmOrdersWindow extends Component {
   }
 
   onChange = (value) => {
-    this.setState({ value });
-  }
+		this.setState({ value })
+		
+		let startDay = value[0],
+				endDay = value[1],
+				range = moment.range(startDay, endDay),
+				drivers = this.props.drivers.data,
+				filteredDrivers = []
+
+		for (let drv = 0; drv < drivers.length; drv++) {
+
+			for (let day = 0; day < drivers[drv].work_schedule.workdays.length; day++) {
+				
+				for (let r of range.by('days')) {
+
+					let workday = moment(drivers[drv].work_schedule.workdays[day].date)
+					
+					if (moment(workday._d.toDateString()).isSame(r._d.toDateString())) {
+						filteredDrivers.push(drivers[drv])
+					}
+				}
+			}
+		}
+
+		filteredDrivers = filteredDrivers.filter( (value, index, self) => {
+			return self.indexOf(value) === index
+		})
+
+		this.setState({ filteredDrivers })
+	}
+	
+	clearDriverFilter() {
+		this.setState({ filteredDrivers: '', value : '' })
+	}
 
   onHoverChange = (hoverValue) => {
     this.setState({ hoverValue });
@@ -288,7 +317,8 @@ export default class AdmOrdersWindow extends Component {
 
   editOrder() {
     let orderId = this.state.currentOrder,
-        driverId = this.setDriverSelect.value
+        driverId = this.editOrderDriverSelect.value,
+        status = this.editOrderStatusSelect.value
 
     if (driverId) {
       let target = this.props.orders.data.filter( ord => {
@@ -297,16 +327,16 @@ export default class AdmOrdersWindow extends Component {
       
       target = target[0]
       target.driver = driverId
-      target.status = allConst.STATUS_WAIT
-      this.props.setDriver(target)
+      target.status = status
+      this.props.editOrder(target)
 
-      this.closeGetDriverModal()
+      this.closeEditOrderModal()
     }
   }
 
   submitDeleteForm() {
     this.props.deleteOrder(this.state.currentOrder)
-     
+    
     let updatedData = this.props.orders.data.filter( ord => {
       return ord.id != this.state.currentOrder
     })
@@ -323,7 +353,7 @@ export default class AdmOrdersWindow extends Component {
         onHoverChange={this.onHoverChange}
         showWeekNumber={false}
         dateInputPlaceholder={['start', 'end']}
-        defaultValue={[now, now.clone().add(1, 'months')]}
+        defaultValue={[now]}
         locale={cn ? zhCN : enUS}
       />
     )
@@ -374,38 +404,55 @@ export default class AdmOrdersWindow extends Component {
             ariaHideApp={false}
           >
             <button type="reset" className="close-btn" onClick={this.closeGetDriverModal} />
-            <label>Выберите дату: <Picker
-              value={this.state.value}
-              onChange={this.onChange}
-              animation="slide-up"
-              calendar={calendar}
-            >
-              {
-                ({ value }) => {
-                  return (
-                    <input
-                      placeholder="Любое число"
-                      disabled={this.state.disabled}
-                      readOnly
-                      type="text"
-                      value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
-                    />
-                  );
-                }
-              }
-            </Picker></label>
+            <h5>Выберите дату: </h5> 
+            <div className="filter-wrap">
+              <Picker
+                  value={this.state.value}
+                  onChange={this.onChange}
+                  animation="slide-up"
+                  calendar={calendar}
+                >
+                  {
+                    ({ value }) => {
+                      return (
+                        <input
+                          placeholder="Select days"
+                          readOnly
+                          type="text"
+                          ref={input => this.selectDays = input}
+                          value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+                        />
+                      );
+                    }
+                  }
+              </Picker>
+              <div className="input-close-btn" onClick={(e) => this.clearDriverFilter(e)}></div>
+            </div>
             <label>Водители:
+
               <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
-                {this.props.drivers.data.map(d => {
-                  return (
-                    <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+
+                { this.state.filteredDrivers.length > 0 ? (
+									
+                    this.state.filteredDrivers.map((d) => {
+                      return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                    })
+
+                  ) : (
+
+                    this.props.drivers.data.map((d) => {
+                      return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                    })
+
                   )
-                })}
+                  
+                }
+
               </select>
             </label>
             <div className="btn-wrap">
               <button type="submit" className="button small" onClick={this.setDriver.bind(this)}>Принять</button>
-              <button type="reset" className="button small">Отмена</button>
+              <button type="reset" className="button small" onClick={this.closeGetDriverModal}>Отмена</button>
             </div>
           </Modal>  
           <Modal
@@ -416,37 +463,51 @@ export default class AdmOrdersWindow extends Component {
             ariaHideApp={false}
           >
             <button type="reset" className="close-btn" onClick={this.closeEditOrderModal} />
-            <label>Выберите дату: <Picker
-              value={this.state.value}
-              onChange={this.onChange}
-              animation="slide-up"
-              calendar={calendar}
-            >
-              {
-                ({ value }) => {
-                  return (
-                    <input
-                      placeholder="Любое число"
-                      disabled={this.state.disabled}
-                      readOnly
-                      type="text"
-                      value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
-                    />
-                  );
-                }
-              }
-            </Picker></label>
+            <h5>Выберите дату: </h5> 
+            <div className="filter-wrap">
+              <Picker
+                  value={this.state.value}
+                  onChange={this.onChange}
+                  animation="slide-up"
+                  calendar={calendar}
+                >
+                  {
+                    ({ value }) => {
+                      return (
+                        <input
+                          placeholder="Select days"
+                          readOnly
+                          type="text"
+                          ref={input => this.selectDays = input}
+                          value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+                        />
+                      );
+                    }
+                  }
+              </Picker>
+              <div className="input-close-btn" onClick={(e) => this.clearDriverFilter(e)}></div>
+            </div>
             <label>Водитель:
-              <select ref={ select => this.setDriverSelect = select }>
-                {this.props.drivers.data.map(d => {
-                  return (
-                    <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+              <select ref={ select => this.editOrderDriverSelect = select }>
+                { this.state.filteredDrivers.length > 0 ? (
+									
+                    this.state.filteredDrivers.map((d) => {
+                      return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                    })
+
+                  ) : (
+
+                    this.props.drivers.data.map((d) => {
+                      return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                    })
+
                   )
-                })}
+                  
+                }
               </select>
             </label>
             <label>Статус:
-              <select ref={ select => this.setDriverSelect = select }>
+              <select ref={ select => this.editOrderStatusSelect = select }>
                 <option>{allConst.STATUS_NEW}</option>
                 <option>{allConst.STATUS_WAIT}</option>
                 <option>{allConst.STATUS_ACTIVE}</option>
