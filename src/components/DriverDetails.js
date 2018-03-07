@@ -67,7 +67,7 @@ export default class DriverDetails extends Component {
       if (moment(m._d.toDateString()).isSame(w.date)) {
         count++
       }
-          
+
     }
     
     return ~count ?
