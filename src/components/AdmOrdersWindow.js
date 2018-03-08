@@ -276,7 +276,6 @@ export default class AdmOrdersWindow extends Component {
   
   onOrderFilterChange() {
   	let value = this.selectOrderId.value.toString(),
-				orders = this.props.orders.data,
 				filteredOrders = this.props.orders.data
 
 		filteredOrders = filteredOrders.filter( ord => {

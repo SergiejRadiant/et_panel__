@@ -11,6 +11,7 @@ export default class DrvOrdersWindow extends Component {
 		super();
 
 		this.state = {
+			filteredOrders: 'none',
 			confirmModalIsOpen: false,
 			completeModalIsOpen: false
 		};
@@ -167,6 +168,22 @@ export default class DrvOrdersWindow extends Component {
 		this.setState({ completeModalIsOpen: false, currentOrder: '' });
 	}
 
+	onOrderFilterChange() {
+  	let value = this.selectOrderId.value.toString(),
+				filteredOrders = this.props.currentDriver.data.orders
+
+		filteredOrders = filteredOrders.filter( ord => {
+			return ~ord.id.toString().indexOf(value)
+		})
+
+		this.setState({ filteredOrders })
+	}
+
+	clearOrderFilter() {
+    this.selectOrderId.value = ''
+		this.setState({ filteredOrders: 'none' })
+	}
+
 	confirmOrder() {
 		let orderId = this.state.currentOrder
 
@@ -211,18 +228,100 @@ export default class DrvOrdersWindow extends Component {
 					) : (
 						<div className="content">
 							<div className="content-label">
-								<h1>Заказы</h1>
-							</div>
-							{this.checkAllOrders()}
-							<div className="content-box">
-								<div className="content-box-row">
-									{this.checkNewOrders()}
 
-									{this.checkActiveOrders()}
+								<h1>Заказы</h1>
+
+								<div className="filter-wrap">
+
+									<input
+										placeholder="Select order ID"
+										type="text"
+										ref={input => this.selectOrderId = input}
+										onChange={() => this.onOrderFilterChange()}
+									/>
+
+									<div className="input-close-btn" onClick={() => this.clearOrderFilter()}></div>
 								</div>
 
-								<div className="content-box-row">{this.checkExecutedOrders()}</div>
 							</div>
+
+							{ this.state.filteredOrders !== 'none' ? (
+             
+								<div className="content-box">
+									<div className="content-box-row">
+										<div className="content-box-cell">
+
+											<div className="content-label">
+												<h5>Выполненные заказы:</h5>
+											</div>
+
+											<table className="default-table">
+
+												<thead>
+													<tr>
+														<td className="xxsmall">Номер:</td>
+														<td className="xxsmall">Дата:</td>
+														<td className="xxsmall">Статус:</td>
+														<td className="xxsmall" />
+													</tr>
+												</thead>
+
+												<tbody>
+
+													{this.state.filteredOrders.map((f) => {
+
+														return (
+
+															<tr key={f.id}>
+																<td>{f.id}</td>
+																<td>{f.date}</td>
+																<td>{f.status}</td>
+																<td>
+
+																	{ f.status === allConst.STATUS_WAIT ? (
+
+																		<span onClick={(orderId) => this.openConfirmModal(f.id)}>Принять</span>
+
+																	) : f.status === allConst.STATUS_ACTIVE ? (
+
+																		<span onClick={(orderId) => this.openCompleteModal(f.id)}>Завершить</span>
+
+																	) : (null)}
+
+																	<Link to={`/admin/det_ord:${f.id}`}>Дет.</Link>
+																</td>
+															</tr>
+														)
+
+													})}
+
+												</tbody>
+
+											</table>
+
+										</div>
+									</div>
+								</div>
+
+
+							) : (
+
+								<div className="content-box">
+
+									<div className="content-box-row">
+
+										{this.checkAllOrders()}
+										{this.checkNewOrders()}
+										{this.checkActiveOrders()}
+
+									</div>
+
+									<div className="content-box-row">{this.checkExecutedOrders()}</div>
+
+								</div>
+
+							)}
+
 							<Modal
 								isOpen={this.state.confirmModalIsOpen}
 								onRequestClose={this.closeConfirmModal}
@@ -231,7 +330,9 @@ export default class DrvOrdersWindow extends Component {
 								ariaHideApp={false}
 							>
 								<button className="close-btn" onClick={this.closeConfirmModal.bind(this)} />
+
 								<p>Подтвердить заказ?</p>
+
 								<div className="btn-wrap">
 									<button className="button small" onClick={this.confirmOrder.bind(this)}>
 										Ок
@@ -240,7 +341,9 @@ export default class DrvOrdersWindow extends Component {
 										Отмена
 									</button>
 								</div>
+
 							</Modal>
+
 							<Modal
 								isOpen={this.state.completeModalIsOpen}
 								onRequestClose={this.closeCompleteModal}
@@ -249,7 +352,9 @@ export default class DrvOrdersWindow extends Component {
 								ariaHideApp={false}
 							>
 								<button className="close-btn" onClick={this.closeCompleteModal.bind(this)} />
+
 								<p>Завершить заказ?</p>
+
 								<div className="btn-wrap">
 									<button className="button small" onClick={this.completeOrder.bind(this)}>
 										Ок
@@ -258,6 +363,7 @@ export default class DrvOrdersWindow extends Component {
 										Отмена
 									</button>
 								</div>
+
 							</Modal>
 						</div>
 					)
