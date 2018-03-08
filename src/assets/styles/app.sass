@@ -112,6 +112,8 @@ h5
 
 input, textarea, select, label
 	box-sizing: border-box
+	outline: 0!important
+	box-shadow: 0 0 0 transparent!important
 
 input[type=text],
 input[type=password],
@@ -428,16 +430,17 @@ a.topbar-nav-link
 		align-items: flex-end
 		padding-top: 15px
 		padding-bottom: 9px
-		span
-			position: relative
 		h1, h5
 			margin: 0 auto 0 0
-			line-height: 1
-		input
-			max-width: 285px
-			margin-right: 10px
+			line-height: 1			
 		.button
 			margin-left: 20px
+
+.filter-wrap
+	position: relative
+	margin-right: 10px
+	input
+		max-width: 285px
 
 .input-close-btn
 	position: absolute
@@ -457,9 +460,6 @@ a.topbar-nav-link
 	cursor: pointer
 	&:before
 		content: '\2573'
-
-.filter-wrap
-	position: relative
 
 .sections
 	width: 100%

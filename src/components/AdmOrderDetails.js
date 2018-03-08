@@ -21,24 +21,6 @@ if (cn) {
   moment.locale('en-gb');
 }
 
-const now = moment();
-if (cn) {
-  now.utcOffset(8);
-} else {
-  now.utcOffset(0);
-}
-
-const defaultCalendarValue = now.clone();
-defaultCalendarValue.add(-1, 'month');
-
-function newArray(start, end) {
-  const result = [];
-  for (let i = start; i < end; i++) {
-    result.push(i);
-  }
-  return result;
-}
-
 function disabledDate(current) {
   const date = moment();
   date.hour(0);
@@ -190,7 +172,6 @@ export default class OrderDetails extends Component {
         onHoverChange={this.onHoverChange}
         showWeekNumber={false}
         dateInputPlaceholder={['start', 'end']}
-        defaultValue={[now, now.clone().add(1, 'months')]}
         locale={cn ? zhCN : enUS}
       />
     )

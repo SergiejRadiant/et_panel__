@@ -25,29 +25,6 @@ const moment = extendMoment(Moment);
 
 const cn = window.location.search.indexOf('cn') !== -1
 
-const now = moment()
-if (cn) {
-  now.locale('zh-cn').utcOffset(8)
-} else {
-  now.locale('en-gb').utcOffset(0)
-}
-
-function newArray(start, end) {
-  const result = []
-  for (let i = start; i < end; i++) {
-    result.push(i)
-  }
-  return result;
-}
-
-function disabledDate(current) {
-  const date = moment()
-  date.hour(0)
-  date.minute(0)
-  date.second(0)
-  return current.isBefore(date)  // can not select days before today
-}
-
 const formatStr = 'YYYY-MM-DD'
 
 function format(v) {
@@ -91,7 +68,7 @@ export default class Shedule extends Component {
 
     for (let w of workdays) {
       
-      if (moment(m._d.toDateString()).isSame(w.date)) {
+      if (moment(m._d.toDateString()).isSame(w.date) && count < 0) {
         count++
       }
           
@@ -253,7 +230,6 @@ export default class Shedule extends Component {
         format={formatStr}
         showWeekNumber={false}
         dateInputPlaceholder={['start', 'end']}
-        defaultValue={[now]}
         locale={cn ? zhCN : enUS}
       />
     )
@@ -316,8 +292,8 @@ export default class Shedule extends Component {
                     }
                   }
                 </Picker></label>
-                <label>Work day start:  <input type="time" name="startTime" /></label>
-                <label>Work day end:  <input type="time" name="endTime" /></label>
+                <label>Work day start:  <input type="time" name="startTime" required/></label>
+                <label>Work day end:  <input type="time" name="endTime" required/></label>
                 <div className="btn-wrap">
                   <button type="submit" className="button small">Принять</button>
                   <button type="recet" className="button small" onClick={() => this.closeSetScheduleModal()}>Отмена</button>

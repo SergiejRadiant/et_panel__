@@ -43,6 +43,7 @@ export default class DriverForm extends Component {
 
   submitForm(e) {
     e.preventDefault()
+
     if (this.props.registerDriver) {
      
       let data = {
@@ -84,10 +85,34 @@ export default class DriverForm extends Component {
 
       let driverId = this.props.match.params.driverId.slice(1)
       this.props.editDriver(data, driverId)
+      this.props.retrieveDriver(driverId)
     }
  
     for (let i of this.form.getElementsByTagName('input')) {
       i.value = ""
+    }
+  }
+
+  onReset(e) {
+    e.preventDefault()
+
+    if (this.props.editDriver) {
+
+      let form = this.form,
+        driver = this.props.currentDriver.data
+
+      form.firstName.value = this.props.currentDriver.data.user.first_name
+      form.lastName.value = driver.user.last_name
+      form.username.value = driver.user.username
+      form.car.value = driver.car
+      form.carNumber.value = driver.number_of_car
+
+    } else  {
+
+      for (let i of this.form.getElementsByTagName('input')) {
+        i.value = ""
+      }
+
     }
   }
 
@@ -115,7 +140,7 @@ export default class DriverForm extends Component {
             
             <div className="btn-wrap">
               <button type="submit" className="button small">Принять</button>
-              <button type="reset" className="button small">Отмена</button>
+              <button className="button small" onClick={(e) => this.onReset(e)} >Отмена</button>
             </div>
           </form>
         )}

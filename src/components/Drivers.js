@@ -73,7 +73,7 @@ export default class Drivers extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			filteredDrivers: [],
+			filteredDrivers: 'none',
 			value: [],
 			hoverValue: [],
 			currentDriver: null,
@@ -134,7 +134,7 @@ export default class Drivers extends Component {
 	}
 	
 	clearDriverFilter() {
-		this.setState({ filteredDrivers: '', value : '' })
+		this.setState({ filteredDrivers: 'none', value : [] })
 	}
 
   onHoverChange = (hoverValue) => {
@@ -161,21 +161,25 @@ export default class Drivers extends Component {
         format={formatStr}
         showWeekNumber={false}
         dateInputPlaceholder={['start', 'end']}
-        defaultValue={[now]}
         locale={cn ? zhCN : enUS}
       />
 		)
 		
 		return (
+
 			<div className="content-wrap">
+
 				{!this.props.drivers.isFetched ? (
+
 					<img className="spinner" src={spinner} />
 				) : (
+
 					<div className="content">
+
 						<div className="content-label">
-						
+
 							<h1>Водители</h1>
-						
+
 							<div className="filter-wrap">
 								<Picker
 										value={this.state.value}
@@ -197,13 +201,16 @@ export default class Drivers extends Component {
 											}
 										}
 								</Picker>
+
 								<div className="input-close-btn" onClick={(e) => this.clearDriverFilter(e)}></div>
+
 							</div>
-							<Link to="/admin/reg_drv" className="button grey">
-								Зарегистрировать
-							</Link>
+
+							<Link to="/admin/reg_drv" className="button grey">Зарегистрировать</Link>
 						</div>
+
 						<table className="default-table">
+
 							<thead>
 								<tr>
 									<td className="normal">Имя</td>
@@ -212,8 +219,9 @@ export default class Drivers extends Component {
 									<td className="small" />
 								</tr>
 							</thead>
+							
 							<tbody>
-								{ this.state.filteredDrivers.length > 0 ? (
+								{ this.state.filteredDrivers !== 'none' ? (
 									
 									this.state.filteredDrivers.map((d) => {
 										
@@ -250,6 +258,7 @@ export default class Drivers extends Component {
 								
 							</tbody>
 						</table>
+
 						<Modal
 							isOpen={this.state.deleteDriverModalIsOpen}
 							onRequestClose={this.closeDeleteDriverModal}

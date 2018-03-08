@@ -10,7 +10,6 @@ import Select from 'rc-select';
 import zhCN from 'rc-calendar/lib/locale/zh_CN';
 import enUS from 'rc-calendar/lib/locale/en_US';
 
-import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'moment/locale/en-gb';
 
@@ -18,6 +17,11 @@ import Modal from 'react-modal'
 
 import spinner from '../assets/images/loading.gif'
 import * as allConst from '../constants/index'
+
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+
+const moment = extendMoment(Moment);
 
 const format = 'YYYY-MM-DD';
 const cn = window.location.search.indexOf('cn') !== -1;
@@ -28,10 +32,6 @@ if (cn) {
 } else {
   now.locale('en-gb').utcOffset(0);
 }
-
-const defaultCalendarValue = now.clone();
-defaultCalendarValue.add(-1, 'month');
-
 
 export default class DriverDetails extends Component {
   constructor(props) {
@@ -64,17 +64,21 @@ export default class DriverDetails extends Component {
 
     for (let w of workdays) {
       
-      if (moment(m._d.toDateString()).isSame(w.date)) {
+      if (moment(m._d.toDateString()).isSame(w.date) && count < 0) {
         count++
       }
 
     }
-    
-    return ~count ?
 
-    <div className="rc-calendar-date work-schedule-selected-day">{moment(m).date()}</div> :
+    console.log(m._d.toDateString())
+    console.log(count)
+    
+    return ~count ? (
+
+    <div className="rc-calendar-date work-schedule-selected-day">{moment(m).date()}</div>) :
 
     <div className="rc-calendar-date">{moment(m).date()}</div>
+
   }
 
   onTypeChange(type) {
@@ -228,7 +232,6 @@ export default class DriverDetails extends Component {
                       Select={Select}
                       fullscreen={false}
                       onSelect={this.onSelect.bind(this)}
-                      defaultValue={now}
                       onTypeChange={this.onTypeChange.bind(this)}
                       locale={cn ? zhCN : enUS}
                       dateCellRender={(m) => this.renderDate(m)}
