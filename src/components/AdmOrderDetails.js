@@ -147,20 +147,24 @@ export default class OrderDetails extends Component {
   }
 
   editOrder() {
-    let orderId = this.props.currentOrder.data.id,
-        driverId = this.editOrderDriverSelect.value,
+    let driverId = this.editOrderDriverSelect.value,
         status = this.editOrderStatusSelect.value
 
     if (driverId) {
-      let target = this.props.orders.data.filter( ord => {
-        return +ord.id === +orderId
-      })
-      
-      target = target[0]
+      let target = this.props.currentOrder.data
+
       target.driver = driverId
       target.status = status
       this.props.editOrder(target)
 
+      let targetInList = this.props.orders.data.filter( ord => {
+        return +ord.id === +this.props.currentOrder.data.id
+      })
+      
+      targetInList = targetInList[0]
+      targetInList.driver = driverId
+      targetInList.status = status
+      
       this.closeEditOrderModal()
     }
   }
