@@ -27,30 +27,8 @@ if (cn) {
 	moment.locale('en-gb');
 }
 
-const now = moment();
-if (cn) {
-	now.utcOffset(8);
-} else {
-	now.utcOffset(0);
-}
-
-function newArray(start, end) {
-	const result = [];
-	for (let i = start; i < end; i++) {
-		result.push(i);
-	}
-	return result;
-}
-
-function disabledDate(current) {
-	const date = moment();
-	date.hour(0);
-	date.minute(0);
-	date.second(0);
-	return current.isBefore(date); // can not select days before today
-}
-
 const formatStr = 'YYYY-MM-DD';
+
 function format(v) {
 	return v ? v.format(formatStr) : '';
 }

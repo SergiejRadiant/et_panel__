@@ -472,9 +472,6 @@
   background: #68f2dd!important;
   color: #666; }
 
-.rc-calendar-selected-date .rc-calendar-date:hover {
-  background: #68f2dd; }
-
 .rc-calendar-today .rc-calendar-date {
   border: 1px solid #11caad; }
 
@@ -1175,5 +1172,19 @@
   border-top-color: #11caad;
   color: #11caad; }
 
+.work-schedule-disabled-day {
+  color: #bcbcbc !important;
+  background: #f3f3f3;
+}
+
+.work-schedule-disabled-day:hover {
+  background: #f3f3f3;
+}
+
+.work-schedule-disabled-day:hover:before {
+  opacity: 0 !important;
+}
+
 .work-schedule-selected-day {
-  background-color: rgba(104, 242, 221, .5); }
+  background-color: rgba(104, 242, 221, .5) !important;
+}

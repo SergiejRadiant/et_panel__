@@ -25,6 +25,21 @@ const moment = extendMoment(Moment);
 
 const cn = window.location.search.indexOf('cn') !== -1
 
+const now = moment();
+if (cn) {
+  now.utcOffset(8);
+} else {
+  now.utcOffset(0);
+}
+
+function disabledDate(current) {
+  const date = moment();
+  date.hour(0);
+  date.minute(0);
+  date.second(0);
+  return current.isBefore(date);  // can not select days before today
+}
+
 const formatStr = 'YYYY-MM-DD'
 
 function format(v) {
@@ -36,12 +51,10 @@ function isValidRange(v) {
 }
 
 function onStandaloneChange(value) {
-  console.log('onChange');
   console.log(value[0] && format(value[0]), value[1] && format(value[1]));
 }
 
 function onStandaloneSelect(value) {
-  console.log('onSelect');
   console.log(format(value[0]), format(value[1]));
 }
 
@@ -60,6 +73,8 @@ export default class Shedule extends Component {
 
     this.openScheduleModal = this.openScheduleModal.bind(this)
     this.closeScheduleModal = this.closeScheduleModal.bind(this)
+    this.openSetScheduleModal = this.openSetScheduleModal.bind(this)
+    this.closeSetScheduleModal = this.closeSetScheduleModal.bind(this)
   }
 
   renderDate(m) {
@@ -74,7 +89,15 @@ export default class Shedule extends Component {
           
     }
     
-    return ~count ?
+    return ~count && moment(m).isBefore(now) ?
+
+    <div className="rc-calendar-date work-schedule-disabled-day work-schedule-selected-day">{moment(m).date()}</div> :
+
+    moment(m).isBefore(now) ?
+
+    <div className="rc-calendar-date work-schedule-disabled-day">{moment(m).date()}</div> :
+   
+    ~count ?
 
     <div className="rc-calendar-date work-schedule-selected-day">{moment(m).date()}</div> :
 
@@ -88,10 +111,20 @@ export default class Shedule extends Component {
   }
 
   onSelect(value) {
-    this.setState({ select: value.format(formatStr) })
-    if (this.state.type === 'date') {
-      this.openScheduleModal()
-    }
+    let workday = this.props.currentDriver.data.work_schedule.workdays.filter( w => {
+      return moment(w.date).isSame(value)
+    })
+
+    if  
+      (
+        this.state.type === 'date' && workday.length > 0 || 
+        this.state.type === 'date' && !moment(value).isBefore(now)
+      ) 
+
+      {
+        this.openScheduleModal()
+        this.setState({ select: value.format(formatStr) })
+      }
   }
 
   openScheduleModal() {
@@ -107,7 +140,7 @@ export default class Shedule extends Component {
   }
 
   closeSetScheduleModal() {
-    this.setState({ setScheduleModalIsOpen: false })
+    this.setState({ setScheduleModalIsOpen: false, value: []})
   }
 
   onChange = (value) => {
@@ -230,6 +263,7 @@ export default class Shedule extends Component {
         format={formatStr}
         showWeekNumber={false}
         dateInputPlaceholder={['start', 'end']}
+        disabledDate={disabledDate}
         locale={cn ? zhCN : enUS}
       />
     )
@@ -272,7 +306,7 @@ export default class Shedule extends Component {
               ariaHideApp={false}
             >
               <form ref={form => this.setSceduleForm = form}  onSubmit={(e) => this.submitSetSchedule(e)}>
-                <button type="reset" className="close-btn" onClick={() => this.closeSetScheduleModal()} />
+                <button type="reset" className="close-btn" onClick={this.closeSetScheduleModal} />
                 <label>Work days: <Picker
                   value={this.state.value}
                   onChange={this.onChange}
@@ -296,7 +330,7 @@ export default class Shedule extends Component {
                 <label>Work day end:  <input type="time" name="endTime" required/></label>
                 <div className="btn-wrap">
                   <button type="submit" className="button small">Принять</button>
-                  <button type="recet" className="button small" onClick={() => this.closeSetScheduleModal()}>Отмена</button>
+                  <button type="recet" className="button small" onClick={this.closeSetScheduleModal}>Отмена</button>
                 </div>
               </form>
             </Modal>   

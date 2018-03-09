@@ -21,14 +21,6 @@ if (cn) {
   moment.locale('en-gb');
 }
 
-function disabledDate(current) {
-  const date = moment();
-  date.hour(0);
-  date.minute(0);
-  date.second(0);
-  return current.isBefore(date);  // can not select days before today
-}
-
 const formatStr = 'YYYY-MM-DD';
 
 function format(v) {
@@ -43,6 +35,7 @@ export default class OrderDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      filteredDrivers: [],
       value: [],
       hoverValue: [],
       getDriverModalIsOpen: false,
@@ -66,7 +59,7 @@ export default class OrderDetails extends Component {
   }
 
   closeGetDriverModal() {
-    this.setState({ getDriverModalIsOpen: false });
+    this.setState({ getDriverModalIsOpen: false, filteredDrivers: [], value: '' });
   }
 
   openDeleteOrderModal() {
@@ -82,7 +75,7 @@ export default class OrderDetails extends Component {
   }
 
   closeEditOrderModal() {
-    this.setState({ editOrderModalIsOpen: false });
+    this.setState({ editOrderModalIsOpen: false, filteredDrivers: [], value: '' });
   }
 
   submitDeleteForm() {
@@ -99,8 +92,34 @@ export default class OrderDetails extends Component {
   }
 
   onChange = (value) => {
-    console.log('onChange', value);
-    this.setState({ value });
+		this.setState({ value })
+		
+		let startDay = value[0],
+				endDay = value[1],
+				range = moment.range(startDay, endDay),
+				drivers = this.props.drivers.data,
+				filteredDrivers = []
+
+		for (let drv = 0; drv < drivers.length; drv++) {
+
+			for (let day = 0; day < drivers[drv].work_schedule.workdays.length; day++) {
+				
+				for (let r of range.by('days')) {
+
+					let workday = moment(drivers[drv].work_schedule.workdays[day].date)
+					
+					if (moment(workday._d.toDateString()).isSame(r._d.toDateString())) {
+						filteredDrivers.push(drivers[drv])
+					}
+				}
+			}
+		}
+
+		filteredDrivers = filteredDrivers.filter( (value, index, self) => {
+			return self.indexOf(value) === index
+		})
+
+		this.setState({ filteredDrivers })
   }
 
   onHoverChange = (hoverValue) => {
@@ -169,6 +188,10 @@ export default class OrderDetails extends Component {
     }
   }
 
+  clearDriverFilter() {
+		this.setState({ filteredDrivers: [], value : '' })
+  }
+  
   render() {
     const calendar = (
       <RangeCalendar
@@ -226,7 +249,7 @@ export default class OrderDetails extends Component {
             className="modal"
             ariaHideApp={false}
           >
-            <button type="reset" className="close-btn" onClick={this.closeGetDriverModal} />
+            <button  className="close-btn" onClick={this.closeGetDriverModal} />
             <label>Выберите дату: <Picker
               value={this.state.value}
               onChange={this.onChange}
@@ -249,16 +272,18 @@ export default class OrderDetails extends Component {
             </Picker></label>
             <label>Водители:
             <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
-              {this.props.drivers.data.map(d => {
+              
+              {this.state.filteredDrivers.map(f => {
                 return (
-                  <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                  <option value={f.id}>{`${f.user.first_name} ${f.user.last_name}`}</option>
                 )
               })}
+
             </select>
             </label>
             <div className="btn-wrap">
-              <button type="submit" className="button small" onClick={this.setDriver.bind(this)}>Принять</button>
-              <button type="reset" className="button small">Отмена</button>
+              <button className="button small" onClick={this.setDriver.bind(this)}>Принять</button>
+              <button className="button small" onClick={this.closeGetDriverModal}>Отмена</button>
             </div>
           </Modal>
 
@@ -289,7 +314,8 @@ export default class OrderDetails extends Component {
             className="modal"
             ariaHideApp={false}
           >
-            <button type="reset" className="close-btn" onClick={this.closeEditOrderModal} />
+            <button className="close-btn" onClick={this.closeEditOrderModal} />
+
             <label>Выберите дату: <Picker
               value={this.state.value}
               onChange={this.onChange}
@@ -310,15 +336,35 @@ export default class OrderDetails extends Component {
                 }
               }
             </Picker></label>
+
             <label>Водитель:
-              <select ref={ select => this.editOrderDriverSelect = select }>
-                {this.props.drivers.data.map(d => {
-                  return (
-                    <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                  )
-                })}
+              <select ref={ select => this.editOrderDriverSelect = select } size="6" style={{ height: "125px" }}>
+                
+                { this.state.filteredDrivers.length !== 0 ? ( 
+                  
+                  this.state.filteredDrivers.map(f => {
+
+                    return (
+                      <option value={f.id}>{`${f.user.first_name} ${f.user.last_name}`}</option>
+                    )
+
+                  })
+                  
+                ) : (
+
+                  this.props.drivers.data.map(d => {
+
+                    return (
+                      <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                    )
+
+                  })
+                    
+                )}
+
               </select>
             </label>
+
             <label>Статус:
               <select ref={ select => this.editOrderStatusSelect = select }>
                 <option>{allConst.STATUS_NEW}</option>
@@ -327,13 +373,15 @@ export default class OrderDetails extends Component {
                 <option>{allConst.STATUS_EXECUTED}</option>
               </select>
             </label>
+
             <div className="btn-wrap">
-              <button type="submit" className="button small" onClick={this.editOrder.bind(this)}>Принять</button>
-              <button type="reset" className="button small">Отмена</button>
+              <button className="button small" onClick={this.editOrder.bind(this)}>Принять</button>
+              <button className="button small" onClick={this.closeEditOrderModal}>Отмена</button>
             </div>
           </Modal>   
 
         </div>
+
         )}
         
       </div>

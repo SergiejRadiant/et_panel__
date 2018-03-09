@@ -22,14 +22,6 @@ if (cn) {
   moment.locale('en-gb');
 }
 
-function disabledDate(current) {
-  const date = moment();
-  date.hour(0);
-  date.minute(0);
-  date.second(0);
-  return current.isBefore(date);  // can not select days before today
-}
-
 const formatStr = 'YYYY-MM-DD';
 
 function format(v) {
@@ -45,7 +37,7 @@ export default class AdmOrdersWindow extends Component {
     super(props)
 
     this.state = {
-      filteredDrivers: 'none',
+      filteredDrivers: [],
       filteredOrders: 'none',
       value: [],
       hoverValue: [],
@@ -228,19 +220,19 @@ export default class AdmOrdersWindow extends Component {
   }
 
   openGetDriverModal(orderId) {
-    this.setState({ getDriverModalIsOpen: true , currentOrder: orderId});
+    this.setState({ getDriverModalIsOpen: true , currentOrder: orderId });
   }
 
   closeGetDriverModal() {
-    this.setState({ getDriverModalIsOpen: false, currentOrder: '' });
+    this.setState({ getDriverModalIsOpen: false, currentOrder: '',  filteredDrivers: [], value: '' });
   }
 
   openEditOrderModal(orderId) {
-    this.setState({ editOrderModalIsOpen: true , currentOrder: orderId});
+    this.setState({ editOrderModalIsOpen: true , currentOrder: orderId });
   }
 
   closeEditOrderModal() {
-    this.setState({ editOrderModalIsOpen: false, currentOrder: ''});
+    this.setState({ editOrderModalIsOpen: false, currentOrder: '',  filteredDrivers: [], value: '' });
   }
 
   onChange = (value) => {
@@ -286,7 +278,7 @@ export default class AdmOrdersWindow extends Component {
 	}
 	
 	clearDriverFilter() {
-		this.setState({ filteredDrivers: 'none', value : '' })
+		this.setState({ filteredDrivers: [], value : '' })
   }
   
   clearOrderFilter() {
@@ -523,21 +515,9 @@ export default class AdmOrdersWindow extends Component {
               <label>Водители:
                 <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
 
-                  { this.state.filteredDrivers !== 'none' ? (
-                    
-                      this.state.filteredDrivers.map((d) => {
-                        return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                      })
-
-                    ) : (
-
-                      this.props.drivers.data.map((d) => {
-                        return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                      })
-
-                    )
-                    
-                  }
+                  {this.state.filteredDrivers.map((d) => {
+                    return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                  })}
 
                 </select>
               </label>
@@ -549,74 +529,79 @@ export default class AdmOrdersWindow extends Component {
 
             </Modal>  
 
-            <Modal
-              isOpen={this.state.editOrderModalIsOpen}
-              onRequestClose={this.closeEditOrderModal}
-              style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-              className="modal"
-              ariaHideApp={false}
+            {/* editDriver */}
+          <Modal
+            isOpen={this.state.editOrderModalIsOpen}
+            onRequestClose={this.closeEditOrderModal}
+            style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
+            className="modal"
+            ariaHideApp={false}
+          >
+            <button className="close-btn" onClick={this.closeEditOrderModal} />
+
+            <label>Выберите дату: <Picker
+              value={this.state.value}
+              onChange={this.onChange}
+              animation="slide-up"
+              calendar={calendar}
             >
-              <button type="reset" className="close-btn" onClick={this.closeEditOrderModal} />
-              <h5>Выберите дату: </h5> 
-              <div className="filter-wrap">
-                <Picker
-                    value={this.state.value}
-                    onChange={this.onChange}
-                    animation="slide-up"
-                    calendar={calendar}
-                  >
-                    {
-                      ({ value }) => {
-                        return (
-                          <input
-                            placeholder="Select days"
-                            readOnly
-                            type="text"
-                            ref={input => this.selectDays = input}
-                            value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
-                          />
-                        );
-                      }
-                    }
-                </Picker>
-                <div className="input-close-btn" onClick={() => this.clearDriverFilter()}></div>
-              </div>
+              {
+                ({ value }) => {
+                  return (
+                    <input
+                      placeholder="Любое число"
+                      disabled={this.state.disabled}
+                      readOnly
+                      type="text"
+                      value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+                    />
+                  );
+                }
+              }
+            </Picker></label>
 
-              <label>Водитель:
-                <select ref={ select => this.editOrderDriverSelect = select }>
-                  { this.state.filteredDrivers !== 'none' ? (
-                    
-                      this.state.filteredDrivers.map((d) => {
-                        return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                      })
+            <label>Водитель:
+              <select ref={ select => this.editOrderDriverSelect = select } size="6" style={{ height: "125px" }}>
+                
+                { this.state.filteredDrivers.length !== 0 ? ( 
+                  
+                  this.state.filteredDrivers.map(f => {
 
-                    ) : (
-
-                      this.props.drivers.data.map((d) => {
-                        return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                      })
-
+                    return (
+                      <option value={f.id}>{`${f.user.first_name} ${f.user.last_name}`}</option>
                     )
+
+                  })
+                  
+                ) : (
+
+                  this.props.drivers.data.map(d => {
+
+                    return (
+                      <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                    )
+
+                  })
                     
-                  }
-                </select>
-              </label>
+                )}
 
-              <label>Статус:
-                <select ref={ select => this.editOrderStatusSelect = select }>
-                  <option>{allConst.STATUS_NEW}</option>
-                  <option>{allConst.STATUS_WAIT}</option>
-                  <option>{allConst.STATUS_ACTIVE}</option>
-                  <option>{allConst.STATUS_EXECUTED}</option>
-                </select>
-              </label>
+              </select>
+            </label>
 
-              <div className="btn-wrap">
-                <button type="submit" className="button small" onClick={this.editOrder.bind(this)}>Принять</button>
-                <button type="reset" className="button small">Отмена</button>
-              </div>
+            <label>Статус:
+              <select ref={ select => this.editOrderStatusSelect = select }>
+                <option>{allConst.STATUS_NEW}</option>
+                <option>{allConst.STATUS_WAIT}</option>
+                <option>{allConst.STATUS_ACTIVE}</option>
+                <option>{allConst.STATUS_EXECUTED}</option>
+              </select>
+            </label>
 
-            </Modal> 
+            <div className="btn-wrap">
+              <button className="button small" onClick={this.editOrder.bind(this)}>Принять</button>
+              <button className="button small" onClick={this.closeEditOrderModal}>Отмена</button>
+            </div>
+          </Modal>    
 
           </div>
 
