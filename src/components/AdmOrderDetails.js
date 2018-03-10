@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
 import spinner from '../assets/images/loading.gif'
 import Picker from 'rc-calendar/lib/Picker'
@@ -39,19 +40,15 @@ export default class OrderDetails extends Component {
       value: [],
       hoverValue: [],
       getDriverModalIsOpen: false,
-      deleteOrderModalIsOpen: false,
-      editOrderModalIsOpen: false,
+      deleteOrderModalIsOpen: false
     }
     this.openGetDriverModal = this.openGetDriverModal.bind(this)
     this.closeGetDriverModal = this.closeGetDriverModal.bind(this)
     this.openDeleteOrderModal = this.openDeleteOrderModal.bind(this)
     this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this)
-    this.openEditOrderModal = this.openEditOrderModal.bind(this)
-    this.closeEditOrderModal = this.closeEditOrderModal.bind(this)
-    
-    let _orderId = this.props.match.params.orderId.slice(1)
 
-    this.props.retrieveOrder(_orderId)
+    let orderId = this.props.match.params.orderId.slice(1)
+    this.props.retrieveOrder(orderId)
   }
 
   openGetDriverModal() {
@@ -68,14 +65,6 @@ export default class OrderDetails extends Component {
 
   closeDeleteOrderModal() {
     this.setState({ deleteOrderModalIsOpen: false });
-  }
-
-  openEditOrderModal() {
-    this.setState({ editOrderModalIsOpen: true });
-  }
-
-  closeEditOrderModal() {
-    this.setState({ editOrderModalIsOpen: false, filteredDrivers: [], value: '' });
   }
 
   submitDeleteForm() {
@@ -165,34 +154,13 @@ export default class OrderDetails extends Component {
     }
   }
 
-  editOrder() {
-    let driverId = this.editOrderDriverSelect.value,
-        status = this.editOrderStatusSelect.value
-
-    if (driverId) {
-      let target = this.props.currentOrder.data
-
-      target.driver = driverId
-      target.status = status
-      this.props.editOrder(target)
-
-      let targetInList = this.props.orders.data.filter( ord => {
-        return +ord.id === +this.props.currentOrder.data.id
-      })
-      
-      targetInList = targetInList[0]
-      targetInList.driver = driverId
-      targetInList.status = status
-      
-      this.closeEditOrderModal()
-    }
-  }
-
   clearDriverFilter() {
 		this.setState({ filteredDrivers: [], value : '' })
   }
   
   render() {
+    let orderId = this.props.match.params.orderId.slice(1)
+
     const calendar = (
       <RangeCalendar
         hoverValue={this.state.hoverValue}
@@ -237,8 +205,8 @@ export default class OrderDetails extends Component {
             <div><h5>Status:</h5> {this.props.currentOrder.data.status}</div>
           </div>
 
-          <div className="btn-wrap">
-            <button className="button small" onClick={() => this.openEditOrderModal()}>Edit</button>
+          <div className="btn-wrap left">
+            <Link to={`/admin/edit_ord:${orderId}`} className="button small">Edit</Link>
             <button className="button small grey" onClick={() => this.openDeleteOrderModal()}>Delete</button>
           </div>
 
@@ -305,80 +273,6 @@ export default class OrderDetails extends Component {
               </button>
             </div>
           </Modal>
-          
-          {/* editDriver */}
-          <Modal
-            isOpen={this.state.editOrderModalIsOpen}
-            onRequestClose={this.closeEditOrderModal}
-            style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-            className="modal"
-            ariaHideApp={false}
-          >
-            <button className="close-btn" onClick={this.closeEditOrderModal} />
-
-            <label>Выберите дату: <Picker
-              value={this.state.value}
-              onChange={this.onChange}
-              animation="slide-up"
-              calendar={calendar}
-            >
-              {
-                ({ value }) => {
-                  return (
-                    <input
-                      placeholder="Любое число"
-                      disabled={this.state.disabled}
-                      readOnly
-                      type="text"
-                      value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
-                    />
-                  );
-                }
-              }
-            </Picker></label>
-
-            <label>Водитель:
-              <select ref={ select => this.editOrderDriverSelect = select } size="6" style={{ height: "125px" }}>
-                
-                { this.state.filteredDrivers.length !== 0 ? ( 
-                  
-                  this.state.filteredDrivers.map(f => {
-
-                    return (
-                      <option value={f.id}>{`${f.user.first_name} ${f.user.last_name}`}</option>
-                    )
-
-                  })
-                  
-                ) : (
-
-                  this.props.drivers.data.map(d => {
-
-                    return (
-                      <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                    )
-
-                  })
-                    
-                )}
-
-              </select>
-            </label>
-
-            <label>Статус:
-              <select ref={ select => this.editOrderStatusSelect = select }>
-                <option>{allConst.STATUS_NEW}</option>
-                <option>{allConst.STATUS_WAIT}</option>
-                <option>{allConst.STATUS_ACTIVE}</option>
-                <option>{allConst.STATUS_EXECUTED}</option>
-              </select>
-            </label>
-
-            <div className="btn-wrap">
-              <button className="button small" onClick={this.editOrder.bind(this)}>Принять</button>
-              <button className="button small" onClick={this.closeEditOrderModal}>Отмена</button>
-            </div>
-          </Modal>   
 
         </div>
 

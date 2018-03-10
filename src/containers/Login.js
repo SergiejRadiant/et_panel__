@@ -32,7 +32,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 	onSubmit: (data) => {
-		dispatch(login(data))
+		dispatch(login(data)).then(response => console.log(response))
 	}
 })
 

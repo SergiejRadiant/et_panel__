@@ -12,6 +12,7 @@ import DriverForm from '../components/DriverForm'
 import OrderForm from '../components/OrderForm'
 import AdmOrderDetails from '../components/AdmOrderDetails'
 import DriverDetails from '../components/DriverDetails'
+import EditOrderForm from '../components/EditOrderForm'
 
 import logo from '../assets/images/logo.svg'
 import burgerIcon from '../assets/images/burger-icon.svg'
@@ -144,7 +145,7 @@ class Admin extends Component {
 						<Switch>
 							<Route path="/admin/home" render={ props => <Home {...props} links={admLinks}/> } />
 
-							<Route path="/admin/drivers" render={ props => <Drivers {...props} deleteDriver={this.props.deleteDriver} drivers={this.props.drivers} /> } />
+							<Route path="/admin/drivers" render={ props => <Drivers {...props}  deleteDriver={this.props.deleteDriver} drivers={this.props.drivers} /> } />
 					
 							<Route path="/admin/reg_drv" render={ props => <DriverForm {...props} registerDriver={this.props.registerDriver} /> } />
 					
@@ -157,12 +158,15 @@ class Admin extends Component {
 							<Route path="/admin/reg_ord" render={ props => <OrderForm {...props}  registerOrder={this.props.registerOrder} /> } />
 					
 							<Route path="/admin/det_ord:orderId" render={ props => <AdmOrderDetails {...props} setDriver={this.props.setDriver} editOrder={this.props.editOrder} retrieveOrder={this.props.retrieveOrder} retrieveOrders={this.props.retrieveOrders} currentOrder={this.props.currentOrder} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
+
+							<Route path="/admin/edit_ord:orderId" render={ props => <EditOrderForm {...props} editOrder={this.props.editOrder} retrieveOrder={this.props.retrieveOrder} retrieveOrders={this.props.retrieveOrders} currentOrder={this.props.currentOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
 							
 							{localStorage.getItem('adminLocation') ? (
 								<Redirect to={localStorage.getItem('adminLocation')}/>
 							) : (
 								<Redirect to="admin/home"/>
 							)}
+							
 						</Switch>
 					</div>
 				</div>
@@ -185,7 +189,7 @@ const mapStateToProps = (state) => {
 		currentOrder: state.retrieveOrderReducer,
 		currentDriver: state.retrieveDriverReducer,
 		editDriver: state.editDriverReducer,
-		editOrder: state.editOrderReducer
+		editOrder: state.editOrderReducer,
 	}
 }
 

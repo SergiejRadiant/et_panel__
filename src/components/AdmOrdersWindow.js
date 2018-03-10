@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Modal from 'react-modal'
 import Picker from 'rc-calendar/lib/Picker';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
@@ -44,15 +44,12 @@ export default class AdmOrdersWindow extends Component {
       deleteOrderModalIsOpen: false,
       currentOrder: null,
       getDriverModalIsOpen: false,
-      editOrderModalIsOpen: false,
     }
 
     this.openDeleteOrderModal = this.openDeleteOrderModal.bind(this)
     this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this)
     this.openGetDriverModal = this.openGetDriverModal.bind(this)
     this.closeGetDriverModal = this.closeGetDriverModal.bind(this)
-    this.openEditOrderModal = this.openEditOrderModal.bind(this)
-    this.closeEditOrderModal = this.closeEditOrderModal.bind(this)
   }
 
   newOrders() {
@@ -92,10 +89,10 @@ export default class AdmOrdersWindow extends Component {
             <thead>
               <tr>
                 <td className="xxsmall">Номер:</td>
-                <td className="xxsmall">Дата:</td>
-                <td className="xxsmall">Статус:</td>
-                <td className="xxsmall">Водитель:</td>
-                <td className="xxsmall" />
+                <td className="xsmall">Дата:</td>
+                <td className="xsmall">Статус:</td>
+                <td className="xsmall">Водитель:</td>
+                <td className="xsmall" />
               </tr>
             </thead>
             <tbody>
@@ -114,7 +111,7 @@ export default class AdmOrdersWindow extends Component {
                     </td>
                     <td>
                       <Link to={`/admin/det_ord:${n.id}`}>Дет.</Link>
-                      <span onClick={(orderId) => this.openEditOrderModal(n.id)}>Ред.</span>
+                      <Link to={`/admin/edit_ord:${n.id}`}>Ред.</Link>
                       <span onClick={() => this.openDeleteOrderModal(n.id)}>Удал.</span>
                     </td>
                   </tr>
@@ -137,10 +134,10 @@ export default class AdmOrdersWindow extends Component {
             <thead>
               <tr>
                 <td className="xxsmall">Номер:</td>
-                <td className="xxsmall">Дата:</td>
-                <td className="xxsmall">Статус:</td>
-                <td className="xxsmall">Водитель:</td>
-                <td className="xxsmall" />
+                <td className="xsmall">Дата:</td>
+                <td className="xsmall">Статус:</td>
+                <td className="xsmall">Водитель:</td>
+                <td className="xsmall" />
                </tr>
             </thead>
             <tbody>
@@ -154,7 +151,7 @@ export default class AdmOrdersWindow extends Component {
                       <Link to={`/admin/det_drv:${a.driver}`}>{this.getDriverName(a.driver)}</Link></td>
                     <td>
                       <Link to={`/admin/det_ord:${a.id}`}>Дет.</Link>
-                      <span onClick={(orderId) => this.openEditOrderModal(a.id)}>Ред.</span>
+                      <Link to={`/admin/edit_ord:${a.id}`}>Ред.</Link>
                       <span onClick={() => this.openDeleteOrderModal(a.id)}>Удал.</span>
                     </td>
                   </tr>
@@ -177,10 +174,10 @@ export default class AdmOrdersWindow extends Component {
             <thead>
               <tr>
                 <td className="xxsmall">Номер:</td>
-                <td className="xxsmall">Дата:</td>
-                <td className="xxsmall">Статус:</td>
-                <td className="xxsmall">Водитель</td>
-                <td className="xxsmall" />
+                <td className="xsmall">Дата:</td>
+                <td className="xsmall">Статус:</td>
+                <td className="xsmall">Водитель</td>
+                <td className="xsmall" />
               </tr>
             </thead>
             <tbody>
@@ -194,7 +191,7 @@ export default class AdmOrdersWindow extends Component {
                       <Link to={`/admin/det_drv:${e.driver}`}>{this.getDriverName(e.driver)}</Link></td>
                     <td>
                       <Link to={`/admin/det_ord:${e.id}`}>Дет.</Link>
-                      <span onClick={(orderId) => this.openEditOrderModal(e.id)}>Ред.</span>
+                      <Link to={`/admin/edit_ord:${e.id}`}>Ред.</Link>
                       <span onClick={(orderId) => this.openDeleteOrderModal(e.id)}>Удал.</span>
                     </td>
                   </tr>
@@ -225,14 +222,6 @@ export default class AdmOrdersWindow extends Component {
 
   closeGetDriverModal() {
     this.setState({ getDriverModalIsOpen: false, currentOrder: '',  filteredDrivers: [], value: '' });
-  }
-
-  openEditOrderModal(orderId) {
-    this.setState({ editOrderModalIsOpen: true , currentOrder: orderId });
-  }
-
-  closeEditOrderModal() {
-    this.setState({ editOrderModalIsOpen: false, currentOrder: '',  filteredDrivers: [], value: '' });
   }
 
   onChange = (value) => {
@@ -305,25 +294,6 @@ export default class AdmOrdersWindow extends Component {
       this.props.setDriver(target)
 
       this.closeGetDriverModal()
-    }
-  }
-
-  editOrder() {
-    let orderId = this.state.currentOrder,
-        driverId = this.editOrderDriverSelect.value,
-        status = this.editOrderStatusSelect.value
-
-    if (driverId) {
-      let target = this.props.orders.data.filter( ord => {
-        return +ord.id === +orderId
-      })
-      
-      target = target[0]
-      target.driver = driverId
-      target.status = status
-      this.props.editOrder(target)
-
-      this.closeEditOrderModal()
     }
   }
 
@@ -423,7 +393,7 @@ export default class AdmOrdersWindow extends Component {
                                 
                               <td>
                                 <Link to={`/admin/det_ord:${f.id}`}>Дет.</Link>
-                                <span onClick={(orderId) => this.openEditOrderModal(f.id)}>Ред.</span>
+                                <Link to={`/admin/edit_ord:${f.id}`}>Ред.</Link>
                                 <span onClick={(orderId) => this.openDeleteOrderModal(f.id)}>Удал.</span>
                               </td>
                             </tr>
@@ -528,80 +498,6 @@ export default class AdmOrdersWindow extends Component {
               </div>
 
             </Modal>  
-
-            {/* editDriver */}
-          <Modal
-            isOpen={this.state.editOrderModalIsOpen}
-            onRequestClose={this.closeEditOrderModal}
-            style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-            className="modal"
-            ariaHideApp={false}
-          >
-            <button className="close-btn" onClick={this.closeEditOrderModal} />
-
-            <label>Выберите дату: <Picker
-              value={this.state.value}
-              onChange={this.onChange}
-              animation="slide-up"
-              calendar={calendar}
-            >
-              {
-                ({ value }) => {
-                  return (
-                    <input
-                      placeholder="Любое число"
-                      disabled={this.state.disabled}
-                      readOnly
-                      type="text"
-                      value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
-                    />
-                  );
-                }
-              }
-            </Picker></label>
-
-            <label>Водитель:
-              <select ref={ select => this.editOrderDriverSelect = select } size="6" style={{ height: "125px" }}>
-                
-                { this.state.filteredDrivers.length !== 0 ? ( 
-                  
-                  this.state.filteredDrivers.map(f => {
-
-                    return (
-                      <option value={f.id}>{`${f.user.first_name} ${f.user.last_name}`}</option>
-                    )
-
-                  })
-                  
-                ) : (
-
-                  this.props.drivers.data.map(d => {
-
-                    return (
-                      <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
-                    )
-
-                  })
-                    
-                )}
-
-              </select>
-            </label>
-
-            <label>Статус:
-              <select ref={ select => this.editOrderStatusSelect = select }>
-                <option>{allConst.STATUS_NEW}</option>
-                <option>{allConst.STATUS_WAIT}</option>
-                <option>{allConst.STATUS_ACTIVE}</option>
-                <option>{allConst.STATUS_EXECUTED}</option>
-              </select>
-            </label>
-
-            <div className="btn-wrap">
-              <button className="button small" onClick={this.editOrder.bind(this)}>Принять</button>
-              <button className="button small" onClick={this.closeEditOrderModal}>Отмена</button>
-            </div>
-          </Modal>    
 
           </div>
 

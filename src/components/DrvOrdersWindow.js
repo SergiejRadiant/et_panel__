@@ -47,7 +47,7 @@ export default class DrvOrdersWindow extends Component {
 					<div className="content-label">
 						<h5>Новые заказы:</h5>
 					</div>
-					<table className="default-table">
+					<table className="default-table" style={{ boxShadow: '0 0 3px #68f2dd' }}>
 						<thead>
 							<tr>
 								<td className="xxsmall">Номер:</td>

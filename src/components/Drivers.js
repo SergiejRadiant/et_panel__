@@ -147,7 +147,7 @@ export default class Drivers extends Component {
 
 			<div className="content-wrap">
 
-				{!this.props.drivers.isFetched ? (
+				{!this.props.drivers.isFetched  ? (
 
 					<img className="spinner" src={spinner} />
 				) : (

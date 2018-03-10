@@ -11,6 +11,22 @@ export default class DriverForm extends Component {
     }
   }
 
+  componentDidMount() {
+    if (this.props.registerDriver) {
+
+      let form = this.form
+
+      form.firstName.setAttribute('required', 'required')
+      form.lastName.setAttribute('required', 'required')
+      form.username.setAttribute('required', 'required')
+      form.email.setAttribute('required', 'required')
+      form.car.setAttribute('required', 'required')
+      form.carNumber.setAttribute('required', 'required')
+      form.password.setAttribute('required', 'required')
+    
+    }
+  }
+
   componentDidUpdate() {
     if (this.props.retrieveDriver && this.props.currentDriver.isFetched) {
 
@@ -23,22 +39,7 @@ export default class DriverForm extends Component {
       form.car.value = driver.car
       form.carNumber.value = driver.number_of_car
 
-      return
-
-    } else if (this.props.registerDriver) {
-
-      let form = this.form
-
-      form.firstName.setAttribute('required', 'required')
-      form.lastName.setAttribute('required', 'required')
-      form.username.setAttribute('required', 'required')
-      form.email.setAttribute('required', 'required')
-      form.car.setAttribute('required', 'required')
-      form.carNumber.setAttribute('required', 'required')
-      form.password.setAttribute('required', 'required')
-
-    }
-      
+    }      
   }
 
   submitForm(e) {
@@ -62,10 +63,13 @@ export default class DriverForm extends Component {
         number_of_car: this.form.carNumber.value
       }
       
-      this.props.registerDriver(data)
-      localStorage.setItem('adminLocation', '/admin/drivers')
-      this.props.history.push('/')  
-    
+      this.props.registerDriver(data).then(() => {
+
+        localStorage.setItem('adminLocation', '/admin/drivers')
+        this.props.history.push('/')
+        
+      })
+      
     } else if (this.props.editDriver) {
       let password = null
 

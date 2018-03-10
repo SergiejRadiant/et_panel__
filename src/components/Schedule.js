@@ -140,7 +140,7 @@ export default class Shedule extends Component {
   }
 
   closeSetScheduleModal() {
-    this.setState({ setScheduleModalIsOpen: false, value: []})
+    this.setState({ setScheduleModalIsOpen: false, value: [] })
   }
 
   onChange = (value) => {

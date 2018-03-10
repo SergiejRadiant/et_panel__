@@ -65,7 +65,7 @@ export default class OrderDetails extends Component {
     this.props.editOrder(target)
     
     let targetInList = this.props.currentDriver.data.orders.filter( ord => {
-      return +ord.id === +this.props.currentOrder.data.id
+      return +ord.id === +target.id
     })
       
     targetInList = targetInList[0]

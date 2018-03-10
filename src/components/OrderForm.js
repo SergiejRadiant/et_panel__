@@ -7,17 +7,6 @@ var serialize = require('form-serialize')
 
 
 export default class DriverForm extends Component {
-  constructor() {
-    super() 
-
-    this.state = {
-      deleteOrderModalIsOpen: false
-    }
-
-    this.openDeleteOrderModal = this.openDeleteOrderModal.bind(this);
-    this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this);
-  } 
-
   submitOrderForm(e) {
     e.preventDefault()
 
@@ -36,17 +25,13 @@ export default class DriverForm extends Component {
       driver: null
     }
 
-    this.props.registerOrder(newOrder)
-    localStorage.setItem('adminLocation', '/admin/orders')
-    this.props.history.push('/')
-  }
+    this.props.registerOrder(newOrder).then(() => {
 
-  openDeleteOrderModal() {
-    this.setState({ deleteOrderModalIsOpen: true });
-  }
+      localStorage.setItem('adminLocation', '/admin/orders')
+      this.props.history.push('/')
 
-  closeDeleteOrderModal() {
-    this.setState({ deleteOrderModalIsOpen: false });
+    })
+    
   }
 
   render() {

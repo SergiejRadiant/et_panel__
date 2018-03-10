@@ -212,21 +212,21 @@ export default class DriverDetails extends Component {
             <div className="content">
               <div className="content-box">
                 <div className="content-box-row">
-                  <div className="content-box-cell">
+                  <div className="content-box-cell order-2">
                     <label>First name: <input type="text" value={this.props.currentDriver.data.user.first_name} disabled /></label>
                     <label>Last name: <input type="text" value={this.props.currentDriver.data.user.last_name} disabled /></label>
-                    <label>Username: <input type="text" value={this.props.currentDriver.data.user.username} disabled /></label>
+                    <label>E-mail: <input type="text" value={this.props.currentDriver.data.user.email} disabled /></label>
                     <div className="btn-wrap left">
                       <Link to={`/admin/edit_drv${_driverId}`} className="button small">Ред.</Link>
                       <span onClick={() => this.openDeleteDriverModal()} className="button small grey">Удал.</span>
                     </div>
                   </div>
-                  <div className="content-box-cell">
-                    <label>E-mail: <input type="text" value={this.props.currentDriver.data.user.email} disabled /></label>
+                  <div className="content-box-cell order-1">
+                    <label>Username: <input type="text" value={this.props.currentDriver.data.user.username} disabled /></label>
                     <label>Car: <input type="text" value={this.props.currentDriver.data.car} disabled /></label>
                     <label>Car number: <input type="text" value={this.props.currentDriver.data.number_of_car} disabled /></label>
                   </div>
-                  <div className="content-box-cell">
+                  <div className="content-box-cell order-3">
                     <h5>Рабочее время:</h5>
                     <FullCalendar
                       Select={Select}
