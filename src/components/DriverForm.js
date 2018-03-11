@@ -192,7 +192,7 @@ export default class DriverForm extends Component {
           className="modal"
           ariaHideApp={false}
         >
-          <p>{this.props.message.toString()}</p>
+          <p>{this.props.message ? this.props.message.toString() : null}</p>
           <div className="btn-wrap">
             <button className="button small" onClick={() => this.goDriverList()}>Go back</button>
             <button className="button small" onClick={() => this.closeMessageModal()}>Close</button>
