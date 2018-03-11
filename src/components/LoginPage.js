@@ -12,6 +12,26 @@ export default class LoginPage extends Component {
     this.props.onSubmit(data)
   }
 
+  getAuthError() {
+    if ( this.props.errors && this.props.errors.non_field_errors ) {
+      return <p className="error-message with-btn-wrap">{this.props.errors.non_field_errors}</p>
+    }
+  }
+
+  getUsernameError() {
+    if ( this.props.errors && this.props.errors.username ) {
+      return <p className="error-message">{this.props.errors.username}</p>
+    }
+  }
+
+  getPasswordError() {
+    if ( this.props.errors && this.props.errors.password ) {
+
+      return <p className="error-message with-btn-wrap">{this.props.errors.password}</p>
+
+    }
+  }
+
   render() {
     return (
       <div className="page login-page">
@@ -27,7 +47,10 @@ export default class LoginPage extends Component {
             >
               <h4>Вход</h4>
               <label>Логин: <input name="username" type="text" /></label>
+              {this.getUsernameError()}
               <label>Пароль: <input name="password" type="password" /></label>
+              {this.getPasswordError()}
+              {this.getAuthError()}
               <div className="btn-wrap center">
                 <button type="submit" className="button">Вход</button>
               </div>

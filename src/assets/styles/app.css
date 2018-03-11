@@ -71,6 +71,14 @@ h4 {
   .modal p {
     margin-bottom: 0; }
 
+.error-message {
+  color: #f86257;
+  font-size: 12px;
+  line-height: 15px;
+  margin-top: 6px; }
+  .error-message.with-btn-wrap + .btn-wrap {
+    padding-top: 20px; }
+
 label, h5 {
   color: #a8acaf;
   font-size: 13px;
@@ -210,7 +218,7 @@ a, span {
     text-decoration: underline; }
 
 h1 {
-  font: 27px RobotoLight, sans-serif;
+  font: 25px RobotoLight, sans-serif;
   margin-bottom: 21px; }
 
 h2 {
@@ -411,8 +419,7 @@ a.topbar-nav-link {
       margin-left: 20px; }
 
 .filter-wrap {
-  position: relative;
-  margin-right: 10px; }
+  position: relative; }
   .filter-wrap input {
     max-width: 285px; }
 

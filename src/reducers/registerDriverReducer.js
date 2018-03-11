@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
       return {
         isFetched: true,
         message: 'Driver was not registered!',
-        errors: {}
+        errors: action.payload.response
       }
     default:
       return state

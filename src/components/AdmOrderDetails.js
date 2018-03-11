@@ -179,7 +179,7 @@ export default class OrderDetails extends Component {
         <div className="content">
 
           <div className="content-label">
-            <h1 style={{ fontSize: "25px"}}>Order #{this.props.currentOrder.data.id}</h1>
+            <h1>Order #{this.props.currentOrder.data.id}</h1>
           </div>
           
           <div className="content-label">

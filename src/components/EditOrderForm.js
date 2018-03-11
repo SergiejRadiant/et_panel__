@@ -80,7 +80,7 @@ export default class EditOrderForm extends Component {
             <form ref={(form) => this.orderForm = form} onSubmit={this.submitOrderForm.bind(this)}>
 
               <div className="content-label">
-                <h1 style={{ fontSize: "25px" }}>Order #{this.props.currentOrder.data.id}</h1>
+                <h1>Order #{this.props.currentOrder.data.id}</h1>
               </div>
 
               <div className="content-label">

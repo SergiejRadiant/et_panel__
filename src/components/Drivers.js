@@ -131,6 +131,23 @@ export default class Drivers extends Component {
 		this.closeDeleteDriverModal()
 	}
 
+	getDriverName(driverId) {
+		let drivers = this.props.drivers.data,
+
+				current = drivers.filter(d => {
+					return +d.id === +driverId
+				})
+
+		current = current[0]
+
+		return current.user.first_name || current.user.last_name ?
+
+		`${current.user.first_name} ${current.user.last_name}` :
+
+		current.user.username
+		
+	}
+
 	render() {
 		const calendar = (
       <RangeCalendar
@@ -205,7 +222,7 @@ export default class Drivers extends Component {
 										
 										return (
 											<tr key={d.id}>
-												<td>{`${d.user.first_name} ${d.user.last_name}`}</td>
+												<td>{this.getDriverName(d.id)}</td>
 												<td>{`${d.car}, ${d.number_of_car}`}</td>
 												<td>{this.isOnline(d)}</td>
 												<td>
@@ -221,7 +238,7 @@ export default class Drivers extends Component {
 
 										return (
 											<tr key={d.id}>
-												<td>{`${d.user.first_name} ${d.user.last_name}`}</td>
+												<td>{this.getDriverName(d.id)}</td>
 												<td>{`${d.car}, ${d.number_of_car}`}</td>
 												<td>{this.isOnline(d)}</td>
 												<td>

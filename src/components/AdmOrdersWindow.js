@@ -104,7 +104,7 @@ export default class AdmOrdersWindow extends Component {
                     <td>{n.status}</td>
                     <td>
                       {n.driver ? (
-                        this.getDriverName(n.driver)
+                        <Link to={`/admin/det_drv:${n.driver}`}>{this.getDriverName(n.driver)}</Link>
                       ) : (
                         <span onClick={() => this.openGetDriverModal(n.id)}>Назначить</span>
                       )}

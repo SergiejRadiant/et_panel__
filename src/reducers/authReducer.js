@@ -42,7 +42,7 @@ export default (state = initialState, action) => {
         access: undefined,
         refresh: undefined,
         exp: undefined,
-        errors: action.payload
+        errors: action.payload.response
       }
     default:
       return state

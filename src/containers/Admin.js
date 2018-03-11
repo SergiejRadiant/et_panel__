@@ -86,6 +86,8 @@ class Admin extends Component {
 			return "Новый заказ"
 		} else if (~path.indexOf("det_ord")) {
 			return "Информация о заказе"
+		} else if (~path.indexOf("edit_ord")) {
+			return "Зувфктировать заказ"
 		}
 	}
 	
@@ -147,7 +149,7 @@ class Admin extends Component {
 
 							<Route path="/admin/drivers" render={ props => <Drivers {...props}  deleteDriver={this.props.deleteDriver} drivers={this.props.drivers} /> } />
 					
-							<Route path="/admin/reg_drv" render={ props => <DriverForm {...props} registerDriver={this.props.registerDriver} /> } />
+							<Route path="/admin/reg_drv" render={ props => <DriverForm {...props} registerDriver={this.props.registerDriver} errors={this.props.registerDriverErrors} message={this.props.registerDriverMessage} /> } />
 					
 							<Route path="/admin/det_drv:driverId" render={props => <DriverDetails {...props} deleteOrder={this.props.deleteOrder} deleteDriver={this.props.deleteDriver} retrieveDriver={this.props.retrieveDriver} drivers={this.props.drivers} currentDriver={this.props.currentDriver} /> } />
 
@@ -186,10 +188,16 @@ const mapStateToProps = (state) => {
 		auth: isAuthenticated(state),
 		drivers: state.retrieveDriversReducer,
 		orders: state.retrieveOrdersReducer,
-		currentOrder: state.retrieveOrderReducer,
 		currentDriver: state.retrieveDriverReducer,
-		editDriver: state.editDriverReducer,
-		editOrder: state.editOrderReducer,
+		currentOrder: state.retrieveOrderReducer,
+		registerDriverErrors: state.registerDriverReducer.errors,
+		registerDriverMessage: state.registerDriverReducer.message,
+		registerOrderErrors: state.registerDriverReducer.errors,
+		registerOrderMessage: state.registerDriverReducer.message,
+		editDriverErrors: state.editDriverReducer.errors,
+		editDriverMessage: state.editDriverReducer.message,
+		editOrderErrors: state.editDriverReducer.errors,
+		editOrderMessage: state.editDriverReducer.message,
 	}
 }
 

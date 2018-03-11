@@ -4,13 +4,14 @@ import { reducer as burgerMenu } from 'redux-burger-menu'
 import authReducer, * as fromAuth from './authReducer.js'
 import deleteDriverReducer from './deleteDriverReducer'
 import deleteOrderReducer from './deleteOrderReducer'
-import registerDriverReducer from './deleteOrderReducer'
+import registerDriverReducer from './registerDriverReducer'
 import registerOrderReducer from './registerOrderReducer'
 import retrieveDriverReducer from './retrieveDriverReducer'
 import retrieveDriversReducer from './retrieveDriversReducer'
 import retrieveOrderReducer from './retrieveOrderReducer'
 import retrieveOrdersReducer from './retrieveOrdersReducer'
 import setScheduleReducer from './setScheduleReducer'
+import editDriverReducer from './editOrderReducer'
 import editOrderReducer from './editOrderReducer'
 
 
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
     retrieveOrderReducer,
     retrieveOrdersReducer,
     setScheduleReducer,
-    editOrderReducer
+    editDriverReducer,
+    editOrderReducer,
 })
 
 

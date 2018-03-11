@@ -48,7 +48,7 @@ export const registerDriver = (data) => ({
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
     types: [
-      constants.REGISTER_DRIVERS_REQUEST, constants.REGISTER_DRIVERS_SUCCESS, constants.REGISTER_DRIVERS_FAILURE
+      constants.REGISTER_DRIVER_REQUEST, constants.REGISTER_DRIVER_SUCCESS, constants.REGISTER_DRIVER_FAILURE
     ]
   }
 })
@@ -97,7 +97,7 @@ export const registerOrder = (data) => ({
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
     types: [
-      constants.REGISTER_ORDERS_REQUEST, constants.REGISTER_ORDERS_SUCCESS, constants.REGISTER_ORDERS_FAILURE
+      constants.REGISTER_ORDER_REQUEST, constants.REGISTER_ORDER_SUCCESS, constants.REGISTER_ORDER_FAILURE
     ]
   }
 })

@@ -14,9 +14,9 @@ export default keyMirror({
   RETRIEVE_DRIVERS_SUCCESS: null,
   RETRIEVE_DRIVERS_FAILURE: null,
 
-  REGISTER_DRIVERS_REQUEST: null,
-  REGISTER_DRIVERS_SUCCESS: null,
-  REGISTER_DRIVERS_FAILURE: null,
+  REGISTER_DRIVER_REQUEST: null,
+  REGISTER_DRIVER_SUCCESS: null,
+  REGISTER_DRIVER_FAILURE: null,
 
   RETRIEVE_DRIVER_REQUEST: null,
   RETRIEVE_DRIVER_SUCCESS: null,
@@ -30,9 +30,9 @@ export default keyMirror({
   RETRIEVE_ORDERS_SUCCESS: null,
   RETRIEVE_ORDERS_FAILURE: null,
   
-  REGISTER_ORDERS_REQUEST: null,
-  REGISTER_ORDERS_SUCCESS: null,
-  REGISTER_ORDERS_FAILURE: null,
+  REGISTER_ORDER_REQUEST: null,
+  REGISTER_ORDER_SUCCESS: null,
+  REGISTER_ORDER_FAILURE: null,
   
   RETRIEVE_ORDER_REQUEST: null,
   RETRIEVE_ORDER_SUCCESS: null,
@@ -64,4 +64,6 @@ export const STATUS_NEW = "Ожидает исполнителя"
 export const STATUS_WAIT = "wait for accepting"
 export const STATUS_ACTIVE = "in process"
 export const STATUS_EXECUTED = "completed"
+
+export const MESSAGE_SUCCESS = "Driver is succesfully registered!"
 
