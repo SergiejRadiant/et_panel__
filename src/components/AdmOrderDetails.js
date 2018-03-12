@@ -115,7 +115,7 @@ export default class OrderDetails extends Component {
     this.setState({ hoverValue });
   }
 
-  getDriverName() {
+  getDriverFromOrder() {
     let driverId = this.props.currentOrder.data.driver,
         orderId = this.props.currentOrder.data.id
     
@@ -123,13 +123,17 @@ export default class OrderDetails extends Component {
     
     let drivers = this.props.drivers.data,
     
-        currentDriver =  drivers.filter(drv => {
+        current =  drivers.filter(drv => {
           return +drv.id === +driverId
         })
 
-    currentDriver = currentDriver[0]
+    current = current[0]
 
-    return `${currentDriver.user.first_name} ${currentDriver.user.last_name}`     
+    return current.user.first_name || current.user.last_name ?
+
+		`${current.user.first_name} ${current.user.last_name}` :
+
+		current.user.username     
   }
 
   setDriver() {
@@ -201,7 +205,7 @@ export default class OrderDetails extends Component {
 
           <div className="table-footer">
             <div><h5>Date of creation:</h5> {this.props.currentOrder.data.date}</div>
-            <div><h5>Driver:</h5> {this.getDriverName()}</div>
+            <div><h5>Driver:</h5> {this.getDriverFromOrder()}</div>
             <div><h5>Status:</h5> {this.props.currentOrder.data.status}</div>
           </div>
 
@@ -243,7 +247,7 @@ export default class OrderDetails extends Component {
               
               {this.state.filteredDrivers.map(f => {
                 return (
-                  <option value={f.id}>{`${f.user.first_name} ${f.user.last_name}`}</option>
+                  <option key={f.id} value={f.id}>{this.getDriverName(f.id)}</option>
                 )
               })}
 

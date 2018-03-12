@@ -112,7 +112,7 @@ export default class Shedule extends Component {
 
   onSelect(value) {
     let workday = this.props.currentDriver.data.work_schedule.workdays.filter( w => {
-      return moment(w.date).isSame(value)
+      return moment(w.date).isSame(value._d.toDateString())
     })
 
     if  

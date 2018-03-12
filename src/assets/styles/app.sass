@@ -75,15 +75,6 @@ h4
 	p
 		margin-bottom: 0
 
-.error-message
-	color: #f86257
-	font-size: 12px
-	line-height: 15px
-	margin-top: 6px
-	&.with-btn-wrap + .btn-wrap
-		padding-top: 20px
-
-
 label, h5
 	color: #a8acaf
 	font-size: 13px
@@ -218,6 +209,26 @@ a, span
 	&:visited
 		color: $light-green-lighten
 		text-decoration: underline
+
+.message
+	color: $light-green
+	font-size: 12px
+	line-height: 16px
+	margin-top: 6px
+	a
+		color: $light-green
+		text-decoration: underline
+		text-decoration-style: dotted
+	& + .btn-wrap
+		padding-top: 19px
+
+.error-message
+	color: #f86257
+	font-size: 12px
+	line-height: 16px
+	margin-top: 6px
+	&.with-btn-wrap + .btn-wrap
+		padding-top: 19px
 
 h1
 	font: 25px RobotoLight, sans-serif

@@ -66,6 +66,20 @@ export default class EditOrderForm extends Component {
     targetInList.driver = this.setDriverSelect.value
   }
 
+  getDriverName(driverId) {
+    let current = this.props.drivers.data.filter(drv => {
+      return +drv.id === +driverId
+    })
+
+    current = current[0]
+
+    return current.user.first_name || current.user.last_name ?
+
+		`${current.user.first_name} ${current.user.last_name}` :
+
+		current.user.username
+  }
+
   render() {
     return (
       <div className="content-wrap">
@@ -113,7 +127,7 @@ export default class EditOrderForm extends Component {
                       
                       if ( current.driver && d.id === current.driver ) {
                         return (
-                          <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                          <option value={d.id}>{this.getDriverName(d.id)}</option>
                         )
                       }
                     })}
@@ -124,13 +138,13 @@ export default class EditOrderForm extends Component {
 
                       if ( current.driver && d.id !== current.driver ) {
                         return (
-                          <option key={d.id} value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                          <option key={d.id} value={d.id}>{this.getDriverName(d.id)}</option>
                         )
                       }
 
                       if ( !current.driver  ) {
                         return (
-                          <option key={d.id} value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                          <option key={d.id} value={d.id}>{this.getDriverName(d.id)}</option>
                         )
                       }
 

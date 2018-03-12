@@ -11,7 +11,7 @@ import retrieveDriversReducer from './retrieveDriversReducer'
 import retrieveOrderReducer from './retrieveOrderReducer'
 import retrieveOrdersReducer from './retrieveOrdersReducer'
 import setScheduleReducer from './setScheduleReducer'
-import editDriverReducer from './editOrderReducer'
+import editDriverReducer from './editDriverReducer'
 import editOrderReducer from './editOrderReducer'
 
 

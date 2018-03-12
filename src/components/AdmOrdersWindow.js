@@ -71,11 +71,17 @@ export default class AdmOrdersWindow extends Component {
   }
 
   getDriverName(driverId) {
-    let driver = this.props.drivers.data.filter(drv => {
+    let current = this.props.drivers.data.filter(drv => {
       return +drv.id === +driverId
     })
 
-    return `${driver[0].user.first_name} ${driver[0].user.last_name}`
+    current = current[0]
+
+    return current.user.first_name || current.user.last_name ?
+
+		`${current.user.first_name} ${current.user.last_name}` :
+
+		current.user.username
   }
 
   checkNewOrders() {
@@ -485,8 +491,8 @@ export default class AdmOrdersWindow extends Component {
               <label>Водители:
                 <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
 
-                  {this.state.filteredDrivers.map((d) => {
-                    return <option value={d.id}>{`${d.user.first_name} ${d.user.last_name}`}</option>
+                  {this.state.filteredDrivers.map((f) => {
+                    return <option key={f.id} value={f.id}>{this.getDriverName(f.id)}</option>
                   })}
 
                 </select>

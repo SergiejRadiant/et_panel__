@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom';
 import Modal from 'react-modal'
 import spinner from '../assets/images/loading.gif'
 import * as allConst from '../constants/index'
@@ -6,14 +7,7 @@ import * as allConst from '../constants/index'
 
 export default class DriverForm extends Component {
   constructor(props) {
-    super(props)
-
-    this.state = {
-      messageModalIsOpen: false
-    }
-
-    this.openMessageModal = this.openMessageModal.bind(this)
-    this.closeMessageModal = this.closeMessageModal.bind(this)
+    super(props) 
 
     if(this.props.retrieveDriver) {
       let driverId = this.props.match.params.driverId.slice(1)
@@ -30,50 +24,14 @@ export default class DriverForm extends Component {
       form.firstName.value = this.props.currentDriver.data.user.first_name
       form.lastName.value = driver.user.last_name
       form.username.value = driver.user.username
+      form.email.value = driver.user.email
       form.car.value = driver.car
       form.carNumber.value = driver.number_of_car
 
     }
   }
 
-  componentWillReceiveProps() {
-    if (this.props.registerDriver && !this.props.errors && this.props.message) {
-      this.openMessageModal()
-    }
-  }
-
-  openMessageModal() {
-    this.setState({ messageModalIsOpen: true });
-  }
-
-  closeMessageModal() {
-    this.setState({ messageModalIsOpen: false });
-  }
-
-  getUsernameError() {
-    if (this.props.errors && this.props.errors.ext_user && this.props.errors.ext_user.user.username) {
-      return <p className="error-message">{this.props.errors.ext_user.user.username}</p> 
-    }
-  }
-
-  getPasswordError() {
-    if (this.props.errors && this.props.errors.ext_user && this.props.errors.ext_user.user.password) {
-      return <p className="error-message with-btn-wrap">{this.props.errors.ext_user.user.password}</p> 
-    }
-  }
-
-  getCarError() {
-    if (this.props.errors && this.props.errors.car) {
-      return <p className="error-message">{this.props.errors.car}</p> 
-    }
-  }
-
-  getCarNumberError() {
-    if (this.props.errors && this.props.errors.number_of_car) {
-      return <p className="error-message">{this.props.errors.number_of_car}</p> 
-    }
-  }
-
+  
   submitForm(e) {
     e.preventDefault()
 
@@ -95,10 +53,13 @@ export default class DriverForm extends Component {
         number_of_car: this.form.carNumber.value
       }
       
-      this.props.registerDriver(data)      
-     
+      this.props.registerDriver(data).then(() => {
+        this.props.retrieveDrivers()
+      })      
+
     } else if (this.props.editDriver) {
-      let password = null
+      let password = null,
+          driverId = this.props.match.params.driverId.slice(1)
 
       if (this.form.password.value !== "") {
         password = this.form.password.value
@@ -114,14 +75,15 @@ export default class DriverForm extends Component {
         number_of_car: this.form.carNumber.value
       }
 
-      let driverId = this.props.match.params.driverId.slice(1)
-      this.props.editDriver(data, driverId)
-      this.props.retrieveDriver(driverId)
+      this.props.editDriver(data, driverId).then(() => {
+        
+        this.props.retrieveDriver(driverId).then(() => {
+        
+        this.props.retrieveDrivers()
+      })
+      })
     }
  
-    for (let i of this.form.getElementsByTagName('input')) {
-      i.value = ""
-    }
   }
 
   onReset(e) {
@@ -138,7 +100,7 @@ export default class DriverForm extends Component {
       form.car.value = driver.car
       form.carNumber.value = driver.number_of_car
 
-    } else  {
+    } else {
 
       for (let i of this.form.getElementsByTagName('input')) {
         i.value = ""
@@ -147,9 +109,76 @@ export default class DriverForm extends Component {
     }
   }
 
-  goDriverList() {
-    localStorage.setItem('adminLocation', '/admin/drivers')
-    this.props.history.push('/')
+  getUsernameError() {
+    if
+      (
+        this.props.response
+        && this.props.response.errors 
+        && this.props.response.errors.ext_user 
+     
+      ) {
+
+        return <p className="error-message">{this.props.response.errors.ext_user.user.username}</p>
+
+      }
+  }
+
+  getPasswordError() {
+    if
+      (
+        this.props.response 
+        && this.props.response.errors 
+        && this.props.response.errors.ext_user
+     
+      ) {
+
+        return <p className="error-message with-btn-wrap">{this.props.response.errors.ext_user.user.password}</p> 
+
+      }
+  }
+
+  getCarError() {
+    if(
+        this.props.response 
+        && this.props.response.errors 
+        && this.props.response.errors.car
+
+      ) {
+
+        return <p className="error-message">{this.props.response.errors.car}</p>
+         
+      }
+  }
+
+  getCarNumberError() {
+    if(
+        this.props.response 
+        && this.props.response.errors 
+        && this.props.response.errors.number_of_car
+
+      ) {
+
+        return <p className="error-message">{this.props.response.errors.number_of_car}</p> 
+
+      }
+  }
+
+  getMessage() {
+    if(
+        this.props.response.isFetched
+        && !this.props.response.errors.ext_user 
+        && !this.props.response.errors.car 
+        && !this.props.response.errors.number_of_car 
+
+      ) {
+
+        return (
+          <p className="message">
+            {`${this.props.response.message.toString()} `}
+            <Link to='/admin/drivers'>Back to drivers.</Link>
+          </p>
+        )
+      }
   }
 
   render() {
@@ -177,27 +206,13 @@ export default class DriverForm extends Component {
           
             <label>Password: <input type="text" name="password"/></label>
             {this.getPasswordError()}
-
+            {this.getMessage()}
             <div className="btn-wrap">
               <button type="submit" className="button small">Принять</button>
               <button className="button small" onClick={(e) => this.onReset(e)} >Отмена</button>
             </div>
           </form>
         )}
-
-        <Modal
-          isOpen={this.state.messageModalIsOpen}
-          onRequestClose={this.closeMessageModal}
-          style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-          className="modal"
-          ariaHideApp={false}
-        >
-          <p>{this.props.message ? this.props.message.toString() : null}</p>
-          <div className="btn-wrap">
-            <button className="button small" onClick={() => this.goDriverList()}>Go back</button>
-            <button className="button small" onClick={() => this.closeMessageModal()}>Close</button>
-          </div>
-        </Modal>
 
       </div>        
     );

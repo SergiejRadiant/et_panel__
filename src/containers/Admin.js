@@ -149,11 +149,11 @@ class Admin extends Component {
 
 							<Route path="/admin/drivers" render={ props => <Drivers {...props}  deleteDriver={this.props.deleteDriver} drivers={this.props.drivers} /> } />
 					
-							<Route path="/admin/reg_drv" render={ props => <DriverForm {...props} registerDriver={this.props.registerDriver} errors={this.props.registerDriverErrors} message={this.props.registerDriverMessage} /> } />
+							<Route path="/admin/reg_drv" render={ props => <DriverForm {...props} registerDriver={this.props.registerDriver} retrieveDrivers={this.props.retrieveDrivers} response={this.props.registerDriver_response} /> } />
 					
 							<Route path="/admin/det_drv:driverId" render={props => <DriverDetails {...props} deleteOrder={this.props.deleteOrder} deleteDriver={this.props.deleteDriver} retrieveDriver={this.props.retrieveDriver} drivers={this.props.drivers} currentDriver={this.props.currentDriver} /> } />
 
-							<Route path="/admin/edit_drv:driverId" render={ props => <DriverForm {...props} editDriver={this.props.editDriver} retrieveDriver={this.props.retrieveDriver} currentDriver={this.props.currentDriver} /> } />
+							<Route path="/admin/edit_drv:driverId" render={ props => <DriverForm {...props} editDriver={this.props.editDriver} retrieveDrivers={this.props.retrieveDrivers} response={this.props.editDriver_response} retrieveDriver={this.props.retrieveDriver} currentDriver={this.props.currentDriver} /> } />
 					
 							<Route path="/admin/orders" render={ props => <AdmOrdersWindow {...props} setDriver={this.props.setDriver} editOrder={this.props.editOrder} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
 					
@@ -190,14 +190,10 @@ const mapStateToProps = (state) => {
 		orders: state.retrieveOrdersReducer,
 		currentDriver: state.retrieveDriverReducer,
 		currentOrder: state.retrieveOrderReducer,
-		registerDriverErrors: state.registerDriverReducer.errors,
-		registerDriverMessage: state.registerDriverReducer.message,
-		registerOrderErrors: state.registerDriverReducer.errors,
-		registerOrderMessage: state.registerDriverReducer.message,
-		editDriverErrors: state.editDriverReducer.errors,
-		editDriverMessage: state.editDriverReducer.message,
-		editOrderErrors: state.editDriverReducer.errors,
-		editOrderMessage: state.editDriverReducer.message,
+		registerDriver_response: state.registerDriverReducer,
+		registerOrder_response: state.registerDriverReducer,
+		editDriver_response: state.editDriverReducer,
+		editOrder_response: state.editDriverReducer,
 	}
 }
 
