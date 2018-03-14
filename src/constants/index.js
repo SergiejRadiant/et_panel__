@@ -60,10 +60,10 @@ export default keyMirror({
 
 })
 
-export const STATUS_NEW = "Ожидает исполнителя"
-export const STATUS_WAIT = "wait for accepting"
-export const STATUS_ACTIVE = "in process"
-export const STATUS_EXECUTED = "completed"
+export const STATUS_NEW = "New"
+export const STATUS_WAIT = "Wait for accepting"
+export const STATUS_ACTIVE = "In process"
+export const STATUS_EXECUTED = "Completed"
 
 export const MESSAGE_SUCCESS = "Driver is succesfully registered!"
 

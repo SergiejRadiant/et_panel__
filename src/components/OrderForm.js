@@ -6,32 +6,22 @@ import * as allConst from '../constants/index'
 var serialize = require('form-serialize')
 
 
-export default class DriverForm extends Component {
+export default class OrderForm extends Component {
   submitOrderForm(e) {
     e.preventDefault()
 
-    let dataObj = serialize(this.orderForm, { hash: true })    
+    let newOrder = serialize(this.orderForm, { hash: true })    
 
-    let orderData = []
+    newOrder.date = null
+    newOrder.driver = null
+    newOrder.status = allConst.STATUS_NEW
 
-    for (let key in dataObj) {
-      orderData.push( { name: key , value: dataObj[key] } )
-    }
-
-    let newOrder = {
-      data: orderData,
-      date: null,
-      status: allConst.STATUS_NEW,
-      driver: null
-    }
+    console.log(newOrder)
 
     this.props.registerOrder(newOrder).then(() => {
-
-      localStorage.setItem('adminLocation', '/admin/orders')
-      this.props.history.push('/')
-
+      
+      this.props.retrieveOrders()
     })
-    
   }
 
   render() {
@@ -44,56 +34,63 @@ export default class DriverForm extends Component {
 
                 <div className="content-box-cell">
 
-                  <label>Откуда: <input type="text" name="From:" /></label>
-                  <label>Куда: <input type="text" name="Where" /></label>
+                  <label>Pick up location: <input type="text" name="pick_up_location" /></label>
+                  <label>Drop off location: <input type="text" name="drop_off_location" /></label>
                   
-                  <label>Дата трансфера: <input type="date" name="Transfer date" /></label>
-                  <label>Время трансфера: <input type="time" name="Transfer time" /></label>
+                  <label>Transfer date: <input type="date" name="transfer_date" /></label>
+                  <label>Transfer time: <input type="time" name="transfer_time" /></label>
                  
                   <div className="radio-wrap">
-                    <label>В одну сторону:<input type="radio" name="Transfer Type" value="roundtrip" /></label>
-                    <label>Туда и обратно:<input type="radio" name="Transfer Type" value="one way" /></label>
+                    <label>Round trip:<input type="radio" name="transfer_type" value="Round trip" /></label>
+                    <label>One way:<input type="radio" name="transfer_type" value="One way" /></label>
                   </div>
 
-                  <label>Поездка обратно: <input type="date" name="Transfer trip back date" /></label>
-                  <label>Время трансфера: <input type="time" name="Transfer trip back time" /></label>
+                  <label>Return journey date: <input type="date" name="return_journey_date" /></label>
+                  <label>Return journey time: <input type="time" name="return_journey_time" /></label>
 
                 </div>
 
                 <div className="content-box-cell">
                  
-                  <label>Номер рейса: <input type="text" name="Flight number" /></label>
-                  <label>Количество взрослых пассажиров: <input type="number" name="Adults passengers" /></label>
-                  <label>Количество пассажиров 0-9кг: <input type="number" name="Passengers from 0 to 9 kg" /></label>
-                  <label>Количество пассажиров 9-18кг: <input type="number" name="Passengers from 9 to 18 kg" /></label>
-                  <label>Количество пассажиров 18-36кг: <input type="number" name="Passengers from 18 to 36 kg" /></label>
+                  <label>Flight number: <input type="text" name="flight_number" /></label>
+                  <label>Adults: <input type="number" name="adults" /></label>
+                  <label>Children 0-9kg: <input type="number" name="children_0_9" /></label>
+                  <label>Children 9-18kg: <input type="number" name="children_9_18" /></label>
+                  <label>Children 18-36kg: <input type="number" name="children_18_36" /></label>
+                  
                   <div className="radio-wrap">
-                    <label>Бизнес-класс:<input type="radio" name="Vehicle type" value="business" /></label>
-                    <label>Минивэн:<input type="radio" name="Vehicle type" value="minivan" /></label>
+                    <label>Business class:<input type="radio" name="car_type" value="Business class" /></label>
+                    <label>Minivan:<input type="radio" name="car_type" value="Minivan" /></label>
                   </div>
-                  <label>Цена:<input type="number" name="Price" /></label>
+                  
+                  <label>Transfer price:<input type="text" name="transfer_price" /></label>
+               
                 </div>
                   
                 <div className="content-box-cell">
           
-                  <label>Способ оплаты:
-                    <select name="Pay method">
-                      <option disabled>Select pay method</option>
+                  <label>Payment type:
+                    <select name="payment_method">
                       <option>By cash to driver</option>
                       <option>By card to driver</option>
-                      <option>By card MasterCard to driver</option>
-                      <option>By card Visa to driver</option>
-                      <option>By card AmericanExpress to driver</option>
                       <option>By PayPal</option>
                     </select>
                   </label>
 
-                  <label>Заказчик: <input type="text" name="Orderer" /></label>
-                  <label>Телефон заказчика: <input type="tel" name="Phone" /></label>
-                  <label>E-mail заказчика: <input type="email" name="Email" /></label>
+                  <label>Card:
+                    <select name="card">
+                      <option>MasterCard</option>
+                      <option>Visa </option>
+                      <option>AmericanExpress</option>
+                    </select>
+                  </label>  
+
+                  <label>Customer name: <input type="text" name="customer_name" /></label>
+                  <label>Customer phone: <input type="tel" name="customer_phone" /></label>
+                  <label>Customer email: <input type="email" name="customer_email" /></label>
                   
-                  <label>Промо: <input type="text" name="Promo" /></label>
-                  <label>Комментарий: <textarea name="Comment" /></label>
+                  <label>Promo-code: <input type="text" name="promo_code" /></label>
+                  <label>Comment: <textarea name="comment" /></label>
                   
                 </div>
               </div>
@@ -101,7 +98,7 @@ export default class DriverForm extends Component {
 
             <div className="btn-wrap">
               <button type="submit" className="button small">Принять</button>
-              <button type="reset" className="button small" onClick={() => this.props.history.goBack()}>Отмена</button>
+              <button type="reset" className="button small">Отмена</button>
             </div>
             
           </form>

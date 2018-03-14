@@ -157,7 +157,7 @@ class Admin extends Component {
 					
 							<Route path="/admin/orders" render={ props => <AdmOrdersWindow {...props} setDriver={this.props.setDriver} editOrder={this.props.editOrder} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
 					
-							<Route path="/admin/reg_ord" render={ props => <OrderForm {...props}  registerOrder={this.props.registerOrder} /> } />
+							<Route path="/admin/reg_ord" render={ props => <OrderForm {...props}  registerOrder={this.props.registerOrder} retrieveOrders={this.props.retrieveOrders} /> } />
 					
 							<Route path="/admin/det_ord:orderId" render={ props => <AdmOrderDetails {...props} setDriver={this.props.setDriver} editOrder={this.props.editOrder} retrieveOrder={this.props.retrieveOrder} retrieveOrders={this.props.retrieveOrders} currentOrder={this.props.currentOrder} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
 

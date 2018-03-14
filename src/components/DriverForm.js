@@ -79,8 +79,8 @@ export default class DriverForm extends Component {
         
         this.props.retrieveDriver(driverId).then(() => {
         
-        this.props.retrieveDrivers()
-      })
+          this.props.retrieveDrivers()
+        })
       })
     }
  

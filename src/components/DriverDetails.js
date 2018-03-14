@@ -69,9 +69,6 @@ export default class DriverDetails extends Component {
       }
 
     }
-
-    console.log(m._d.toDateString())
-    console.log(count)
     
     return ~count ? (
 

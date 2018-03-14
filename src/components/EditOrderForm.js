@@ -13,24 +13,28 @@ export default class EditOrderForm extends Component {
   constructor(props) {
     super(props)
 
-    let _orderId = this.props.match.params.orderId.slice(1)
-    this.props.retrieveOrder(_orderId)
+    let orderId = this.props.match.params.orderId.slice(1)
+    this.props.retrieveOrder(orderId)
   }
 
   componentDidUpdate() {
     if (this.orderForm && this.props.currentOrder.isFetched) {
 
       let current = this.props.currentOrder.data,
-          inputs = this.orderForm.getElementsByTagName('input')
-
+          form = this.orderForm,
+          inputs = form.getElementsByTagName("input")
+          
       for (let i of inputs) {
-        let target = current.data.filter(c => {
-          return i.name === c.name
-        })
+        let target
 
-        target = target[0]
-
-        i.value = target.value
+        for (let key in current) {
+          if ( key === i.name ) {
+            target = current[key]
+          }
+       
+        }
+     
+        i.value = target
       }
 
     }      
@@ -39,31 +43,52 @@ export default class EditOrderForm extends Component {
   submitOrderForm(e) {
     e.preventDefault()
 
-    let dataObj = this.orderForm.getElementsByTagName('input'),
-        target = this.props.currentOrder.data,
-        orderData = []
+    let current = this.props.currentOrder.data,
+        form = this.orderForm,
+        inputs = form.getElementsByTagName("input"),
+        orderId = this.props.match.params.orderId.slice(1)
 
-    for (let input of dataObj) {
-      orderData.push( { name: input.name , value: input.value } )
+    for (let i of inputs) {
+
+      for (let key in current) {
+        if ( key === i.name ) {
+          current[key] = i.value
+        }
+      }
+
     }
 
-    target.data = orderData
-    target.status = this.setStatusSelect.value
-    target.driver = this.setDriverSelect.value
+    current.status = this.setStatusSelect.value
+    current.driver = this.setDriverSelect.value
 
-    console.log(orderData)
-
-    this.props.editOrder(target)
-
-    let targetInList = this.props.orders.data.filter( ord => {
-      return +ord.id === +target.id
-    })
+    this.props.editOrder(current).then(() => {
+        
+      this.props.retrieveOrder(orderId).then(() => {
       
-    targetInList = targetInList[0]
+        this.props.retrieveOrders()
+      })
+    })
+  }
+
+  onReset(e) {
+    e.preventDefault()
+
+    let current = this.props.currentOrder.data,
+        form = this.orderForm,
+        inputs = form.getElementsByTagName("input")
+          
+    for (let i of inputs) {
+      let target
+
+      for (let key in current) {
+        if ( key === i.name ) {
+          target = current[key]
+        }
+      
+      }
     
-    targetInList.data = orderData
-    targetInList.status = this.setStatusSelect.value
-    targetInList.driver = this.setDriverSelect.value
+      i.value = target
+    }
   }
 
   getDriverName(driverId) {
@@ -103,14 +128,50 @@ export default class EditOrderForm extends Component {
 
               <table className="default-table vertical">
                 <tbody>
-                  {this.props.currentOrder.data.data.map( d => {
-                    return (
-                      <tr key={d.value}>
-                        <td>{d.name}</td>
-                        <td><input type="text" name={d.name}/></td>
-                      </tr>
-                    )
-                  })}
+                  <tr>
+                    <td>Transfer price</td><td><input type="text" name="transfer_price"/></td></tr>
+                  <tr>
+                    <td>Promo-code</td><td><input type="text" name="promo_code"/></td></tr>
+                  <tr>
+                    <td>Transfer-type</td><td><input type="text" name="transfer_type"/></td></tr>
+                  <tr>
+                    <td>Pick up location</td><td><input type="text" name="pick_up_location"/></td></tr>
+                  <tr>
+                    <td>Drop off location</td><td><input type="text" name="drop_off_location"/></td></tr>
+                  <tr>
+                    <td>Flight number</td><td><input type="text" name="flight_number"/></td></tr>
+                  <tr>
+                    <td>Transfer date</td><td><input type="text" name="transfer_date"/></td></tr>
+                  <tr>
+                    <td>Transfer time</td><td><input type="text" name="transfer_time"/></td></tr>
+                  <tr>
+                    <td>Return journey date</td><td><input type="text" name="return_journey_date"/></td></tr>
+                  <tr>
+                    <td>Return journey time</td><td><input type="text" name="return_journey_time"/></td></tr>
+                  <tr>
+                    <td>Discount</td><td><input type="text" name="discount"/></td></tr>
+                  <tr>
+                    <td>Adults</td><td><input type="text" name="adults"/></td></tr>
+                  <tr>
+                    <td>Children 0-9kg</td><td><input type="text" name="children_0_9"/></td></tr>
+                  <tr>
+                    <td>Children 9-18kg</td><td><input type="text" name="children_9_18"/></td></tr>
+                  <tr>
+                    <td>Children 18-36kg</td><td><input type="text" name="children_18_36"/></td></tr>
+                  <tr>
+                    <td>Car</td><td><input type="text" name="car_type"/></td></tr>
+                  <tr>
+                    <td>Customer name</td><td><input type="text" name="customer_name"/></td></tr>
+                  <tr>
+                    <td>Customer phone</td><td><input type="text" name="customer_phone"/></td></tr>
+                  <tr>
+                    <td>Customer email</td><td><input type="text" name="customer_email"/></td></tr>
+                  <tr>
+                    <td>Payment type</td><td><input type="text" name="payment_method"/></td></tr>
+                  <tr>
+                    <td>Card</td><td><input type="text" name="card"/></td></tr>
+                  <tr>
+                    <td>Comment</td><td><input type="text" name="comment"/></td></tr>
                 </tbody>
               </table>
 
@@ -187,7 +248,7 @@ export default class EditOrderForm extends Component {
 
               <div className="btn-wrap">
                 <button type="submit" className="button small">Accept</button>
-                <button type="reset" className="button small">Cancel</button>
+                <button className="button small" onClick={(e) => this.onReset(e)}>Cancel</button>
               </div>
 
             </form>
