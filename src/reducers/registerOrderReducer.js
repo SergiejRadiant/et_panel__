@@ -22,8 +22,8 @@ export default (state = initialState, action) => {
     case constants.REGISTER_ORDER_FAILURE:
       return {
         isFetched: true,
-        message: 'Driver was not created!',
-        errors: {}
+        message: 'Order was not created!',
+        errors: action.payload.response
       }
     default:
       return state

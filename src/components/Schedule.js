@@ -40,7 +40,7 @@ function disabledDate(current) {
   return current.isBefore(date);  // can not select days before today
 }
 
-const formatStr = 'YYYY-MM-DD'
+const formatStr = 'DD.MM.YYYY'
 
 function format(v) {
   return v ? v.format(formatStr) : '';
@@ -242,7 +242,7 @@ export default class Shedule extends Component {
 
     for (let day of range.by('days')) { 
       newWorkdays.push({
-        date: day.format('YYYY-MM-DD'),
+        date: day.format('DD.MM.YYYY'),
         start: startTime,
         end: endTime,
       }) 

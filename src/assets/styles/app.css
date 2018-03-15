@@ -152,7 +152,11 @@ select {
       margin-left: 10px; }
 
 textarea {
-  resize: none; }
+  resize: none;
+  height: 61px; }
+
+label + .btn-wrap {
+  padding-top: 41px; }
 
 .button {
   width: 100%;
@@ -203,7 +207,8 @@ a, span {
   color: #11caad;
   font-size: 12px;
   line-height: 16px;
-  margin-top: 6px; }
+  margin-top: 6px;
+  margin-bottom: 0; }
   .message a {
     color: #11caad;
     text-decoration: underline;
@@ -417,7 +422,7 @@ a.topbar-nav-link {
     .content .content-label h1, .content .content-label h5 {
       margin: 0 auto 0 0;
       line-height: 1; }
-    .content .content-label .button {
+    .content .content-label .button, .content .content-label .filter-wrap {
       margin-left: 20px; }
 
 .filter-wrap {

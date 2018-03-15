@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Modal from 'react-modal'
+import moment from 'moment'
+
 import * as allConst from '../constants/index'
 
 var serialize = require('form-serialize')
@@ -10,18 +12,35 @@ export default class OrderForm extends Component {
   submitOrderForm(e) {
     e.preventDefault()
 
-    let newOrder = serialize(this.orderForm, { hash: true })    
+    let newOrder = serialize(this.orderForm, { hash: true })
+    
+    newOrder.transfer_date = moment(newOrder.transfer_date).format('YYYY-MM-DD')
 
-    newOrder.date = null
+    if (newOrder.return_journey_date) {
+      newOrder.return_journey_date = moment(newOrder.return_journey_date).format('YYYY-MM-DD')
+    }
+
     newOrder.driver = null
-    newOrder.status = allConst.STATUS_NEW
-
-    console.log(newOrder)
 
     this.props.registerOrder(newOrder).then(() => {
       
       this.props.retrieveOrders()
     })
+  }
+
+  getMessage() {
+    
+    if( this.props.response.isFetched ) {
+      
+      return (
+        
+        <p className="message">
+          {`${this.props.response.message.toString()} `}
+          <Link to='/admin/orders'>Back to orders.</Link>
+        </p>
+
+      )
+    }
   }
 
   render() {
@@ -47,12 +66,12 @@ export default class OrderForm extends Component {
 
                   <label>Return journey date: <input type="date" name="return_journey_date" /></label>
                   <label>Return journey time: <input type="time" name="return_journey_time" /></label>
+                  <label>Flight number: <input type="text" name="flight_number" /></label>
 
                 </div>
 
                 <div className="content-box-cell">
                  
-                  <label>Flight number: <input type="text" name="flight_number" /></label>
                   <label>Adults: <input type="number" name="adults" /></label>
                   <label>Children 0-9kg: <input type="number" name="children_0_9" /></label>
                   <label>Children 9-18kg: <input type="number" name="children_9_18" /></label>
@@ -63,12 +82,9 @@ export default class OrderForm extends Component {
                     <label>Minivan:<input type="radio" name="car_type" value="Minivan" /></label>
                   </div>
                   
-                  <label>Transfer price:<input type="text" name="transfer_price" /></label>
-               
-                </div>
-                  
-                <div className="content-box-cell">
-          
+                  <label>Transfer price: <input type="text" name="transfer_price" /></label>
+                  <label>Discount: <input type="text" name="discount" /></label>
+
                   <label>Payment type:
                     <select name="payment_method">
                       <option>By cash to driver</option>
@@ -76,6 +92,10 @@ export default class OrderForm extends Component {
                       <option>By PayPal</option>
                     </select>
                   </label>
+
+                </div>
+                  
+                <div className="content-box-cell">
 
                   <label>Card:
                     <select name="card">
@@ -92,14 +112,17 @@ export default class OrderForm extends Component {
                   <label>Promo-code: <input type="text" name="promo_code" /></label>
                   <label>Comment: <textarea name="comment" /></label>
                   
+                  {this.getMessage()}
+
+                  <div className="btn-wrap">
+                    <button type="submit" className="button small">Принять</button>
+                    <button type="reset" className="button small">Отмена</button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="btn-wrap">
-              <button type="submit" className="button small">Принять</button>
-              <button type="reset" className="button small">Отмена</button>
-            </div>
+            
             
           </form>
 

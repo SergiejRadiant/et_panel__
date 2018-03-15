@@ -23,7 +23,7 @@ import { extendMoment } from 'moment-range';
 
 const moment = extendMoment(Moment);
 
-const format = 'YYYY-MM-DD';
+const format = 'DD.MM.YYYY';
 const cn = window.location.search.indexOf('cn') !== -1;
 
 const now = moment();
@@ -256,6 +256,7 @@ export default class DriverDetails extends Component {
                               <td>{ord.status}</td>
                               <td>
                                 <Link to={`/admin/det_ord:${ord.id}`}>Дет.</Link>
+                                <Link to={`/admin/edit_ord:${ord.id}`}>Ред.</Link>
                                 <span onClick={(orderId) => this.openDeleteOrderModal(ord.id)}>Удал.</span>
                               </td>
                             </tr>

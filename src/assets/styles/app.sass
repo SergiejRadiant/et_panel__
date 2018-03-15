@@ -151,6 +151,10 @@ select
 
 textarea
 	resize: none
+	height: 61px
+	
+label + .btn-wrap
+	padding-top: 41px
 
 .button
 	width: 100%
@@ -204,12 +208,14 @@ a, span
 	font-size: 12px
 	line-height: 16px
 	margin-top: 6px
+	margin-bottom: 0
 	a
 		color: $light-green
 		text-decoration: underline
 		text-decoration-style: dotted
 	& + .btn-wrap
 		padding-top: 19px
+
 
 .error-message
 	color: #f86257
@@ -441,7 +447,7 @@ a.topbar-nav-link
 		h1, h5
 			margin: 0 auto 0 0
 			line-height: 1			
-		.button
+		.button, .filter-wrap
 			margin-left: 20px
 
 .filter-wrap

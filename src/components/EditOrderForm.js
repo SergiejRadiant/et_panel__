@@ -52,7 +52,7 @@ export default class EditOrderForm extends Component {
 
       for (let key in current) {
         if ( key === i.name ) {
-          current[key] = i.value
+          current[key] = i.value !== '' ? i.value : null
         }
       }
 
@@ -105,6 +105,21 @@ export default class EditOrderForm extends Component {
 		current.user.username
   }
 
+  getMessage() {
+    
+    if( this.props.response.isFetched ) {
+      
+      return (
+        
+        <p className="message">
+          {`${this.props.response.message.toString()} `}
+          <Link to='/admin/orders'>Back to orders.</Link>
+        </p>
+
+      )
+    }
+  }
+
   render() {
     return (
       <div className="content-wrap">
@@ -129,7 +144,9 @@ export default class EditOrderForm extends Component {
               <table className="default-table vertical">
                 <tbody>
                   <tr>
-                    <td>Transfer price</td><td><input type="text" name="transfer_price"/></td></tr>
+                    <td>Transfer price with discount</td><td><input type="text" name="transfer_price_with_discount"/></td></tr>
+                  <tr>
+                    <td>Transfer price</td><td><input type="text" name="transfer_price" required/></td></tr>
                   <tr>
                     <td>Promo-code</td><td><input type="text" name="promo_code"/></td></tr>
                   <tr>
@@ -159,7 +176,7 @@ export default class EditOrderForm extends Component {
                   <tr>
                     <td>Children 18-36kg</td><td><input type="text" name="children_18_36"/></td></tr>
                   <tr>
-                    <td>Car</td><td><input type="text" name="car_type"/></td></tr>
+                    <td>Car</td><td><input type="text" name="car_type" required/></td></tr>
                   <tr>
                     <td>Customer name</td><td><input type="text" name="customer_name"/></td></tr>
                   <tr>
@@ -167,7 +184,7 @@ export default class EditOrderForm extends Component {
                   <tr>
                     <td>Customer email</td><td><input type="text" name="customer_email"/></td></tr>
                   <tr>
-                    <td>Payment type</td><td><input type="text" name="payment_method"/></td></tr>
+                    <td>Payment type</td><td><input type="text" name="payment_method" required/></td></tr>
                   <tr>
                     <td>Card</td><td><input type="text" name="card"/></td></tr>
                   <tr>
@@ -244,11 +261,13 @@ export default class EditOrderForm extends Component {
 
                 </label>
 
-              </div>
+                {this.getMessage()}
 
-              <div className="btn-wrap">
-                <button type="submit" className="button small">Accept</button>
-                <button className="button small" onClick={(e) => this.onReset(e)}>Cancel</button>
+                <div className="btn-wrap">
+                  <button type="submit" className="button small">Accept</button>
+                  <button className="button small grey" onClick={(e) => this.onReset(e)}>Cancel</button>
+                </div>
+
               </div>
 
             </form>

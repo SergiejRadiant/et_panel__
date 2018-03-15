@@ -2,6 +2,7 @@ import constants from '../constants/index'
 
 const initialState = {
   isFetched: false,
+  message: {},
   errors: {}
 }
 
@@ -10,6 +11,7 @@ export default (state = initialState, action) => {
     case constants.EDIT_ORDER_SUCCESS:
       return {
         isFetched: true,
+        message: 'Order is succesfully edited!',
         errors: {}
       }
     case constants.EDIT_ORDER_REQUEST:
@@ -20,6 +22,7 @@ export default (state = initialState, action) => {
     case constants.EDIT_ORDER_FAILURE:
       return {
         isFetched: true,
+        message: 'Order was not edited!',
         errors: {}
       }
     default:

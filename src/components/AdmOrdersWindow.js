@@ -22,7 +22,7 @@ if (cn) {
   moment.locale('en-gb');
 }
 
-const formatStr = 'YYYY-MM-DD';
+const formatStr = 'DD.MM.YYYY';
 
 function format(v) {
   return v ? v.format(formatStr) : '';

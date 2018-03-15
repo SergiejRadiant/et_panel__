@@ -22,7 +22,7 @@ if (cn) {
   moment.locale('en-gb');
 }
 
-const formatStr = 'YYYY-MM-DD';
+const formatStr = 'DD.MM.YYYY';
 
 function format(v) {
   return v ? v.format(formatStr) : '';
@@ -207,6 +207,8 @@ export default class OrderDetails extends Component {
 
           <table className="default-table vertical">
             <tbody>
+              <tr>
+                <td>Transfer price with discount</td><td>{currentOrder.transfer_price_with_discount}</td></tr>
               <tr>
                 <td>Transfer price</td><td>{currentOrder.transfer_price}</td></tr>
               <tr>

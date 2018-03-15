@@ -157,11 +157,11 @@ class Admin extends Component {
 					
 							<Route path="/admin/orders" render={ props => <AdmOrdersWindow {...props} setDriver={this.props.setDriver} editOrder={this.props.editOrder} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
 					
-							<Route path="/admin/reg_ord" render={ props => <OrderForm {...props}  registerOrder={this.props.registerOrder} retrieveOrders={this.props.retrieveOrders} /> } />
+							<Route path="/admin/reg_ord" render={ props => <OrderForm {...props}  registerOrder={this.props.registerOrder} response={this.props.registerOrder_response} retrieveOrders={this.props.retrieveOrders} /> } />
 					
 							<Route path="/admin/det_ord:orderId" render={ props => <AdmOrderDetails {...props} setDriver={this.props.setDriver} editOrder={this.props.editOrder} retrieveOrder={this.props.retrieveOrder} retrieveOrders={this.props.retrieveOrders} currentOrder={this.props.currentOrder} deleteOrder={this.props.deleteOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
 
-							<Route path="/admin/edit_ord:orderId" render={ props => <EditOrderForm {...props} editOrder={this.props.editOrder} retrieveOrder={this.props.retrieveOrder} retrieveOrders={this.props.retrieveOrders} currentOrder={this.props.currentOrder} drivers={this.props.drivers} orders={this.props.orders} /> } />
+							<Route path="/admin/edit_ord:orderId" render={ props => <EditOrderForm {...props} editOrder={this.props.editOrder} response={this.props.editOrder_response} retrieveOrder={this.props.retrieveOrder} retrieveOrders={this.props.retrieveOrders} currentOrder={this.props.currentOrder} drivers={this.props.drivers} /> } />
 							
 							{localStorage.getItem('adminLocation') ? (
 								<Redirect to={localStorage.getItem('adminLocation')}/>
@@ -191,9 +191,9 @@ const mapStateToProps = (state) => {
 		currentDriver: state.retrieveDriverReducer,
 		currentOrder: state.retrieveOrderReducer,
 		registerDriver_response: state.registerDriverReducer,
-		registerOrder_response: state.registerDriverReducer,
+		registerOrder_response: state.registerOrderReducer,
 		editDriver_response: state.editDriverReducer,
-		editOrder_response: state.editDriverReducer,
+		editOrder_response: state.editOrderReducer,
 	}
 }
 

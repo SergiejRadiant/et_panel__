@@ -21,7 +21,7 @@ export default (state = initialState, action) => {
     case constants.SET_SCHEDULE_FAILURE:
       return {
         isFetched: true,
-        errors: {}
+        errors: action.payload.response
       }
     default:
       return state

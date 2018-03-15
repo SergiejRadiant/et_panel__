@@ -27,7 +27,7 @@ if (cn) {
 	moment.locale('en-gb');
 }
 
-const formatStr = 'YYYY-MM-DD';
+const formatStr = 'DD.MM.YYYY';
 
 function format(v) {
 	return v ? v.format(formatStr) : '';
@@ -66,7 +66,7 @@ export default class Drivers extends Component {
 		return d.user.is_authenticated ? (
 			<div style={{ color: '#68f2dd' }}>online</div>
 		) : d.user.last_login ? (
-			`last visit ${moment(d.user.last_login).format('YYYY-MM-DD HH:mm')}`
+			`last visit ${moment(d.user.last_login).format('DD.MM.YYYY HH:mm')}`
 		) : (
 			''
 		)
