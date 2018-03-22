@@ -118,7 +118,7 @@ class Admin extends Component {
 				<div className="topbar">
 					<div className="container">
 						<div className="topbar-content">
-							<span className="burger"><img onClick={() => window.store.dispatch(toggleMenu(true))} src={burgerIcon} />{this.setCounter()}</span>
+							<span className="burger"><img onClick={() => window.store.dispatch(toggleMenu(true))} src={burgerIcon} alt="Menu" />{this.setCounter()}</span>
 							<Link to="/admin/home"  className="logo" ><img src={logo} alt="Logo" /></Link>
 							<ul className="topbar-nav">
 								<li className="topbar-nav-item">
@@ -140,7 +140,12 @@ class Admin extends Component {
 					<div className="container">
 						
 						<div className="content-topbar">
-							<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Назад</a>
+							{
+								this.props.history.location.pathname.indexOf('home') === -1 ? (
+									<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Назад</a>
+								) : null
+							}
+							
 							<h2>{this.getTitle()}</h2>
 						</div>
 				
@@ -151,7 +156,7 @@ class Admin extends Component {
 					
 							<Route path="/admin/reg_drv" render={ props => <DriverForm {...props} registerDriver={this.props.registerDriver} retrieveDrivers={this.props.retrieveDrivers} response={this.props.registerDriver_response} /> } />
 					
-							<Route path="/admin/det_drv:driverId" render={props => <DriverDetails {...props} deleteOrder={this.props.deleteOrder} deleteDriver={this.props.deleteDriver} retrieveDriver={this.props.retrieveDriver} drivers={this.props.drivers} currentDriver={this.props.currentDriver} /> } />
+							<Route path="/admin/det_drv:driverId" render={props => <DriverDetails {...props} deleteOrder={this.props.deleteOrder} deleteDriver={this.props.deleteDriver} retrieveDriver={this.props.retrieveDriver} drivers={this.props.drivers} orders={this.props.orders} currentDriver={this.props.currentDriver} /> } />
 
 							<Route path="/admin/edit_drv:driverId" render={ props => <DriverForm {...props} editDriver={this.props.editDriver} retrieveDrivers={this.props.retrieveDrivers} response={this.props.editDriver_response} retrieveDriver={this.props.retrieveDriver} currentDriver={this.props.currentDriver} /> } />
 					

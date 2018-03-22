@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Modal from 'react-modal'
 import moment from 'moment'
-
-import * as allConst from '../constants/index'
 
 var serialize = require('form-serialize')
 

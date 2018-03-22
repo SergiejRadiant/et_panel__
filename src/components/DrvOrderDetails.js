@@ -82,7 +82,7 @@ export default class OrderDetails extends Component {
       <div className="content-wrap">
         {!this.props.currentOrder.isFetched ? (
 
-          <img className="spinner" src={spinner} />
+          <img className="spinner" src={spinner} alt="spinner" />
 
         ) : (
 

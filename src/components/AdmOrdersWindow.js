@@ -106,7 +106,7 @@ export default class AdmOrdersWindow extends Component {
                 return (
                   <tr key={n.id}>
                     <td>{n.id}</td>
-                    <td>{n.date}</td>
+                    <td>{moment(n.date).format(formatStr)}</td>
                     <td>{n.status}</td>
                     <td>
                       {n.driver ? (
@@ -151,7 +151,7 @@ export default class AdmOrdersWindow extends Component {
                 return (
                   <tr key={a.id}>
                     <td>{a.id}</td>
-                    <td>{a.date}</td>
+                    <td>{moment(a.date).format(formatStr)}</td>
                     <td>{a.status}</td>
                     <td>
                       <Link to={`/admin/det_drv:${a.driver}`}>{this.getDriverName(a.driver)}</Link></td>
@@ -191,7 +191,7 @@ export default class AdmOrdersWindow extends Component {
                 return (
                   <tr key={e.id}>
                     <td>{e.id}</td>
-                    <td>{e.date}</td>
+                    <td>{moment(e.date).format(formatStr)}</td>
                     <td>{e.status}</td>
                     <td>
                       <Link to={`/admin/det_drv:${e.driver}`}>{this.getDriverName(e.driver)}</Link></td>
@@ -227,7 +227,7 @@ export default class AdmOrdersWindow extends Component {
   }
 
   closeGetDriverModal() {
-    this.setState({ getDriverModalIsOpen: false, currentOrder: '',  filteredDrivers: [], value: '' });
+    this.setState({ getDriverModalIsOpen: false, currentOrder: '',  filteredDrivers: [], value: [] });
   }
 
   onChange = (value) => {
@@ -252,8 +252,8 @@ export default class AdmOrdersWindow extends Component {
 					}
 				}
 			}
-		}
-
+    }
+    
 		filteredDrivers = filteredDrivers.filter( (value, index, self) => {
 			return self.indexOf(value) === index
 		})
@@ -273,7 +273,7 @@ export default class AdmOrdersWindow extends Component {
 	}
 	
 	clearDriverFilter() {
-		this.setState({ filteredDrivers: [], value : '' })
+		this.setState({ filteredDrivers: [], value : [] })
   }
   
   clearOrderFilter() {
@@ -307,7 +307,7 @@ export default class AdmOrdersWindow extends Component {
     this.props.deleteOrder(this.state.currentOrder)
     
     let updatedData = this.props.orders.data.filter( ord => {
-      return ord.id != this.state.currentOrder
+      return +ord.id !== +this.state.currentOrder
     })
 
     this.props.orders.data = updatedData
@@ -332,7 +332,7 @@ export default class AdmOrdersWindow extends Component {
 
         {!this.props.orders.isFetched || !this.props.drivers.isFetched ? (
 
-          <img className="spinner" src={spinner} />
+          <img className="spinner" src={spinner} alt="spinner" />
 
         ) : (
 
@@ -479,7 +479,7 @@ export default class AdmOrdersWindow extends Component {
                             readOnly
                             type="text"
                             ref={input => this.selectDays = input}
-                            value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+                            value={( isValidRange(value) && `${format(value[0])} - ${format(value[1])}` ) || ''}
                           />
                         );
                       }

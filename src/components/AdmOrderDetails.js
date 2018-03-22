@@ -6,7 +6,6 @@ import Picker from 'rc-calendar/lib/Picker'
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar'
 import zhCN from 'rc-calendar/lib/locale/zh_CN'
 import enUS from 'rc-calendar/lib/locale/en_US'
-import TimePickerPanel from 'rc-time-picker/lib/Panel'
 import '../assets/styles/calendar.css'
 import '../assets/styles/picker.css'
 import moment from 'moment'
@@ -56,7 +55,7 @@ export default class OrderDetails extends Component {
   }
 
   closeGetDriverModal() {
-    this.setState({ getDriverModalIsOpen: false, filteredDrivers: [], value: '' });
+    this.setState({ getDriverModalIsOpen: false, filteredDrivers: [], value: [] });
   }
 
   openDeleteOrderModal() {
@@ -71,7 +70,7 @@ export default class OrderDetails extends Component {
     this.props.deleteOrder(this.props.currentOrder.data.id)
 
     let updatedData = this.props.orders.data.filter( ord => {
-      return ord.id != this.props.currentOrder.data.id
+      return +ord.id !== +this.props.currentOrder.data.id
     })
 
     this.props.orders.data = updatedData
@@ -102,8 +101,8 @@ export default class OrderDetails extends Component {
 					}
 				}
 			}
-		}
-
+    }
+    
 		filteredDrivers = filteredDrivers.filter( (value, index, self) => {
 			return self.indexOf(value) === index
 		})
@@ -116,10 +115,9 @@ export default class OrderDetails extends Component {
   }
 
   getDriverFromOrder() {
-    let driverId = this.props.currentOrder.data.driver,
-        orderId = this.props.currentOrder.data.id
+    let driverId = this.props.currentOrder.data.driver
     
-    if (!driverId) return <span onClick={(orderId) => this.openGetDriverModal(orderId)}>Appoint a driver</span>
+    if (!driverId) return <span onClick={() => this.openGetDriverModal()}>Appoint a driver</span>
     
     let drivers = this.props.drivers.data,
     
@@ -173,7 +171,7 @@ export default class OrderDetails extends Component {
   }
 
   clearDriverFilter() {
-		this.setState({ filteredDrivers: [], value : '' })
+		this.setState({ filteredDrivers: [], value : [] })
   }
   
   render() {
@@ -193,7 +191,7 @@ export default class OrderDetails extends Component {
     return (
       <div className="content-wrap">
         {!this.props.currentOrder.isFetched || !this.props.drivers.isFetched ? (
-          <img className="spinner" src={spinner} />
+          <img className="spinner" src={spinner} alt="spinner" />
         ) : (
         <div className="content">
 
@@ -257,7 +255,7 @@ export default class OrderDetails extends Component {
           </table>
 
           <div className="table-footer">
-            <div><h5>Date of creation:</h5> {currentOrder.date}</div>
+            <div><h5>Date of creation:</h5>{currentOrder.date}</div>
             <div><h5>Driver:</h5> {this.getDriverFromOrder()}</div>
             <div><h5>Status:</h5> {currentOrder.status}</div>
           </div>
@@ -268,49 +266,54 @@ export default class OrderDetails extends Component {
           </div>
 
           <Modal
-            isOpen={this.state.getDriverModalIsOpen}
-            onRequestClose={this.closeDetDriverModal}
-            style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-            className="modal"
-            ariaHideApp={false}
-          >
-            <button  className="close-btn" onClick={this.closeGetDriverModal} />
-            <label>Выберите дату: <Picker
-              value={this.state.value}
-              onChange={this.onChange}
-              animation="slide-up"
-              calendar={calendar}
+              isOpen={this.state.getDriverModalIsOpen}
+              onRequestClose={this.closeDetDriverModal}
+              style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
+              className="modal"
+              ariaHideApp={false}
             >
-              {
-                ({ value }) => {
-                  return (
-                    <input
-                      placeholder="please select"
-                      disabled={this.state.disabled}
-                      readOnly
-                      type="text"
-                      value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
-                    />
-                  );
-                }
-              }
-            </Picker></label>
-            <label>Водители:
-            <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
-              
-              {this.state.filteredDrivers.map(f => {
-                return (
-                  <option key={f.id} value={f.id}>{this.getDriverName(f.id)}</option>
-                )
-              })}
+              <button type="reset" className="close-btn" onClick={this.closeGetDriverModal} />
+              <h5>Выберите дату: </h5> 
+              <div className="filter-wrap">
+                <Picker
+                    value={this.state.value}
+                    onChange={this.onChange}
+                    animation="slide-up"
+                    calendar={calendar}
+                  >
+                    {
+                      ({ value }) => {
+                        return (
+                          <input
+                            placeholder="Select days"
+                            readOnly
+                            type="text"
+                            ref={input => this.selectDays = input}
+                            value={( isValidRange(value) && `${format(value[0])} - ${format(value[1])}` ) || ''}
+                          />
+                        );
+                      }
+                    }
+                </Picker>
+                <div className="input-close-btn" onClick={() => this.clearDriverFilter()}></div>
+              </div>
 
-            </select>
-            </label>
-            <div className="btn-wrap">
-              <button className="button small" onClick={this.setDriver.bind(this)}>Принять</button>
-              <button className="button small" onClick={this.closeGetDriverModal}>Отмена</button>
-            </div>
-          </Modal>
+              <label>Водители:
+                <select ref={ select => this.setDriverSelect = select} size="6" style={{ height: "125px" }}>
+
+                  {this.state.filteredDrivers.map((f) => {
+                    return <option key={f.id} value={f.id}>{this.getDriverName(f.id)}</option>
+                  })}
+
+                </select>
+              </label>
+
+              <div className="btn-wrap">
+                <button type="submit" className="button small" onClick={this.setDriver.bind(this)}>Принять</button>
+                <button type="reset" className="button small" onClick={this.closeGetDriverModal}>Отмена</button>
+              </div>
+
+            </Modal>
 
           <Modal
             isOpen={this.state.deleteOrderModalIsOpen}

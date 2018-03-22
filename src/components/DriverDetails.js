@@ -1,6 +1,5 @@
 import '../assets/styles/calendar.css';
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import FullCalendar from 'rc-calendar/lib/FullCalendar';
 
@@ -16,14 +15,15 @@ import 'moment/locale/en-gb';
 import Modal from 'react-modal'
 
 import spinner from '../assets/images/loading.gif'
-import * as allConst from '../constants/index'
 
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 
 const moment = extendMoment(Moment);
 
-const format = 'DD.MM.YYYY';
+const format = 'YYYY-MM-DD';
+const formatStr = 'DD.MM.YYYY';
+
 const cn = window.location.search.indexOf('cn') !== -1;
 
 const now = moment();
@@ -49,8 +49,6 @@ export default class DriverDetails extends Component {
 
     this.openDeleteOrderModal = this.openDeleteOrderModal.bind(this);
     this.closeDeleteOrderModal = this.closeDeleteOrderModal.bind(this);
-    this.openDeleteDriverModal = this.openDeleteDriverModal.bind(this);
-    this.closeDeleteDriverModal = this.closeDeleteDriverModal.bind(this);
     this.openScheduleModal = this.openScheduleModal.bind(this)
     this.closeScheduleModal = this.closeScheduleModal.bind(this)
 
@@ -107,14 +105,6 @@ export default class DriverDetails extends Component {
     this.setState({ scheduleModalIsOpen: false })
   }
 
-  openDeleteDriverModal() {
-		this.setState({ deleteDriverModalIsOpen: true });
-	}
-
-	closeDeleteDriverModal() {
-		this.setState({ deleteDriverModalIsOpen: false });
-	}
-
   openDeleteOrderModal(orderId) {
     this.setState({ deleteOrderModalIsOpen: true , currentOrder: orderId });
   }
@@ -138,9 +128,9 @@ export default class DriverDetails extends Component {
 
           <button className="close-btn" onClick={this.closeScheduleModal}></button>
 
-          <h4>{workday.date}</h4>
+          <h4>{moment(workday.date).format(formatStr)}</h4>
 
-          <label>Work day: <input type="text" name="workDay" value={workday.date} disabled/></label>
+          <label>Work day: <input type="text" name="workDay" value={moment(workday.date).format(formatStr)} disabled/></label>
           <label>Work day start:  <input type="text" value={workday.start} disabled /></label>
           <label>Work day end:  <input type="text" value={workday.end} disabled /></label>
           
@@ -177,7 +167,7 @@ export default class DriverDetails extends Component {
     this.closeDeleteDriverModal()
 
     let updatedData = this.props.drivers.data.filter( ord => {
-      return ord.id != this.props.currentDriver.data.id
+      return +ord.id !== +this.props.currentDriver.data.id
     })
 
     this.props.drivers.data = updatedData
@@ -189,22 +179,27 @@ export default class DriverDetails extends Component {
     this.props.deleteOrder(this.state.currentOrder)
      
     let updatedData = this.props.currentDriver.data.orders.filter( ord => {
-      return ord.id != this.state.currentOrder
+      return +ord.id !== +this.state.currentOrder
+    })
+
+    let updatedOrdersList = this.props.orders.data.filter( ord => {
+      return +ord.id !== +this.state.currentOrder
     })
 
     this.props.currentDriver.data.orders = updatedData
-
+    this.props.orders.data = updatedOrdersList
+    
     this.closeDeleteOrderModal()
   }
   
   render() {
-    let _driverId = this.props.match.params.driverId
+    let driverId = this.props.match.params.driverId
 
     return (
       <div className="content-wrap">
         {
           !this.props.currentDriver.isFetched ? (
-            <img className="spinner" src={spinner} />
+            <img className="spinner" src={spinner}alt="spinner" />
           ) : (
             <div className="content">
               <div className="content-box">
@@ -214,7 +209,7 @@ export default class DriverDetails extends Component {
                     <label>Last name: <input type="text" value={this.props.currentDriver.data.user.last_name} disabled /></label>
                     <label>E-mail: <input type="text" value={this.props.currentDriver.data.user.email} disabled /></label>
                     <div className="btn-wrap left">
-                      <Link to={`/admin/edit_drv${_driverId}`} className="button small">Ред.</Link>
+                      <Link to={`/admin/edit_drv${driverId}`} className="button small">Ред.</Link>
                       <span onClick={() => this.openDeleteDriverModal()} className="button small grey">Удал.</span>
                     </div>
                   </div>
@@ -252,7 +247,7 @@ export default class DriverDetails extends Component {
                           return (
                             <tr key={ord.id}>
                               <td>{ord.id}</td>
-                              <td>{ord.date}</td>
+                              <td>{moment(ord.date).format(formatStr)}</td>
                               <td>{ord.status}</td>
                               <td>
                                 <Link to={`/admin/det_ord:${ord.id}`}>Дет.</Link>

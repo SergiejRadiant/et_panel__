@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
-import Modal from 'react-modal'
 import spinner from '../assets/images/loading.gif'
-import * as allConst from '../constants/index'
 
 
 export default class DriverForm extends Component {
@@ -185,7 +183,7 @@ export default class DriverForm extends Component {
     return (
       <div className="content-wrap">
         {(this.props.retrieveDriver !== undefined && !this.props.currentDriver.isFetched) ? (
-          <img className="spinner" src={spinner} />
+          <img className="spinner" src={spinner} alt="spinner" />
         ) : (
           <form className="form" ref={(form) => this.form = form} onSubmit={(e) => this.submitForm(e)}>
  

@@ -1,6 +1,5 @@
 import '../assets/styles/calendar.css'
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import FullCalendar from 'rc-calendar/lib/FullCalendar'
 import Picker from 'rc-calendar/lib/Picker'
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar'
@@ -40,22 +39,14 @@ function disabledDate(current) {
   return current.isBefore(date);  // can not select days before today
 }
 
-const formatStr = 'DD.MM.YYYY'
+const formatStr = 'YYYY-MM-DD'
 
 function format(v) {
-  return v ? v.format(formatStr) : '';
+  return v ? v.format('DD.MM.YYYY') : '';
 }
 
 function isValidRange(v) {
   return v && v[0] && v[1];
-}
-
-function onStandaloneChange(value) {
-  console.log(value[0] && format(value[0]), value[1] && format(value[1]));
-}
-
-function onStandaloneSelect(value) {
-  console.log(format(value[0]), format(value[1]));
 }
 
 export default class Shedule extends Component {
@@ -115,16 +106,10 @@ export default class Shedule extends Component {
       return moment(w.date).isSame(value._d.toDateString())
     })
 
-    if  
-      (
-        this.state.type === 'date' && workday.length > 0 || 
-        this.state.type === 'date' && !moment(value).isBefore(now)
-      ) 
-
-      {
-        this.openScheduleModal()
-        this.setState({ select: value.format(formatStr) })
-      }
+    if( this.state.type === 'date' && ( workday.length > 0 || !moment(value).isBefore(now) ) ) {
+      this.openScheduleModal()
+      this.setState({ select: value.format(formatStr) })
+    }
   }
 
   openScheduleModal() {
@@ -166,11 +151,11 @@ export default class Shedule extends Component {
 
           <button className="close-btn" onClick={this.closeScheduleModal}></button>
 
-          <h4>{workday.date}</h4>
+          <h4>{moment(workday.date).format('DD.MM.YYYY')}</h4>
 
-          <label>Work day: <input type="text" name="workDay" value={workday.date} disabled/></label>
-          <label>Work day start:  <input type="text" value={workday.start} disabled /></label>
-          <label>Work day end:  <input type="text" value={workday.end} disabled /></label>
+          <label>Work day: <input type="text" name="workDay" value={moment(workday.date).format('DD.MM.YYYY')} disabled/></label>
+          <label>Work day start: <input type="text" value={workday.start} disabled /></label>
+          <label>Work day end: <input type="text" value={workday.end} disabled /></label>
           
           <div className="btn-wrap">
             <button type="submit" className="button small" onClick={this.closeScheduleModal.bind(this)}>Ок</button>
@@ -187,9 +172,9 @@ export default class Shedule extends Component {
       <form  ref={form => this.scheduleForm = form}  onSubmit={(e) => this.submitSchedule(e)}>
         <button className="close-btn" onClick={this.closeScheduleModal.bind(this)}></button>
 
-        <h4>{this.state.select}</h4>
+        <h4>{moment(this.state.select).format('DD.MM.YYYY')}</h4>
 
-        <label>Work day: <input type="text" name="workDay" value={this.state.select} disabled/></label>
+        <label>Work day: <input type="text" name="workDay" value={moment(this.state.select).format('DD.MM.YYYY')} disabled/></label>
         <label>Work day start:  <input type="time" name="startTime" required/></label>
         <label>Work day end:  <input type="time" name="endTime" required/></label>
 
@@ -207,7 +192,7 @@ export default class Shedule extends Component {
   submitSchedule(e) {
     e.preventDefault()
 
-    let workDay = this.scheduleForm.workDay.value,
+    let workDay = this.state.select,
         startTime = this.scheduleForm.startTime.value,
         endTime = this.scheduleForm.endTime.value,
         driver = this.props.currentDriver.data,
@@ -242,7 +227,7 @@ export default class Shedule extends Component {
 
     for (let day of range.by('days')) { 
       newWorkdays.push({
-        date: day.format('DD.MM.YYYY'),
+        date: day.format(formatStr),
         start: startTime,
         end: endTime,
       }) 
@@ -271,7 +256,7 @@ export default class Shedule extends Component {
     return (
       <div className="content-wrap schedule">
         {!this.props.currentDriver.isFetched ? (
-          <img className="spinner" src={spinner} />
+          <img className="spinner" src={spinner} alt="spinner" />
         ) : (
           <div className="content">
             <FullCalendar
@@ -320,7 +305,7 @@ export default class Shedule extends Component {
                           placeholder="please select"
                           readOnly
                           type="text"
-                          value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+                          value={( isValidRange(value) && `${format(value[0])} - ${format(value[1])}` ) || ''}
                         />
                       );
                     }

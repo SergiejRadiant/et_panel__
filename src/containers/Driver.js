@@ -98,7 +98,7 @@ class Driver extends Component {
 				<div className="topbar">
 					<div className="container">
 						<div className="topbar-content">
-							<span className="burger"><img onClick={() => window.store.dispatch(toggleMenu(true))} src={burgerIcon} />{this.setCounter()}</span>
+							<span className="burger"><img onClick={() => window.store.dispatch(toggleMenu(true))} src={burgerIcon} alt="Menu" />{this.setCounter()}</span>
 							<Link to="/driver/home" className="logo" ><img src={logo} alt="Logo" /></Link>
 							<ul className="topbar-nav">
 								<li className="topbar-nav-item">
@@ -120,7 +120,12 @@ class Driver extends Component {
 					<div className="container">
 
 						<div className="content-topbar">
-							<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Назад</a>
+							{
+								this.props.history.location.pathname.indexOf('home') === -1 ? (
+									<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Назад</a>
+								) : null
+							}
+							
 							<h2>{this.getTitle()}</h2>
 						</div>
 

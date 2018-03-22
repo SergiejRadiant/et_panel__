@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import Modal from 'react-modal';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import Modal from 'react-modal'
+import moment from 'moment';
 
 import spinner from '../assets/images/loading.gif'
 import * as allConst from '../constants/index'
+
+const formatStr = 'DD.MM.YYYY'
 
 export default class DrvOrdersWindow extends Component {
 	constructor() {
@@ -61,7 +63,7 @@ export default class DrvOrdersWindow extends Component {
 								return (
 									<tr key={n.id}>
 										<td>{n.id}</td>
-										<td>{n.date}</td>
+										<td>{moment(n.date).format(formatStr)}</td>
 										<td>{n.status}</td>
 										<td>
 											<span onClick={(orderId) => this.openConfirmModal(n.id)}>Принять</span>
@@ -97,7 +99,7 @@ export default class DrvOrdersWindow extends Component {
 								return (
 									<tr key={a.id}>
 										<td>{a.id}</td>
-										<td>{a.date}</td>
+										<td>{moment(a.date).format(formatStr)}</td>
 										<td>{a.status}</td>
 										<td>
 											<span onClick={(orderId) => this.openCompleteModal(a.id)}>Заверш.</span>
@@ -133,7 +135,7 @@ export default class DrvOrdersWindow extends Component {
 								return (
 									<tr key={e.id}>
 										<td>{e.id}</td>
-										<td>{e.date}</td>
+										<td>{moment(e.date).format(formatStr)}</td>
 										<td>{e.status}</td>
 										<td>
 											<Link to={`/driver/det_ord:${e.id}`}>Детали</Link>
@@ -223,7 +225,7 @@ export default class DrvOrdersWindow extends Component {
 			<div className="content-wrap">
 				{ !this.props.currentDriver.isFetched ? (
           
-					<img className="spinner" src={spinner} />
+					<img className="spinner" src={spinner} alt="spinner" />
 					
 					) : (
 						<div className="content">

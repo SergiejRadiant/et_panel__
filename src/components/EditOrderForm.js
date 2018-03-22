@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Modal from 'react-modal'
 
 import spinner from '../assets/images/loading.gif'
 import * as allConst from '../constants/index'
-
-var serialize = require('form-serialize')
 
 const statuses = [ allConst.STATUS_NEW, allConst.STATUS_WAIT, allConst.STATUS_ACTIVE, allConst.STATUS_EXECUTED ]
 
@@ -126,7 +123,7 @@ export default class EditOrderForm extends Component {
 
         {!this.props.currentOrder.isFetched || !this.props.drivers.isFetched ? (
           
-          <img className="spinner" src={spinner} />
+          <img className="spinner" src={spinner} alt="spinner" />
         
         ) : (
 
@@ -205,9 +202,11 @@ export default class EditOrderForm extends Component {
                       
                       if ( current.driver && d.id === current.driver ) {
                         return (
-                          <option value={d.id}>{this.getDriverName(d.id)}</option>
+                          <option key={d.id} value={d.id}>{this.getDriverName(d.id)}</option>
                         )
                       }
+
+                      return null
                     })}
 
                     {this.props.drivers.data.map(d => {
@@ -226,6 +225,7 @@ export default class EditOrderForm extends Component {
                         )
                       }
 
+                      return null
                     })}
 
                   </select>
@@ -244,6 +244,7 @@ export default class EditOrderForm extends Component {
                         )
                       }
 
+                      return null
                     })}
 
                     {statuses.map(s => {
@@ -254,7 +255,8 @@ export default class EditOrderForm extends Component {
                           <option key={s}>{s}</option>
                         )
                       }
-
+                      
+                      return null
                     })}
 
                   </select>

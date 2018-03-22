@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import Modal from 'react-modal';
 import Picker from 'rc-calendar/lib/Picker';
 import RangeCalendar from 'rc-calendar/lib/RangeCalendar';
@@ -35,16 +33,6 @@ function format(v) {
 
 function isValidRange(v) {
 	return v && v[0] && v[1];
-}
-
-function onStandaloneChange(value) {
-	console.log('onChange');
-	console.log(value[0] && format(value[0]), value[1] && format(value[1]));
-}
-
-function onStandaloneSelect(value) {
-	console.log('onSelect');
-	console.log(format(value[0]), format(value[1]));
 }
 
 export default class Drivers extends Component {
@@ -123,7 +111,7 @@ export default class Drivers extends Component {
 		this.props.deleteDriver(this.state.currentDriver)
 
 		let updatedData = this.props.drivers.data.filter( ord => {
-      return ord.id != this.state.currentDriver
+      return +ord.id !== +this.state.currentDriver
     })
 
 		this.props.drivers.data = updatedData
@@ -166,7 +154,7 @@ export default class Drivers extends Component {
 
 				{!this.props.drivers.isFetched  ? (
 
-					<img className="spinner" src={spinner} />
+					<img className="spinner" src={spinner} alt="spinner" />
 				) : (
 
 					<div className="content">
@@ -190,7 +178,7 @@ export default class Drivers extends Component {
 														readOnly
 														type="text"
 														ref={input => this.selectDays = input}
-														value={isValidRange(value) && `${format(value[0])} - ${format(value[1])}` || ''}
+														value={( isValidRange(value) && `${format(value[0])} - ${format(value[1])}` ) || ''}
 													/>
 												);
 											}
