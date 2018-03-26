@@ -54,7 +54,7 @@ export default class Drivers extends Component {
 		return d.user.is_authenticated ? (
 			<div style={{ color: '#68f2dd' }}>online</div>
 		) : d.user.last_login ? (
-			`last visit ${moment(d.user.last_login).format('DD.MM.YYYY HH:mm')}`
+			`${moment(d.user.last_login).format('DD.MM.YYYY HH:mm')}`
 		) : (
 			''
 		)
@@ -161,7 +161,7 @@ export default class Drivers extends Component {
 
 						<div className="content-label">
 
-							<h1>Водители</h1>
+							<h1>Drivers</h1>
 
 							<div className="filter-wrap">
 								<Picker
@@ -189,16 +189,16 @@ export default class Drivers extends Component {
 
 							</div>
 
-							<Link to="/admin/reg_drv" className="button grey">Зарегистрировать</Link>
+							<Link to="/admin/reg_drv" className="button grey">New driver</Link>
 						</div>
 
 						<table className="default-table">
 
 							<thead>
 								<tr>
-									<td className="normal">Имя</td>
-									<td className="normal">Машина</td>
-									<td className="normal">В сети (был)</td>
+									<td className="normal">Name</td>
+									<td className="normal">Car</td>
+									<td className="normal">Last visit</td>
 									<td className="small" />
 								</tr>
 							</thead>
@@ -214,9 +214,9 @@ export default class Drivers extends Component {
 												<td>{`${d.car}, ${d.number_of_car}`}</td>
 												<td>{this.isOnline(d)}</td>
 												<td>
-													<Link to={`/admin/det_drv:${d.id}`}>Дет.</Link>
-													<Link to={`/admin/edit_drv:${d.id}`}>Ред.</Link>
-													<span onClick={() => this.openDeleteDriverModal(d.id)}>Удал.</span>
+													<Link to={`/admin/det_drv:${d.id}`}>Det.</Link>
+													<Link to={`/admin/edit_drv:${d.id}`}>Edit</Link>
+													<span onClick={() => this.openDeleteDriverModal(d.id)}>Del.</span>
 												</td>
 											</tr>
 										)
@@ -230,9 +230,9 @@ export default class Drivers extends Component {
 												<td>{`${d.car}, ${d.number_of_car}`}</td>
 												<td>{this.isOnline(d)}</td>
 												<td>
-													<Link to={`/admin/det_drv:${d.id}`}>Дет.</Link>
-													<Link to={`/admin/edit_drv:${d.id}`}>Ред.</Link>
-													<span onClick={() => this.openDeleteDriverModal(d.id)}>Удал.</span>
+													<Link to={`/admin/det_drv:${d.id}`}>Det.</Link>
+													<Link to={`/admin/edit_drv:${d.id}`}>Edit</Link>
+													<span onClick={() => this.openDeleteDriverModal(d.id)}>Del.</span>
 												</td>
 											</tr>
 										)

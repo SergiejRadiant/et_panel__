@@ -71,23 +71,23 @@ class Admin extends Component {
 	getTitle() {
 		let path = this.props.history.location.pathname
 		if (~path.indexOf("home")) {
-			return "Добро пожаловать"
+			return "Welcome"
 		} else if (~path.indexOf("drivers")) {
-			return "Водители"
+			return "Drivers"
 		} else if (~path.indexOf("reg_drv")) {
-			return "Новый водитель"
+			return "New driver"
 		} else if (~path.indexOf("det_drv")) {
-			return "Информация о водителе"
+			return "Driver details"
 		} else if (~path.indexOf("edit_drv")) {
-			return "Редактировать пользователя"
+			return "Edit user"
 		} else if (~path.indexOf("orders")) {
-			return "Заказы"
+			return "Orders"
 		} else if (~path.indexOf("reg_ord")) {
-			return "Новый заказ"
+			return "New order"
 		} else if (~path.indexOf("det_ord")) {
-			return "Информация о заказе"
+			return "Order details"
 		} else if (~path.indexOf("edit_ord")) {
-			return "Зувфктировать заказ"
+			return "Edit order"
 		}
 	}
 	
@@ -128,9 +128,9 @@ class Admin extends Component {
 									<Link className="topbar-nav-link" to='/admin/drivers'>Drivers</Link>
 								</li>
 							</ul>
-							<div className="topbar-auth">
-								Вы вошли как Admin
-								<img src={exitBtn} alt="Выход" className="exit-btn" onClick={() => this.logout()}/>
+							<div className="topbar-auth">				
+								Signed in as Admin
+								<img src={exitBtn} alt="Exit" className="exit-btn" onClick={() => this.logout()}/>
 							</div>
 						</div>
 					</div>
@@ -142,7 +142,7 @@ class Admin extends Component {
 						<div className="content-topbar">
 							{
 								this.props.history.location.pathname.indexOf('home') === -1 ? (
-									<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Назад</a>
+									<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Back</a>
 								) : null
 							}
 							
@@ -180,7 +180,7 @@ class Admin extends Component {
 
 				<div className="footer">
 					<div className="container">
-						Developed by <a href="radiant-graphics.ru">Radiant Graphics</a>
+						Developed by <a href="http://radiant-graphics.ru">Radiant Graphics</a>
 					</div>
 				</div>
 			</div>

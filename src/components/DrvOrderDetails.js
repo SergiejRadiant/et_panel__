@@ -93,7 +93,7 @@ export default class OrderDetails extends Component {
             </div>
 
             <div className="content-label">
-              <h5>Информация о заказе:</h5>
+              <h5>Order data:</h5>
             </div>
 
            <table className="default-table vertical">
@@ -155,11 +155,11 @@ export default class OrderDetails extends Component {
             {
               this.props.currentOrder.data.status === allConst.STATUS_WAIT ? (
                 <div className="btn-wrap">
-                  <button className="button small left" onClick={() => this.openConfirmModal()}>Подтв.</button>
+                  <button className="button small left" onClick={() => this.openConfirmModal()}>Accept</button>
                 </div>
               ) : this.props.currentOrder.data.status === allConst.STATUS_ACTIVE ? (
                 <div className="btn-wrap">
-                  <button className="button small left" onClick={() => this.openCompleteModal()}>Заверш.</button>
+                  <button className="button small left" onClick={() => this.openCompleteModal()}>Finish</button>
                 </div>
               ) : null
             }
@@ -191,13 +191,13 @@ export default class OrderDetails extends Component {
               ariaHideApp={false}
             >
               <button className="close-btn" onClick={this.closeCompleteModal.bind(this)} />
-              <p>Завершить заказ?</p>
+              <p>Do you wanna finish the order?</p>
               <div className="btn-wrap">
                 <button className="button small" onClick={this.completeOrder.bind(this)}>
-                  Ок
+                  Ok
                 </button>
                 <button className="button small" onClick={this.closeCompleteModal.bind(this)}>
-                  Отмена
+                  Cancel
                 </button>
               </div>
             </Modal>

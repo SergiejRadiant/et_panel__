@@ -130,9 +130,9 @@ export default class DriverDetails extends Component {
 
           <h4>{moment(workday.date).format(formatStr)}</h4>
 
-          <label>Work day: <input type="text" name="workDay" value={moment(workday.date).format(formatStr)} disabled/></label>
-          <label>Work day start:  <input type="text" value={workday.start} disabled /></label>
-          <label>Work day end:  <input type="text" value={workday.end} disabled /></label>
+          <label>Workday: <input type="text" name="workDay" value={moment(workday.date).format(formatStr)} disabled/></label>
+          <label>Workday start:  <input type="text" value={workday.start} disabled /></label>
+          <label>Workday end:  <input type="text" value={workday.end} disabled /></label>
           
           <div className="btn-wrap">
             <button type="submit" className="button small" onClick={this.closeScheduleModal.bind(this)}>Ок</button>
@@ -149,7 +149,7 @@ export default class DriverDetails extends Component {
       <div>
         <button className="close-btn" onClick={this.closeScheduleModal.bind(this)}></button>
 
-        <p>Выходной</p>
+        <p>Holliday</p>
 
         <div className="btn-wrap">
           <button className="button small" onClick={this.closeScheduleModal.bind(this)}>Ок</button>
@@ -209,8 +209,8 @@ export default class DriverDetails extends Component {
                     <label>Last name: <input type="text" value={this.props.currentDriver.data.user.last_name} disabled /></label>
                     <label>E-mail: <input type="text" value={this.props.currentDriver.data.user.email} disabled /></label>
                     <div className="btn-wrap left">
-                      <Link to={`/admin/edit_drv${driverId}`} className="button small">Ред.</Link>
-                      <span onClick={() => this.openDeleteDriverModal()} className="button small grey">Удал.</span>
+                      <Link to={`/admin/edit_drv${driverId}`} className="button small">Edit</Link>
+                      <span onClick={() => this.openDeleteDriverModal()} className="button small grey">Delete</span>
                     </div>
                   </div>
                   <div className="content-box-cell order-1">
@@ -219,7 +219,7 @@ export default class DriverDetails extends Component {
                     <label>Car number: <input type="text" value={this.props.currentDriver.data.number_of_car} disabled /></label>
                   </div>
                   <div className="content-box-cell order-3">
-                    <h5>Рабочее время:</h5>
+                    <h5>Worktime:</h5>
                     <FullCalendar
                       Select={Select}
                       fullscreen={false}
@@ -232,7 +232,7 @@ export default class DriverDetails extends Component {
                 </div>
                 <div className="content-box-row">
                   <div className="content-box-cell wide">
-                    <h5>Заказы:</h5>
+                    <h5>Orders:</h5>
                     <table className="default-table">
                       <thead>
                         <tr>
@@ -250,9 +250,9 @@ export default class DriverDetails extends Component {
                               <td>{moment(ord.date).format(formatStr)}</td>
                               <td>{ord.status}</td>
                               <td>
-                                <Link to={`/admin/det_ord:${ord.id}`}>Дет.</Link>
-                                <Link to={`/admin/edit_ord:${ord.id}`}>Ред.</Link>
-                                <span onClick={(orderId) => this.openDeleteOrderModal(ord.id)}>Удал.</span>
+                                <Link to={`/admin/det_ord:${ord.id}`}>Det.</Link>
+                                <Link to={`/admin/edit_ord:${ord.id}`}>Edit</Link>
+                                <span onClick={(orderId) => this.openDeleteOrderModal(ord.id)}>Del.</span>
                               </td>
                             </tr>
                           )
@@ -270,13 +270,13 @@ export default class DriverDetails extends Component {
                 ariaHideApp={false}
               >
                 <button className="close-btn" onClick={this.closeDeleteDriverModal.bind(this)} />
-                <p>Вы уверены, что хотите удалить пользователя?</p>
+                <p>Are you sure you wanna delete this driver?</p>
                 <div className="btn-wrap">
                   <button type="submit" className="button small" onClick={this.submitDeleteDriverForm.bind(this)}>
-                    Ок
+                    Ok
                   </button>
                   <button type="recet" className="button small" onClick={this.closeDeleteDriverModal.bind(this)}>
-                    Отмена
+                    Cancel
                   </button>
                 </div>
               </Modal>
@@ -288,13 +288,13 @@ export default class DriverDetails extends Component {
                 ariaHideApp={false}
               >
                 <button type="reset" className="close-btn" onClick={() => this.closeDeleteOrderModal()} />
-                <p>Вы уверены, что хотите удалить заказ?</p>
+                <p>Are you sure you wanna delete this order?</p>
                 <div className="btn-wrap">
                   <button type="submit" className="button small" onClick={this.submitDeleteOrderForm.bind(this)}>
-                    Ок
+                    Ok
                   </button>
                   <button type="recet" className="button small" onClick={this.closeDeleteOrderModal}>
-                    Отмена
+                    Cancel
                   </button>
                 </div>
               </Modal>

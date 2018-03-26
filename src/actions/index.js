@@ -5,7 +5,7 @@ import constants from '../constants/index'
 
 export const login = (data) => ({
   [RSAA]: {
-    endpoint: 'http://expresstransfers.eu/ru/ext_api/v0/api-token-auth/',
+    endpoint: 'http://expresstransfers.eu/en/ext_api/v0/api-token-auth/',
     method: 'POST',
     body: JSON.stringify(data),
     headers: { 'Content-Type': 'application/json' },
@@ -18,7 +18,7 @@ export const login = (data) => ({
 
 export const refreshAccessToken = (token) => ({
   [RSAA]: {
-    endpoint: 'http://expresstransfers.eu/ru/ext_api/v0/api-token-refresh/',
+    endpoint: 'http://expresstransfers.eu/en/ext_api/v0/api-token-refresh/',
     method: 'POST',
     body: JSON.stringify({ token: token }),
     headers: { 'Content-Type': 'application/json' },
@@ -31,7 +31,7 @@ export const refreshAccessToken = (token) => ({
 
 export const retrieveDrivers = () => ({
   [RSAA]: {
-    endpoint: 'http://expresstransfers.eu/ru/ext_api/v0/drivers/',
+    endpoint: 'http://expresstransfers.eu/en/ext_api/v0/drivers/',
     method: 'GET',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     types: [
@@ -43,7 +43,7 @@ export const retrieveDrivers = () => ({
 
 export const registerDriver = (data) => ({
   [RSAA]: {
-    endpoint: 'http://expresstransfers.eu/ru/ext_api/v0/drivers/',
+    endpoint: 'http://expresstransfers.eu/en/ext_api/v0/drivers/',
     method: 'POST',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
@@ -56,7 +56,7 @@ export const registerDriver = (data) => ({
 
 export const retrieveDriver = (driverId) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/drivers/${driverId}/`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/drivers/${driverId}/`,
     method: 'GET',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     types: [
@@ -68,7 +68,7 @@ export const retrieveDriver = (driverId) => ({
 
 export const deleteDriver = (driverId) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/drivers/${driverId}/`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/drivers/${driverId}/`,
     method: 'DELETE',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     types: [
@@ -80,7 +80,7 @@ export const deleteDriver = (driverId) => ({
 
 export const retrieveOrders = () => ({
   [RSAA]: {
-    endpoint: 'http://expresstransfers.eu/ru/ext_api/v0/orders/',
+    endpoint: 'http://expresstransfers.eu/en/ext_api/v0/orders/',
     method: 'GET',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     types: [
@@ -92,7 +92,7 @@ export const retrieveOrders = () => ({
 
 export const registerOrder = (data) => ({
   [RSAA]: {
-    endpoint: 'http://expresstransfers.eu/ru/ext_api/v0/orders/',
+    endpoint: 'http://expresstransfers.eu/en/ext_api/v0/orders/',
     method: 'POST',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
@@ -105,7 +105,7 @@ export const registerOrder = (data) => ({
 
 export const retrieveOrder = (orderId) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/orders/${orderId}/`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/orders/${orderId}/`,
     method: 'GET',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     types: [
@@ -117,7 +117,7 @@ export const retrieveOrder = (orderId) => ({
 
 export const deleteOrder = (orderId) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/orders/${orderId}/`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/orders/${orderId}/`,
     method: 'DELETE',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     types: [
@@ -129,7 +129,7 @@ export const deleteOrder = (orderId) => ({
 
 export const setDriver = (data) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/orders/${data.id}/`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/orders/${data.id}/`,
     method: 'PATCH',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
@@ -141,7 +141,7 @@ export const setDriver = (data) => ({
 
 export const setSchedule = (data, scheduleId) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/add-workdays/${scheduleId}`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/add-workdays/${scheduleId}`,
     method: 'POST',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
@@ -153,7 +153,7 @@ export const setSchedule = (data, scheduleId) => ({
 
 export const editDriver = (data, driverId) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/edit-driver/${driverId}`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/edit-driver/${driverId}`,
     method: 'POST',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),
@@ -165,7 +165,7 @@ export const editDriver = (data, driverId) => ({
 
 export const editOrder = (data) => ({
   [RSAA]: {
-    endpoint: `http://expresstransfers.eu/ru/ext_api/v0/orders/${data.id}/`,
+    endpoint: `http://expresstransfers.eu/en/ext_api/v0/orders/${data.id}/`,
     method: 'PATCH',
     headers: withAuth({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(data),

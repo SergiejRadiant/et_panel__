@@ -7,9 +7,11 @@ export default class Home extends Component {
     return (
       <div className="content-wrap">
         <div className="content">
-          <h1>Добро пожаловать в это приложение</h1>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio voluptates suscipit porro repellat! Tempore, repellendus rerum. Enim praesentium eaque necessitatibus, cupiditate, veniam aperiam, eligendi quos molestias saepe voluptatem modi amet.</p>
-          <h3>Вам доступны следующие разделы:</h3>
+          <h1>Welcome to EXT Panel</h1>
+          <p>EXT Panel is a user-friendly application for the company Express Transfers. It helps you perform all necessary operations with orders, set your work schedule.</p>
+          <p>Application has ability to inform users about new changes in all existing orders or new orders in realtime.</p>
+
+          <h3>The following sections are available:</h3>
           <div className="sections">
             {this.props.links.map(l => {
               return (
@@ -17,8 +19,8 @@ export default class Home extends Component {
               )
             })}
           </div>
-          <h3>Заголовок</h3>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio voluptates suscipit porro repellat! Tempore, repellendus rerum. Enim praesentium eaque necessitatibus, cupiditate, veniam aperiam, eligendi quos molestias saepe voluptatem modi amet.</p>
+          <h3>With best regards</h3>
+          <p>We hope this application makes your work a little bit easier.</p>
         </div>
       </div>
     );

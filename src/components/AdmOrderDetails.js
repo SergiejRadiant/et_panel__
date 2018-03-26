@@ -200,7 +200,7 @@ export default class OrderDetails extends Component {
           </div>
           
           <div className="content-label">
-            <h5>Информация о заказе:</h5>
+            <h5>Order data:</h5>
           </div>
 
           <table className="default-table vertical">
