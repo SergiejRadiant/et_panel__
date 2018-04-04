@@ -153,9 +153,9 @@ export default class Shedule extends Component {
 
           <h4>{moment(workday.date).format('DD.MM.YYYY')}</h4>
 
-          <label>Work day: <input type="text" name="workDay" value={moment(workday.date).format('DD.MM.YYYY')} disabled/></label>
-          <label>Work day start: <input type="text" value={workday.start} disabled /></label>
-          <label>Work day end: <input type="text" value={workday.end} disabled /></label>
+          <label>Workday: <input type="text" name="workDay" value={moment(workday.date).format('DD.MM.YYYY')} disabled/></label>
+          <label>Workday start: <input type="text" value={workday.start} disabled /></label>
+          <label>Workday end: <input type="text" value={workday.end} disabled /></label>
           
           <div className="btn-wrap">
             <button type="submit" className="button small" onClick={this.closeScheduleModal.bind(this)}>Ок</button>
@@ -174,13 +174,13 @@ export default class Shedule extends Component {
 
         <h4>{moment(this.state.select).format('DD.MM.YYYY')}</h4>
 
-        <label>Work day: <input type="text" name="workDay" value={moment(this.state.select).format('DD.MM.YYYY')} disabled/></label>
-        <label>Work day start:  <input type="time" name="startTime" required/></label>
-        <label>Work day end:  <input type="time" name="endTime" required/></label>
+        <label>Workday: <input type="text" name="workDay" value={moment(this.state.select).format('DD.MM.YYYY')} disabled/></label>
+        <label>Workday start:  <input type="time" name="startTime" required/></label>
+        <label>Workday end:  <input type="time" name="endTime" required/></label>
 
         <div className="btn-wrap">
-          <button type="submit" className="button small">Ок</button>
-          <button type="recet" className="button small" onClick={this.closeScheduleModal.bind(this)}>Отмена</button>
+          <button type="submit" className="button small">Ok</button>
+          <button type="recet" className="button small" onClick={this.closeScheduleModal.bind(this)}>Cancel</button>
         </div>
         
       </form>
@@ -292,7 +292,7 @@ export default class Shedule extends Component {
             >
               <form ref={form => this.setSceduleForm = form}  onSubmit={(e) => this.submitSetSchedule(e)}>
                 <button type="reset" className="close-btn" onClick={this.closeSetScheduleModal} />
-                <label>Work days: <Picker
+                <label>Workdays: <Picker
                   value={this.state.value}
                   onChange={this.onChange}
                   animation="slide-up"
@@ -311,11 +311,11 @@ export default class Shedule extends Component {
                     }
                   }
                 </Picker></label>
-                <label>Work day start:  <input type="time" name="startTime" required/></label>
-                <label>Work day end:  <input type="time" name="endTime" required/></label>
+                <label>Workday start:  <input type="time" name="startTime" required/></label>
+                <label>Workday end:  <input type="time" name="endTime" required/></label>
                 <div className="btn-wrap">
-                  <button type="submit" className="button small">Принять</button>
-                  <button type="recet" className="button small" onClick={this.closeSetScheduleModal}>Отмена</button>
+                  <button type="submit" className="button small">Ok</button>
+                  <button type="recet" className="button small" onClick={this.closeSetScheduleModal}>Cancel</button>
                 </div>
               </form>
             </Modal>   

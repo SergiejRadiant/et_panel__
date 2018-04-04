@@ -47,14 +47,14 @@ export default class DrvOrdersWindow extends Component {
 			return (
 				<div className="content-box-cell">
 					<div className="content-label">
-						<h5>Новые заказы:</h5>
+						<h5>New orders:</h5>
 					</div>
 					<table className="default-table" style={{ boxShadow: '0 0 3px #68f2dd' }}>
 						<thead>
 							<tr>
-								<td className="xxsmall">Номер:</td>
-								<td className="xxsmall">Дата:</td>
-								<td className="xxsmall">Статус:</td>
+								<td className="xxsmall">Number:</td>
+								<td className="xxsmall">Date:</td>
+								<td className="xxsmall">Status:</td>
 								<td className="xxsmall" />
 							</tr>
 						</thead>
@@ -66,8 +66,8 @@ export default class DrvOrdersWindow extends Component {
 										<td>{moment(n.date).format(formatStr)}</td>
 										<td>{n.status}</td>
 										<td>
-											<span onClick={(orderId) => this.openConfirmModal(n.id)}>Принять</span>
-											<Link to={`/driver/det_ord:${n.id}`}>Дет.</Link>
+											<span onClick={(orderId) => this.openConfirmModal(n.id)}>Accept</span>
+											<Link to={`/driver/det_ord:${n.id}`}>Det.</Link>
 										</td>
 									</tr>
 								);
@@ -83,14 +83,14 @@ export default class DrvOrdersWindow extends Component {
 			return (
 				<div className="content-box-cell">
 					<div className="content-label">
-						<h5>Активные заказы:</h5>
+						<h5>Active orders:</h5>
 					</div>
 						<table className="default-table">
 						<thead>
 							<tr>
-								<td className="xxsmall">Номер:</td>
-								<td className="xxsmall">Дата:</td>
-								<td className="xxsmall">Статус:</td>
+								<td className="xxsmall">Number:</td>
+								<td className="xxsmall">Date:</td>
+								<td className="xxsmall">Status:</td>
 								<td className="xxsmall" />
 							</tr>
 						</thead>
@@ -102,8 +102,8 @@ export default class DrvOrdersWindow extends Component {
 										<td>{moment(a.date).format(formatStr)}</td>
 										<td>{a.status}</td>
 										<td>
-											<span onClick={(orderId) => this.openCompleteModal(a.id)}>Заверш.</span>
-											<Link to={`/driver/det_ord:${a.id}`}>Дет.</Link>
+											<span onClick={(orderId) => this.openCompleteModal(a.id)}>Finish</span>
+											<Link to={`/driver/det_ord:${a.id}`}>Det.</Link>
 										</td>
 									</tr>
 								);
@@ -119,14 +119,14 @@ export default class DrvOrdersWindow extends Component {
 			return (
 				<div className="content-box-cell">
 					<div className="content-label">
-						<h5>Выполненные заказы:</h5>
+						<h5>Completed orders:</h5>
 					</div>
 					<table className="default-table">
 						<thead>
 							<tr>
-								<td className="xxsmall">Номер:</td>
-								<td className="xxsmall">Дата:</td>
-								<td className="xxsmall">Статус:</td>
+								<td className="xxsmall">Number:</td>
+								<td className="xxsmall">Date:</td>
+								<td className="xxsmall">Status:</td>
 								<td className="xxsmall"/>
 							</tr>
 						</thead>
@@ -138,7 +138,7 @@ export default class DrvOrdersWindow extends Component {
 										<td>{moment(e.date).format(formatStr)}</td>
 										<td>{e.status}</td>
 										<td>
-											<Link to={`/driver/det_ord:${e.id}`}>Детали</Link>
+											<Link to={`/driver/det_ord:${e.id}`}>Details</Link>
 										</td>
 									</tr>
 								);
@@ -231,7 +231,7 @@ export default class DrvOrdersWindow extends Component {
 						<div className="content">
 							<div className="content-label">
 
-								<h1>Заказы</h1>
+								<h1>Orders</h1>
 
 								<div className="filter-wrap">
 
@@ -254,16 +254,16 @@ export default class DrvOrdersWindow extends Component {
 										<div className="content-box-cell">
 
 											<div className="content-label">
-												<h5>Выполненные заказы:</h5>
+												<h5>Completed orders:</h5>
 											</div>
 
 											<table className="default-table">
 
 												<thead>
 													<tr>
-														<td className="xxsmall">Номер:</td>
-														<td className="xxsmall">Дата:</td>
-														<td className="xxsmall">Статус:</td>
+														<td className="xxsmall">Number:</td>
+														<td className="xxsmall">Date:</td>
+														<td className="xxsmall">Status:</td>
 														<td className="xxsmall" />
 													</tr>
 												</thead>
@@ -282,15 +282,15 @@ export default class DrvOrdersWindow extends Component {
 
 																	{ f.status === allConst.STATUS_WAIT ? (
 
-																		<span onClick={(orderId) => this.openConfirmModal(f.id)}>Принять</span>
+																		<span onClick={(orderId) => this.openConfirmModal(f.id)}>Accept</span>
 
 																	) : f.status === allConst.STATUS_ACTIVE ? (
 
-																		<span onClick={(orderId) => this.openCompleteModal(f.id)}>Завершить</span>
+																		<span onClick={(orderId) => this.openCompleteModal(f.id)}>Finish</span>
 
 																	) : (null)}
 
-																	<Link to={`/admin/det_ord:${f.id}`}>Дет.</Link>
+																	<Link to={`/admin/det_ord:${f.id}`}>Det.</Link>
 																</td>
 															</tr>
 														)
@@ -333,14 +333,14 @@ export default class DrvOrdersWindow extends Component {
 							>
 								<button className="close-btn" onClick={this.closeConfirmModal.bind(this)} />
 
-								<p>Подтвердить заказ?</p>
+								<p>Accept order?</p>
 
 								<div className="btn-wrap">
 									<button className="button small" onClick={this.confirmOrder.bind(this)}>
-										Ок
+										Ok
 									</button>
 									<button className="button small" onClick={this.closeConfirmModal.bind(this)}>
-										Отмена
+										Cancel
 									</button>
 								</div>
 
@@ -355,14 +355,14 @@ export default class DrvOrdersWindow extends Component {
 							>
 								<button className="close-btn" onClick={this.closeCompleteModal.bind(this)} />
 
-								<p>Завершить заказ?</p>
+								<p>Do you wanna finish the order?</p>
 
 								<div className="btn-wrap">
 									<button className="button small" onClick={this.completeOrder.bind(this)}>
-										Ок
+										Ok
 									</button>
 									<button className="button small" onClick={this.closeCompleteModal.bind(this)}>
-										Отмена
+										Cancel
 									</button>
 								</div>
 

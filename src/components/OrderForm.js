@@ -112,8 +112,8 @@ export default class OrderForm extends Component {
                   {this.getMessage()}
 
                   <div className="btn-wrap">
-                    <button type="submit" className="button small">Принять</button>
-                    <button type="reset" className="button small">Отмена</button>
+                    <button type="submit" className="button small">Accept</button>
+                    <button type="reset" className="button small">Cancel</button>
                   </div>
                 </div>
               </div>

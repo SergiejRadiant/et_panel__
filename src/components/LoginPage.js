@@ -45,14 +45,14 @@ export default class LoginPage extends Component {
               action="#"
               ref={(form) => this.form = form}
             >
-              <h4>Вход</h4>
-              <label>Логин: <input name="username" type="text" /></label>
+              <h4>Sign in to EXT Panel</h4>
+              <label>Username: <input name="username" type="text" /></label>
               {this.getUsernameError()}
-              <label>Пароль: <input name="password" type="password" /></label>
+              <label>Password: <input name="password" type="password" /></label>
               {this.getPasswordError()}
               {this.getAuthError()}
               <div className="btn-wrap center">
-                <button type="submit" className="button">Вход</button>
+                <button type="submit" className="button">Sign</button>
               </div>
             </form>
           </div>

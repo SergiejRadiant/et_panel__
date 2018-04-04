@@ -89,15 +89,15 @@ export default class AdmOrdersWindow extends Component {
       return (
         <div className="content-box-cell">
           <div className="content-label">
-						<h5>Новые заказы:</h5>
+						<h5>New orders:</h5>
 					</div>
           <table className="default-table" style={{ boxShadow: '0 0 3px #68f2dd' }}>
             <thead>
               <tr>
-                <td className="xxsmall">Номер:</td>
-                <td className="xsmall">Дата:</td>
-                <td className="xsmall">Статус:</td>
-                <td className="xsmall">Водитель:</td>
+                <td className="xxsmall">Number:</td>
+                <td className="xsmall">Date:</td>
+                <td className="xsmall">Status:</td>
+                <td className="xsmall">Driver:</td>
                 <td className="xsmall" />
               </tr>
             </thead>
@@ -112,13 +112,13 @@ export default class AdmOrdersWindow extends Component {
                       {n.driver ? (
                         <Link to={`/admin/det_drv:${n.driver}`}>{this.getDriverName(n.driver)}</Link>
                       ) : (
-                        <span onClick={() => this.openGetDriverModal(n.id)}>Назначить</span>
+                        <span onClick={() => this.openGetDriverModal(n.id)}>Set driver</span>
                       )}
                     </td>
                     <td>
-                      <Link to={`/admin/det_ord:${n.id}`}>Дет.</Link>
-                      <Link to={`/admin/edit_ord:${n.id}`}>Ред.</Link>
-                      <span onClick={() => this.openDeleteOrderModal(n.id)}>Удал.</span>
+                      <Link to={`/admin/det_ord:${n.id}`}>Det.</Link>
+                      <Link to={`/admin/edit_ord:${n.id}`}>Edit</Link>
+                      <span onClick={() => this.openDeleteOrderModal(n.id)}>Del.</span>
                     </td>
                   </tr>
                 );
@@ -134,15 +134,15 @@ export default class AdmOrdersWindow extends Component {
       return (
         <div className="content-box-cell">
           <div className="content-label">
-					  <h5>Активные заказы:</h5>
+					  <h5>Active orders:</h5>
 					</div>
           <table className="default-table">
             <thead>
               <tr>
-                <td className="xxsmall">Номер:</td>
-                <td className="xsmall">Дата:</td>
-                <td className="xsmall">Статус:</td>
-                <td className="xsmall">Водитель:</td>
+                <td className="xxsmall">Number:</td>
+                <td className="xsmall">Date:</td>
+                <td className="xsmall">Status:</td>
+                <td className="xsmall">Driver:</td>
                 <td className="xsmall" />
                </tr>
             </thead>
@@ -156,9 +156,9 @@ export default class AdmOrdersWindow extends Component {
                     <td>
                       <Link to={`/admin/det_drv:${a.driver}`}>{this.getDriverName(a.driver)}</Link></td>
                     <td>
-                      <Link to={`/admin/det_ord:${a.id}`}>Дет.</Link>
-                      <Link to={`/admin/edit_ord:${a.id}`}>Ред.</Link>
-                      <span onClick={() => this.openDeleteOrderModal(a.id)}>Удал.</span>
+                      <Link to={`/admin/det_ord:${a.id}`}>Det.</Link>
+                      <Link to={`/admin/edit_ord:${a.id}`}>Edit</Link>
+                      <span onClick={() => this.openDeleteOrderModal(a.id)}>Del.</span>
                     </td>
                   </tr>
                 );
@@ -174,15 +174,15 @@ export default class AdmOrdersWindow extends Component {
       return (
         <div className="content-box-cell">
           <div className="content-label">
-						<h5>Выполненные заказы:</h5>
+						<h5>Completed orders:</h5>
 					</div>
           <table className="default-table">
             <thead>
               <tr>
-                <td className="xxsmall">Номер:</td>
-                <td className="xsmall">Дата:</td>
-                <td className="xsmall">Статус:</td>
-                <td className="xsmall">Водитель</td>
+                <td className="xxsmall">Number:</td>
+                <td className="xsmall">Date:</td>
+                <td className="xsmall">Status:</td>
+                <td className="xsmall">Driver:</td>
                 <td className="xsmall" />
               </tr>
             </thead>
@@ -196,9 +196,9 @@ export default class AdmOrdersWindow extends Component {
                     <td>
                       <Link to={`/admin/det_drv:${e.driver}`}>{this.getDriverName(e.driver)}</Link></td>
                     <td>
-                      <Link to={`/admin/det_ord:${e.id}`}>Дет.</Link>
-                      <Link to={`/admin/edit_ord:${e.id}`}>Ред.</Link>
-                      <span onClick={(orderId) => this.openDeleteOrderModal(e.id)}>Удал.</span>
+                      <Link to={`/admin/det_ord:${e.id}`}>Det.</Link>
+                      <Link to={`/admin/edit_ord:${e.id}`}>Edit</Link>
+                      <span onClick={(orderId) => this.openDeleteOrderModal(e.id)}>Del.</span>
                     </td>
                   </tr>
                 );
@@ -340,7 +340,7 @@ export default class AdmOrdersWindow extends Component {
 
             <div className="content-label">
 
-              <h1>Заказы</h1>
+              <h1>Orders</h1>
 
               <div className="filter-wrap">
 
@@ -354,7 +354,7 @@ export default class AdmOrdersWindow extends Component {
 								<div className="input-close-btn" onClick={() => this.clearOrderFilter()}></div>
   						</div>
 
-              <Link to='/admin/reg_ord' className="button grey">Новый заказ</Link>
+              <Link to='/admin/reg_ord' className="button grey">New order</Link>
             </div>
 
             { this.state.filteredOrders !== 'none' ? (

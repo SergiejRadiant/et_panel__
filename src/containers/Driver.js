@@ -61,13 +61,13 @@ class Driver extends Component {
 	getTitle() {
 		let path = this.props.history.location.pathname
 		if (~path.indexOf("home")) {
-			return "Добро пожаловать"
+			return "Welcome"
 		} else if (~path.indexOf("schedule")) {
-			return "Рабочий график"
+			return "Schedule"
 		} else if (~path.indexOf("orders")) {
-			return "Заказы"
+			return "Orders"
 		} else if (~path.indexOf("det_ord")) {
-			return "Информация о заказе"
+			return "Order details"
 		}
 	}
 
@@ -109,8 +109,8 @@ class Driver extends Component {
 								</li>
 							</ul>
 							<div className="topbar-auth">
-								Вы вошли как {this.getUsername()}
-								<img src={exitBtn} alt="Выход" className="exit-btn" onClick={() => this.logout()}/>
+								Signed in as {this.getUsername()}
+								<img src={exitBtn} alt="Exit" className="exit-btn" onClick={() => this.logout()}/>
 							</div>
 						</div>
 					</div>
@@ -122,7 +122,7 @@ class Driver extends Component {
 						<div className="content-topbar">
 							{
 								this.props.history.location.pathname.indexOf('home') === -1 ? (
-									<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Назад</a>
+									<a className="back-btn" onClick={() => this.props.history.goBack()}>&#8249; Back</a>
 								) : null
 							}
 							
@@ -150,7 +150,7 @@ class Driver extends Component {
 
 				<div className="footer">
 					<div className="container">
-						Developed by <a href="radiant-graphics.ru">Radiant Graphics</a>
+						Developed by <a href="http://radiant-graphics.ru">Radiant Graphics</a>
 					</div>
 				</div>
 			</div>

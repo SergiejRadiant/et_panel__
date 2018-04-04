@@ -206,8 +206,8 @@ export default class DriverForm extends Component {
             {this.getPasswordError()}
             {this.getMessage()}
             <div className="btn-wrap">
-              <button type="submit" className="button small">Принять</button>
-              <button className="button small" onClick={(e) => this.onReset(e)} >Отмена</button>
+              <button type="submit" className="button small">Ok</button>
+              <button className="button small" onClick={(e) => this.onReset(e)} >Cancel</button>
             </div>
           </form>
         )}
