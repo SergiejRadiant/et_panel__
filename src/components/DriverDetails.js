@@ -195,122 +195,115 @@ export default class DriverDetails extends Component {
   render() {
     let driverId = this.props.match.params.driverId
 
-    return (
-      <div className="content-wrap">
-        {
-          !this.props.currentDriver.isFetched ? (
-            <img className="spinner" src={spinner}alt="spinner" />
-          ) : (
-            <div className="content">
-              <div className="content-box">
-                <div className="content-box-row">
-                  <div className="content-box-cell order-2">
-                    <label>First name: <input type="text" value={this.props.currentDriver.data.user.first_name} disabled /></label>
-                    <label>Last name: <input type="text" value={this.props.currentDriver.data.user.last_name} disabled /></label>
-                    <label>E-mail: <input type="text" value={this.props.currentDriver.data.user.email} disabled /></label>
-                    <div className="btn-wrap left">
-                      <Link to={`/admin/edit_drv${driverId}`} className="button small">Edit</Link>
-                      <span onClick={() => this.openDeleteDriverModal()} className="button small grey">Delete</span>
-                    </div>
-                  </div>
-                  <div className="content-box-cell order-1">
-                    <label>Username: <input type="text" value={this.props.currentDriver.data.user.username} disabled /></label>
-                    <label>Car: <input type="text" value={this.props.currentDriver.data.car} disabled /></label>
-                    <label>Car number: <input type="text" value={this.props.currentDriver.data.number_of_car} disabled /></label>
-                  </div>
-                  <div className="content-box-cell order-3">
-                    <h5>Worktime:</h5>
-                    <FullCalendar
-                      Select={Select}
-                      fullscreen={false}
-                      onSelect={this.onSelect.bind(this)}
-                      onTypeChange={this.onTypeChange.bind(this)}
-                      locale={cn ? zhCN : enUS}
-                      dateCellRender={(m) => this.renderDate(m)}
-                    />
+    return <div className="content-wrap">
+        {!this.props.currentDriver.isFetched ? <img className="spinner" src={spinner} alt="spinner" /> : <div className="content">
+            <div className="content-box">
+              <div className="content-box-row">
+                <div className="content-box-cell order-2">
+                  <label>
+                    First name: <input type="text" value={this.props.currentDriver.data.user.first_name} disabled />
+                  </label>
+                  <label>
+                    Last name: <input type="text" value={this.props.currentDriver.data.user.last_name} disabled />
+                  </label>
+                  <label>
+                    E-mail: <input type="text" value={this.props.currentDriver.data.user.email} disabled />
+                  </label>
+                  <div className="btn-wrap left">
+                    <Link to={`/admin/edit_drv${driverId}`} className="button small">
+                      Edit
+                    </Link>
+                    <span onClick={() => this.openDeleteDriverModal()} className="button small grey">
+                      Delete
+                    </span>
                   </div>
                 </div>
-                <div className="content-box-row">
-                  <div className="content-box-cell wide">
-                    <h5>Orders:</h5>
-                    <table className="default-table">
-                      <thead>
-                        <tr>
-                          <td className="xsmall">Num.</td>
-                          <td className="xsmall">Date</td>
-                          <td className="xsmall">Status</td>
-                          <td className="xxsmall"></td>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {this.props.currentDriver.data.orders.map(ord => {
-                          return (
-                            <tr key={ord.id}>
-                              <td>{ord.id}</td>
-                              <td>{moment(ord.date).format(formatStr)}</td>
-                              <td>{ord.status}</td>
-                              <td>
-                                <Link to={`/admin/det_ord:${ord.id}`}>Det.</Link>
-                                <Link to={`/admin/edit_ord:${ord.id}`}>Edit</Link>
-                                <span onClick={(orderId) => this.openDeleteOrderModal(ord.id)}>Del.</span>
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                <div className="content-box-cell order-1">
+                  <label>
+                    Username: <input type="text" value={this.props.currentDriver.data.user.username} disabled />
+                  </label>
+                  <label>
+                    Car: <input type="text" value={this.props.currentDriver.data.car} disabled />
+                  </label>
+                  <label>
+                    Car number: <input type="text" value={this.props.currentDriver.data.number_of_car} disabled />
+                  </label>
+                </div>
+                <div className="content-box-cell order-3">
+                  <h5>Worktime:</h5>
+                  <FullCalendar Select={Select} fullscreen={false} onSelect={this.onSelect.bind(this)} onTypeChange={this.onTypeChange.bind(this)} locale={cn ? zhCN : enUS} dateCellRender={m => this.renderDate(m)} />
                 </div>
               </div>
-              <Modal
-                isOpen={this.state.deleteDriverModalIsOpen}
-                onRequestClose={this.closeDeleteDriverModal}
-                style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-                className="modal"
-                ariaHideApp={false}
-              >
-                <button className="close-btn" onClick={this.closeDeleteDriverModal.bind(this)} />
-                <p>Are you sure you wanna delete this driver?</p>
-                <div className="btn-wrap">
-                  <button type="submit" className="button small" onClick={this.submitDeleteDriverForm.bind(this)}>
-                    Ok
-                  </button>
-                  <button type="recet" className="button small" onClick={this.closeDeleteDriverModal.bind(this)}>
-                    Cancel
-                  </button>
+              <div className="content-box-row">
+                <div className="content-box-cell wide">
+                  <h5>Orders:</h5>
+                  <table className="default-table">
+                    <thead>
+                      <tr>
+                        <td className="xsmall">Num.</td>
+                        <td className="xsmall">Transfer date</td>
+                        <td className="xsmall">Status</td>
+                        <td className="xxsmall" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.props.currentDriver.data.orders.map(ord => {
+                        return <tr key={ord.id}>
+                            <td>{ord.id}</td>
+                            <td>
+                              {moment(ord.transfer_date).format(formatStr)}
+                            </td>
+                            <td>{ord.status}</td>
+                            <td>
+                              <Link to={`/admin/det_ord:${ord.id}`}>
+                                Det.
+                              </Link>
+                              <Link to={`/admin/edit_ord:${ord.id}`}>
+                                Edit
+                              </Link>
+                              <span
+                                onClick={orderId =>
+                                  this.openDeleteOrderModal(ord.id)
+                                }
+                              >
+                                Del.
+                              </span>
+                            </td>
+                          </tr>;
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-              </Modal>
-              <Modal
-                isOpen={this.state.deleteOrderModalIsOpen}
-                onRequestClose={this.closeDeleteOrderModal}
-                style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: '1000' } }}
-                className="modal"
-                ariaHideApp={false}
-              >
-                <button type="reset" className="close-btn" onClick={() => this.closeDeleteOrderModal()} />
-                <p>Are you sure you wanna delete this order?</p>
-                <div className="btn-wrap">
-                  <button type="submit" className="button small" onClick={this.submitDeleteOrderForm.bind(this)}>
-                    Ok
-                  </button>
-                  <button type="recet" className="button small" onClick={this.closeDeleteOrderModal}>
-                    Cancel
-                  </button>
-                </div>
-              </Modal>
-              <Modal
-                isOpen={this.state.scheduleModalIsOpen}
-                onRequestClose={this.closeScheduleModal}
-                style={{ overlay: { background: 'rgba(0, 0, 0, 0.12)', zIndex: "1000" } }}
-                className="modal"
-                ariaHideApp={false}
-              >
-                {this.getDayOfSchedule()} 
-              </Modal>
+              </div>
             </div>
-          )
-        }
-      </div>
-    );
+            <Modal isOpen={this.state.deleteDriverModalIsOpen} onRequestClose={this.closeDeleteDriverModal} style={{ overlay: { background: "rgba(0, 0, 0, 0.12)", zIndex: "1000" } }} className="modal" ariaHideApp={false}>
+              <button className="close-btn" onClick={this.closeDeleteDriverModal.bind(this)} />
+              <p>Are you sure you wanna delete this driver?</p>
+              <div className="btn-wrap">
+                <button type="submit" className="button small" onClick={this.submitDeleteDriverForm.bind(this)}>
+                  Ok
+                </button>
+                <button type="recet" className="button small" onClick={this.closeDeleteDriverModal.bind(this)}>
+                  Cancel
+                </button>
+              </div>
+            </Modal>
+            <Modal isOpen={this.state.deleteOrderModalIsOpen} onRequestClose={this.closeDeleteOrderModal} style={{ overlay: { background: "rgba(0, 0, 0, 0.12)", zIndex: "1000" } }} className="modal" ariaHideApp={false}>
+              <button type="reset" className="close-btn" onClick={() => this.closeDeleteOrderModal()} />
+              <p>Are you sure you wanna delete this order?</p>
+              <div className="btn-wrap">
+                <button type="submit" className="button small" onClick={this.submitDeleteOrderForm.bind(this)}>
+                  Ok
+                </button>
+                <button type="recet" className="button small" onClick={this.closeDeleteOrderModal}>
+                  Cancel
+                </button>
+              </div>
+            </Modal>
+            <Modal isOpen={this.state.scheduleModalIsOpen} onRequestClose={this.closeScheduleModal} style={{ overlay: { background: "rgba(0, 0, 0, 0.12)", zIndex: "1000" } }} className="modal" ariaHideApp={false}>
+              {this.getDayOfSchedule()}
+            </Modal>
+          </div>}
+      </div>;
   }
 }

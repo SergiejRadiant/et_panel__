@@ -86,87 +86,96 @@ export default class AdmOrdersWindow extends Component {
 
   checkNewOrders() {
     if (this.newOrders().length)
-      return (
-        <div className="content-box-cell">
+      return <div className="content-box-cell">
           <div className="content-label">
-						<h5>New orders:</h5>
-					</div>
-          <table className="default-table" style={{ boxShadow: '0 0 3px #68f2dd' }}>
+            <h5>New orders:</h5>
+          </div>
+          <table className="default-table" style={{ boxShadow: "0 0 3px #68f2dd" }}>
             <thead>
               <tr>
                 <td className="xxsmall">Number:</td>
-                <td className="xsmall">Date:</td>
+                <td className="xsmall">Transfer date:</td>
                 <td className="xsmall">Status:</td>
                 <td className="xsmall">Driver:</td>
                 <td className="xsmall" />
               </tr>
             </thead>
             <tbody>
-              {this.newOrders().map((n) => {
-                return (
-                  <tr key={n.id}>
+              {this.newOrders().map(n => {
+                return <tr key={n.id}>
                     <td>{n.id}</td>
-                    <td>{moment(n.date).format(formatStr)}</td>
+                    <td>{moment(n.transfer_date).format(formatStr)}</td>
                     <td>{n.status}</td>
                     <td>
                       {n.driver ? (
-                        <Link to={`/admin/det_drv:${n.driver}`}>{this.getDriverName(n.driver)}</Link>
+                        <Link to={`/admin/det_drv:${n.driver}`}>
+                          {this.getDriverName(n.driver)}
+                        </Link>
                       ) : (
-                        <span onClick={() => this.openGetDriverModal(n.id)}>Set driver</span>
+                        <span
+                          onClick={() => this.openGetDriverModal(n.id)}
+                        >
+                          Set driver
+                        </span>
                       )}
                     </td>
                     <td>
                       <Link to={`/admin/det_ord:${n.id}`}>Det.</Link>
                       <Link to={`/admin/edit_ord:${n.id}`}>Edit</Link>
-                      <span onClick={() => this.openDeleteOrderModal(n.id)}>Del.</span>
+                      <span
+                        onClick={() => this.openDeleteOrderModal(n.id)}
+                      >
+                        Del.
+                      </span>
                     </td>
-                  </tr>
-                );
+                  </tr>;
               })}
             </tbody>
           </table>
-        </div>
-      );
+        </div>;
   }
 
   checkActiveOrders() {
     if (this.activeOrders().length)
-      return (
-        <div className="content-box-cell">
+      return <div className="content-box-cell">
           <div className="content-label">
-					  <h5>Active orders:</h5>
-					</div>
+            <h5>Active orders:</h5>
+          </div>
           <table className="default-table">
             <thead>
               <tr>
                 <td className="xxsmall">Number:</td>
-                <td className="xsmall">Date:</td>
+                <td className="xsmall">Transfer date:</td>
                 <td className="xsmall">Status:</td>
                 <td className="xsmall">Driver:</td>
                 <td className="xsmall" />
-               </tr>
+              </tr>
             </thead>
             <tbody>
-              {this.activeOrders().map((a) => {
-                return (
-                  <tr key={a.id}>
+              {this.activeOrders().map(a => {
+                return <tr key={a.id}>
                     <td>{a.id}</td>
-                    <td>{moment(a.date).format(formatStr)}</td>
+                    <td>{moment(a.transfer_date).format(formatStr)}</td>
                     <td>{a.status}</td>
                     <td>
-                      <Link to={`/admin/det_drv:${a.driver}`}>{this.getDriverName(a.driver)}</Link></td>
+                      <Link to={`/admin/det_drv:${a.driver}`}>
+                        {this.getDriverName(a.driver)}
+                      </Link>
+                    </td>
                     <td>
                       <Link to={`/admin/det_ord:${a.id}`}>Det.</Link>
                       <Link to={`/admin/edit_ord:${a.id}`}>Edit</Link>
-                      <span onClick={() => this.openDeleteOrderModal(a.id)}>Del.</span>
+                      <span
+                        onClick={() => this.openDeleteOrderModal(a.id)}
+                      >
+                        Del.
+                      </span>
                     </td>
-                  </tr>
-                );
+                  </tr>;
               })}
             </tbody>
           </table>
-        </div>
-      );
+        </div>;
   }
 
   checkExecutedOrders() {
@@ -180,7 +189,7 @@ export default class AdmOrdersWindow extends Component {
             <thead>
               <tr>
                 <td className="xxsmall">Number:</td>
-                <td className="xsmall">Date:</td>
+                <td className="xsmall">Transfers date:</td>
                 <td className="xsmall">Status:</td>
                 <td className="xsmall">Driver:</td>
                 <td className="xsmall" />
@@ -188,20 +197,35 @@ export default class AdmOrdersWindow extends Component {
             </thead>
             <tbody>
               {this.executedOrders().map((e) => {
-                return (
-                  <tr key={e.id}>
+                return <tr key={e.id}>
                     <td>{e.id}</td>
-                    <td>{moment(e.date).format(formatStr)}</td>
+                    <td>
+                      {moment(e.transfer_date).format(
+                        formatStr
+                      )}
+                    </td>
                     <td>{e.status}</td>
                     <td>
-                      <Link to={`/admin/det_drv:${e.driver}`}>{this.getDriverName(e.driver)}</Link></td>
-                    <td>
-                      <Link to={`/admin/det_ord:${e.id}`}>Det.</Link>
-                      <Link to={`/admin/edit_ord:${e.id}`}>Edit</Link>
-                      <span onClick={(orderId) => this.openDeleteOrderModal(e.id)}>Del.</span>
+                      <Link to={`/admin/det_drv:${e.driver}`}>
+                        {this.getDriverName(e.driver)}
+                      </Link>
                     </td>
-                  </tr>
-                );
+                    <td>
+                      <Link to={`/admin/det_ord:${e.id}`}>
+                        Det.
+                      </Link>
+                      <Link to={`/admin/edit_ord:${e.id}`}>
+                        Edit
+                      </Link>
+                      <span
+                        onClick={orderId =>
+                          this.openDeleteOrderModal(e.id)
+                        }
+                      >
+                        Del.
+                      </span>
+                    </td>
+                  </tr>;
               })}
             </tbody>
           </table>

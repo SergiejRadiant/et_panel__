@@ -44,74 +44,74 @@ export default class DrvOrdersWindow extends Component {
 
 	checkNewOrders() {
 		if (this.newOrders().length)
-			return (
-				<div className="content-box-cell">
-					<div className="content-label">
-						<h5>New orders:</h5>
-					</div>
-					<table className="default-table" style={{ boxShadow: '0 0 3px #68f2dd' }}>
-						<thead>
-							<tr>
-								<td className="xxsmall">Number:</td>
-								<td className="xxsmall">Date:</td>
-								<td className="xxsmall">Status:</td>
-								<td className="xxsmall" />
-							</tr>
-						</thead>
-						<tbody>
-							{this.newOrders().map((n) => {
-								return (
-									<tr key={n.id}>
-										<td>{n.id}</td>
-										<td>{moment(n.date).format(formatStr)}</td>
-										<td>{n.status}</td>
-										<td>
-											<span onClick={(orderId) => this.openConfirmModal(n.id)}>Accept</span>
-											<Link to={`/driver/det_ord:${n.id}`}>Det.</Link>
-										</td>
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				</div>
-			);
+			return <div className="content-box-cell">
+          <div className="content-label">
+            <h5>New orders:</h5>
+          </div>
+          <table className="default-table" style={{ boxShadow: "0 0 3px #68f2dd" }}>
+            <thead>
+              <tr>
+                <td className="xxsmall">Number:</td>
+                <td className="xxsmall">Transfer date:</td>
+                <td className="xxsmall">Status:</td>
+                <td className="xxsmall" />
+              </tr>
+            </thead>
+            <tbody>
+              {this.newOrders().map(n => {
+                return <tr key={n.id}>
+                    <td>{n.id}</td>
+                    <td>{moment(n.transfer_date).format(formatStr)}</td>
+                    <td>{n.status}</td>
+                    <td>
+                      <span
+                        onClick={orderId => this.openConfirmModal(n.id)}
+                      >
+                        Accept
+                      </span>
+                      <Link to={`/driver/det_ord:${n.id}`}>Det.</Link>
+                    </td>
+                  </tr>;
+              })}
+            </tbody>
+          </table>
+        </div>;
 	}
 
 	checkActiveOrders() {
 		if (this.activeOrders().length)
-			return (
-				<div className="content-box-cell">
-					<div className="content-label">
-						<h5>Active orders:</h5>
-					</div>
-						<table className="default-table">
-						<thead>
-							<tr>
-								<td className="xxsmall">Number:</td>
-								<td className="xxsmall">Date:</td>
-								<td className="xxsmall">Status:</td>
-								<td className="xxsmall" />
-							</tr>
-						</thead>
-						<tbody>
-							{this.activeOrders().map((a) => {
-								return (
-									<tr key={a.id}>
-										<td>{a.id}</td>
-										<td>{moment(a.date).format(formatStr)}</td>
-										<td>{a.status}</td>
-										<td>
-											<span onClick={(orderId) => this.openCompleteModal(a.id)}>Finish</span>
-											<Link to={`/driver/det_ord:${a.id}`}>Det.</Link>
-										</td>
-									</tr>
-								);
-							})}
-						</tbody>
-					</table>
-				</div>
-			);
+			return <div className="content-box-cell">
+          <div className="content-label">
+            <h5>Active orders:</h5>
+          </div>
+          <table className="default-table">
+            <thead>
+              <tr>
+                <td className="xxsmall">Number:</td>
+                <td className="xxsmall">Transfer date:</td>
+                <td className="xxsmall">Status:</td>
+                <td className="xxsmall" />
+              </tr>
+            </thead>
+            <tbody>
+              {this.activeOrders().map(a => {
+                return <tr key={a.id}>
+                    <td>{a.id}</td>
+                    <td>{moment(a.transfer_date).format(formatStr)}</td>
+                    <td>{a.status}</td>
+                    <td>
+                      <span
+                        onClick={orderId => this.openCompleteModal(a.id)}
+                      >
+                        Finish
+                      </span>
+                      <Link to={`/driver/det_ord:${a.id}`}>Det.</Link>
+                    </td>
+                  </tr>;
+              })}
+            </tbody>
+          </table>
+        </div>;
 	}
 
 	checkExecutedOrders() {
@@ -125,23 +125,27 @@ export default class DrvOrdersWindow extends Component {
 						<thead>
 							<tr>
 								<td className="xxsmall">Number:</td>
-								<td className="xxsmall">Date:</td>
+								<td className="xxsmall">Transfer date:</td>
 								<td className="xxsmall">Status:</td>
 								<td className="xxsmall"/>
 							</tr>
 						</thead>
 						<tbody>
 							{this.executedOrders().map((e) => {
-								return (
-									<tr key={e.id}>
-										<td>{e.id}</td>
-										<td>{moment(e.date).format(formatStr)}</td>
-										<td>{e.status}</td>
-										<td>
-											<Link to={`/driver/det_ord:${e.id}`}>Details</Link>
-										</td>
-									</tr>
-								);
+								return <tr key={e.id}>
+                    <td>{e.id}</td>
+                    <td>
+                      {moment(e.transfer_date).format(
+                        formatStr
+                      )}
+                    </td>
+                    <td>{e.status}</td>
+                    <td>
+                      <Link to={`/driver/det_ord:${e.id}`}>
+                        Details
+                      </Link>
+                    </td>
+                  </tr>;
 							})}
 						</tbody>
 					</table>
